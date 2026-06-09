@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Yoton_Mobile.Pages;
 
 namespace Yoton_Mobile
 {
@@ -7,11 +8,7 @@ namespace Yoton_Mobile
         public App()
         {
             InitializeComponent();
-        }
-
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
+            MainPage = new WelcomePage();
         }
     }
 }
