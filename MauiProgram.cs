@@ -22,7 +22,7 @@ namespace Yoton_Mobile
             // HttpClient for API calls
             builder.Services.AddHttpClient("YotoonApi", client =>
             {
-                client.BaseAddress = new Uri("http://localhost:5205");
+                client.BaseAddress = new Uri("http://10.0.2.2:5205");
             });
 
             // Services
