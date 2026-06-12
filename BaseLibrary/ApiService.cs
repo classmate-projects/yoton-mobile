@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 
-namespace Yoton_Mobile.Services
+namespace Yoton_Mobile.BaseLibrary
 {
     public class ApiService
     {
@@ -13,7 +13,7 @@ namespace Yoton_Mobile.Services
 
         private HttpClient CreateClient()
         {
-            var client = _factory.CreateClient("YotoonApi");
+            var client = _factory.CreateClient("YotonApi");
 
             var token = Preferences.Get("auth_token", null);
             if (!string.IsNullOrEmpty(token))

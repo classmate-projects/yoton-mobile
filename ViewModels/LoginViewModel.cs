@@ -31,7 +31,7 @@ namespace Yoton_Mobile.ViewModels
                 return;
             }
 
-            Preferences.Set("auth_token", token);
+            Preferences.Set("auth_token", token.Token);
 
             await Shell.Current.GoToAsync("//HomePage");
         }

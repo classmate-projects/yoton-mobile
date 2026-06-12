@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Pages;
 using Yoton_Mobile.Services;
 using Yoton_Mobile.ViewModels;
@@ -20,9 +21,9 @@ namespace Yoton_Mobile
                 });
 
             // HttpClient for API calls
-            builder.Services.AddHttpClient("YotoonApi", client =>
+            builder.Services.AddHttpClient("YotonApi", client =>
             {
-                client.BaseAddress = new Uri("http://10.0.2.2:5205");
+                client.BaseAddress = new Uri(APILibrary.BaseUrl);
             });
 
             // Services
@@ -31,9 +32,11 @@ namespace Yoton_Mobile
 
             // ViewModels
             builder.Services.AddSingleton<LoginViewModel>();
+            builder.Services.AddSingleton<HomeViewModel>();
 
             // Pages
             builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<HomePage>();
 
 #if DEBUG
             builder.Logging.AddDebug(); // debug logs

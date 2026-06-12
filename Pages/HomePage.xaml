@@ -7,8 +7,34 @@
         <CollectionView ItemsSource="{Binding Patients}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Label Text="{Binding FullName}" />
+                    <Frame Margin="10" Padding="15" BorderColor="#cccccc" CornerRadius="10">
+                        <VerticalStackLayout Spacing="6">
+
+                            <Label Text="{Binding Name}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="#333" />
+
+                            <Label Text="{Binding Email}"
+                                   FontSize="14"
+                                   TextColor="#555" />
+
+                            <Label Text="{Binding Phone}"
+                                   FontSize="14"
+                                   TextColor="#555" />
+
+                            <Label Text="{Binding Address}"
+                                   FontSize="14"
+                                   TextColor="#555" />
+
+                            <Label Text="{Binding DateOfBirth}"
+                                   FontSize="14"
+                                   TextColor="#777" />
+
+                        </VerticalStackLayout>
+                    </Frame>
                 </DataTemplate>
+
             </CollectionView.ItemTemplate>
         </CollectionView>
     </VerticalStackLayout>
