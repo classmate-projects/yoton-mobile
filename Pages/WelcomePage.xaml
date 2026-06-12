@@ -4,7 +4,7 @@
              x:Class="Yoton_Mobile.Pages.WelcomePage">
     <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
 
-        <Label Text="Welcome to Yotoon Clinic"
+        <Label Text="Welcome to Yoton Application"
                FontSize="28"
                HorizontalOptions="Center" />
 

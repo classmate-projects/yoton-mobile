@@ -2,7 +2,6 @@
 using Yoton_Mobile.Pages;
 using Yoton_Mobile.Services;
 using Yoton_Mobile.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Yoton_Mobile
 {
@@ -27,6 +26,7 @@ namespace Yoton_Mobile
             });
 
             // Services
+            builder.Services.AddSingleton<ApiService>();
             builder.Services.AddSingleton<AuthService>();
 
             // ViewModels
