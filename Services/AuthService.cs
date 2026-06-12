@@ -10,12 +10,12 @@ namespace Yoton_Mobile.Services
         {
             _http = httpClientFactory.CreateClient("YotoonApi");
         }
-
-        public async Task<string?> LoginAsync(string emailOrPhone, string password)
+        
+        public async Task<string?> LoginAsync(string EmailOrUserName, string password)
         {
             var data = new
             {
-                emailOrPhone,
+                EmailOrUserName,
                 password
             };
 
