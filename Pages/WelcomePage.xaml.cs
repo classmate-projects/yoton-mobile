@@ -1,14 +1,19 @@
+using Yoton_Mobile.ViewModels;
+
 namespace Yoton_Mobile.Pages;
 
 public partial class WelcomePage : ContentPage
 {
-    public WelcomePage()
+    public WelcomePage(WelcomeViewModel vm)
     {
         InitializeComponent();
+        BindingContext = vm;
     }
 
-    private async void OnLoginClicked(object sender, EventArgs e)
+    protected override async void OnAppearing()
     {
-        await Shell.Current.GoToAsync(nameof(LoginPage));
+        base.OnAppearing();
+        await (BindingContext as WelcomeViewModel).InitializeAsync();
     }
+
 }

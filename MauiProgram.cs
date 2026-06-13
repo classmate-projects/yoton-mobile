@@ -30,13 +30,15 @@ namespace Yoton_Mobile
             builder.Services.AddSingleton<ApiService>();
             builder.Services.AddSingleton<AuthService>();
 
-            // ViewModels
-            builder.Services.AddSingleton<LoginViewModel>();
-            builder.Services.AddSingleton<HomeViewModel>();
-
             // Pages
+            builder.Services.AddSingleton<WelcomePage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<HomePage>();
+
+            // ViewModels
+            builder.Services.AddSingleton<WelcomeViewModel>();
+            builder.Services.AddSingleton<LoginViewModel>();
+            builder.Services.AddSingleton<HomeViewModel>();
 
 #if DEBUG
             builder.Logging.AddDebug(); // debug logs
