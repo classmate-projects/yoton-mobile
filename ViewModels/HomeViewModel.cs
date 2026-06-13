@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Models;
-using Yoton_Mobile.Services;
 
 namespace Yoton_Mobile.ViewModels
 {
@@ -14,12 +14,18 @@ namespace Yoton_Mobile.ViewModels
         public HomeViewModel(ApiService api)
         {
             _api = api;
-            LoadPatients();
         }
 
-        private async void LoadPatients()
+        public async Task InitializeAsync()
         {
-            Patients = await _api.GetAsync<List<Patient>>("/api/patient");
+            await LoadPatients();
+        }
+        private async Task LoadPatients()
+        {
+            var response = await _api.GetAsync<PatientResponse>(APILibrary.Patient.GetAllPatients);
+
+            if (response != null)
+                Patients = response.Patients;
         }
     }
 }

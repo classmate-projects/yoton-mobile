@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Services;
 
 namespace Yoton_Mobile.ViewModels
@@ -31,7 +32,7 @@ namespace Yoton_Mobile.ViewModels
                 return;
             }
 
-            Preferences.Set("auth_token", token);
+            Preferences.Set("auth_token", token.Token);
 
             await Shell.Current.GoToAsync("//HomePage");
         }

@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Yoton_Mobile.ViewModels
+namespace Yoton_Mobile.BaseLibrary
 {
     public partial class BaseViewModel : ObservableObject
     {

@@ -8,6 +8,7 @@ namespace Yoton_Mobile
         {
             InitializeComponent();
 
+            Routing.RegisterRoute(nameof(WelcomePage), typeof(WelcomePage));
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
         }
