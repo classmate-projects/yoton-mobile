@@ -16,14 +16,27 @@ namespace Yoton_Mobile
                 .UseMauiApp<App>() // start the app
                 .ConfigureFonts(fonts =>
                 {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"); // font 1
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold"); // font 2
+                    // Public Sans
+                    fonts.AddFont("PublicSans-Regular.ttf", "PublicSansRegular");
+                    fonts.AddFont("PublicSans-Bold.ttf", "PublicSansBold");
+                    fonts.AddFont("PublicSans-Light.ttf", "PublicSansLight");
+
+                    // Noto Sans
+                    fonts.AddFont("NotoSans-Regular.ttf", "NotoSansRegular");
+                    fonts.AddFont("NotoSans-Bold.ttf", "NotoSansBold");
+                    fonts.AddFont("NotoSans-Light.ttf", "NotoSansLight");
+
+                    // Open Sans
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Bold.ttf", "OpenSansBold");
+                    fonts.AddFont("OpenSans-Light.ttf", "OpenSansLight");
                 });
 
             // HttpClient for API calls
             builder.Services.AddHttpClient("YotonApi", client =>
             {
                 client.BaseAddress = new Uri(APILibrary.BaseUrl);
+                client.Timeout = TimeSpan.FromMinutes(2);
             });
 
             // Services
