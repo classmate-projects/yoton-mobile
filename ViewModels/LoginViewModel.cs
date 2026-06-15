@@ -34,7 +34,7 @@ namespace Yoton_Mobile.ViewModels
 
             Preferences.Set("auth_token", token.Token);
 
-            await Shell.Current.GoToAsync("//HomePage");
+            Application.Current.MainPage = new AppShell();
         }
     }
 

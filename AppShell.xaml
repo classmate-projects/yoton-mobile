@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Yoton_Mobile.AppShell"
-             xmlns:pages="clr-namespace:Yoton_Mobile.Pages">
-    <!-- First page -->
-    <ShellContent
-        Route="WelcomePage"
-        ContentTemplate="{DataTemplate pages:WelcomePage}" />
+<Shell 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:Yoton_Mobile.Pages"
+    x:Class="Yoton_Mobile.AppShell">
 
-    <!-- Login -->
-    <ShellContent
-        Route="LoginPage"
-        ContentTemplate="{DataTemplate pages:LoginPage}" />
+    <FlyoutItem Title="Home">
+        <ShellContent ContentTemplate="{DataTemplate pages:HomePage}" />
+    </FlyoutItem>
 
-    <!-- Home -->
-    <ShellContent
-        Route="HomePage"
-        ContentTemplate="{DataTemplate pages:HomePage}" />
 </Shell>

@@ -36,22 +36,36 @@ namespace Yoton_Mobile
             builder.Services.AddHttpClient("YotonApi", client =>
             {
                 client.BaseAddress = new Uri(APILibrary.BaseUrl);
-                client.Timeout = TimeSpan.FromMinutes(2);
             });
 
             // Services
             builder.Services.AddSingleton<ApiService>();
+            builder.Services.AddSingleton<NavigationService>();
             builder.Services.AddSingleton<AuthService>();
 
             // Pages
-            builder.Services.AddSingleton<WelcomePage>();
+            builder.Services.AddTransient<WelcomePage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<HomePage>();
 
             // ViewModels
-            builder.Services.AddSingleton<WelcomeViewModel>();
-            builder.Services.AddSingleton<LoginViewModel>();
-            builder.Services.AddSingleton<HomeViewModel>();
+            builder.Services.AddTransient<WelcomeViewModel>();
+            builder.Services.AddTransient<LoginViewModel>();
+            builder.Services.AddTransient<HomeViewModel>();
+
+            //Logging
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                LogService.Write("🔥 UNHANDLED EXCEPTION");
+                LogService.Write(e.ExceptionObject.ToString());
+            };
+
+            TaskScheduler.UnobservedTaskException += (s, e) =>
+            {
+                LogService.Write("🔥 UNOBSERVED TASK EXCEPTION");
+                LogService.Write(e.Exception.ToString());
+                e.SetObserved();
+            };
 
 #if DEBUG
             builder.Logging.AddDebug(); // debug logs

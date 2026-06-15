@@ -2,7 +2,70 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Yoton_Mobile.Pages.WelcomePage">
-    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+
+    <Grid RowDefinitions="*, Auto, Auto, Auto">
+
+        <!--        TOP BACKGROUND         -->
+        <Grid Grid.Row="0">
+
+            <StackLayout 
+                Padding="30"
+                VerticalOptions="Center">
+
+                <Label 
+                    Text="Yoton Health"
+                    Style="{StaticResource H1}" />
+
+                <Label 
+                    Text="Welcome to Yoton Health"
+                    Style="{StaticResource H2}"
+                    Margin="0,10,0,0" />
+
+                <Label 
+                    Text="Experience outpatient excellence through precision medicine and streamlined digital healthcare tailored for your recovery."
+                    Style="{StaticResource BodyMedium}"
+                    Margin="0,10,0,0" />
+            </StackLayout>
+        </Grid>
+        <!--         GET STARTED           -->
+        <Button 
+            Grid.Row="1"
+            Text="Get Started"
+            Command="{Binding LoginCommand}" 
+            Style="{StaticResource PrimaryButton}"
+            Margin="30,20" />
+        <!--      ICONS (Clinical/Secure)  -->
+        <Grid Grid.Row="2"
+              ColumnDefinitions="*,*"
+              Margin="30,10">
+
+            <StackLayout HorizontalOptions="Center">
+                <Label Text="Clinical Grade" Style="{StaticResource LabelDefault}" />
+            </StackLayout>
+
+            <StackLayout Grid.Column="1" HorizontalOptions="Center">
+                <Label Text="Secure" Style="{StaticResource LabelDefault}" />
+            </StackLayout>
+        </Grid>
+        <!--          FOOTER TEXT          -->
+        <StackLayout Grid.Row="3"
+                     HorizontalOptions="Center"
+                     Margin="0,20,0,20">
+
+            <Label 
+                Text="v1.0.4 Clinical Precision"
+                Style="{StaticResource LabelLight}" />
+
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Label Text="Privacy Policy" Style="{StaticResource LabelDefault}" />
+                <Label Text="  |  " Style="{StaticResource LabelDefault}" />
+                <Label Text="Terms of Service" Style="{StaticResource LabelDefault}" />
+            </StackLayout>
+        </StackLayout>
+
+    </Grid>
+
+    <!--<VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
         <Frame Padding="20"
                CornerRadius="15"
                BorderColor="#cccccc"
@@ -55,5 +118,5 @@
                 BackgroundColor="#007AFF"
                 TextColor="White" />
 
-    </VerticalStackLayout>
+    </VerticalStackLayout>-->
 </ContentPage>
