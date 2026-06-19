@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Yoton_Mobile.Pages.LoginPage"
-             Title="LoginPage">
+             NavigationPage.HasNavigationBar="False">
     <VerticalStackLayout Padding="30" Spacing="15" VerticalOptions="Center">
 
         <Label Text="Login"

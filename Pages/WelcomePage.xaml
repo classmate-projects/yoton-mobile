@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Yoton_Mobile.Pages.WelcomePage">
-
+             x:Class="Yoton_Mobile.Pages.WelcomePage"
+             NavigationPage.HasNavigationBar="False">
     <Grid RowDefinitions="*, Auto, Auto, Auto">
 
         <!--        TOP BACKGROUND         -->
@@ -64,59 +64,4 @@
         </StackLayout>
 
     </Grid>
-
-    <!--<VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
-        <Frame Padding="20"
-               CornerRadius="15"
-               BorderColor="#cccccc"
-               HasShadow="True">
-
-            <VerticalStackLayout Spacing="10">
-
-                <Label Text="API Status"
-                       FontSize="22"
-                       FontAttributes="Bold"
-                       TextColor="#333" />
-
-                <Label Text="{Binding Apidata.message}"
-                       FontSize="16"
-                       TextColor="#444" />
-
-                <Label Text="{Binding Apidata.environment, StringFormat='Environment: {0}'}"
-                       FontSize="16"
-                       TextColor="#444" />
-
-                <Label Text="{Binding Apidata.serverTime, StringFormat='Server Time: {0}'}"
-                       FontSize="16"
-                       TextColor="#444" />
-
-                <Label Text="{Binding Apidata.database, StringFormat='Database: {0}'}"
-                       FontSize="16"
-                       TextColor="#444" />
-
-                <Label Text="{Binding Apidata.migrationsApplied, StringFormat='Migrations Applied: {0}'}"
-                       FontSize="16"
-                       TextColor="#444" />
-
-                <Label Text="{Binding Apidata.adminSeeded, StringFormat='Admin Seeded: {0}'}"
-                       FontSize="16"
-                       TextColor="#444" />
-
-                <Label Text="{Binding Apidata.version, StringFormat='Version: {0}'}"
-                       FontSize="16"
-                       TextColor="#444" />
-
-            </VerticalStackLayout>
-
-        </Frame>
-        <Label Text="Welcome to Yoton Application"
-               FontSize="28"
-               HorizontalOptions="Center" />
-
-        <Button Text="Login"
-                Command="{Binding LoginCommand}"                
-                BackgroundColor="#007AFF"
-                TextColor="White" />
-
-    </VerticalStackLayout>-->
 </ContentPage>

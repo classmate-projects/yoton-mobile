@@ -6,7 +6,8 @@
     x:Class="Yoton_Mobile.AppShell">
 
     <FlyoutItem Title="Home">
-        <ShellContent ContentTemplate="{DataTemplate pages:HomePage}" />
+        <ShellContent ContentTemplate="{DataTemplate pages:HomePage}" 
+                      Shell.NavBarIsVisible="False" />
     </FlyoutItem>
 
 </Shell>
