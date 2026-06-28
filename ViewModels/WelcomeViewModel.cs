@@ -14,9 +14,14 @@ namespace Yoton_Mobile.ViewModels
         private readonly NavigationService _nav;
 
         [ObservableProperty]
-        APIData apidata;
-
-        public WelcomeViewModel(ApiService api, NavigationService nav)
+        Basedata baseData;
+        public string Version => BaseData?.mobileVersion ?? "Loading...";
+        partial void OnBaseDataChanged(Basedata value)
+        {
+            OnPropertyChanged(nameof(Version));
+        }
+        public WelcomeViewModel(ApiService api,
+                                NavigationService nav)
         {
             LogService.Write("WelcomeViewModel created");
             LogService.Write("ApiService null? " + (api == null));
@@ -42,10 +47,10 @@ namespace Yoton_Mobile.ViewModels
 
         private async Task LoadAPI()
         {
-            var response = await _api.GetAsync<APIData>(APILibrary.BaseUrl);
+            var response = await _api.GetAsync<Basedata>(APILibrary.BaseUrl);
 
             if (response != null)
-                Apidata = response;
+                BaseData = response;
         }
 
         [RelayCommand]
