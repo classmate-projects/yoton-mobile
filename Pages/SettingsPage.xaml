@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Yoton_Mobile.Pages.SettingsPage"
+             Title="Settings"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <!-- Header -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Settings &amp; Preferences" Style="{StaticResource H2}" FontAttributes="Bold" />
+                <Label Text="Configure application styles, notifications, and manage session logouts." Style="{StaticResource LabelLight}" />
+            </VerticalStackLayout>
+
+            <!-- PREFERENCES CONTAINER -->
+            <Border StrokeThickness="0" Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" Padding="20">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="15">
+                    <!-- Dark Mode -->
+                    <Grid ColumnDefinitions="*, Auto">
+                        <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                            <Label Text="Dark Mode Theme" FontAttributes="Bold" FontSize="15"/>
+                            <Label Text="Switch between light and dark backgrounds" Style="{StaticResource LabelLight}" FontSize="12"/>
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" IsToggled="{Binding IsDarkModeEnabled}" OnColor="{StaticResource Primary-500}" VerticalOptions="Center"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Neutral-100}" Margin="0,5" />
+
+                    <!-- Push Notifications -->
+                    <Grid ColumnDefinitions="*, Auto">
+                        <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                            <Label Text="Push Notifications" FontAttributes="Bold" FontSize="15"/>
+                            <Label Text="Receive alert logs for medications and appointments" Style="{StaticResource LabelLight}" FontSize="12"/>
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" IsToggled="{Binding IsNotificationsEnabled}" OnColor="{StaticResource Primary-500}" VerticalOptions="Center"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ABOUT CONTAINER -->
+            <Border StrokeThickness="0" Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" Padding="20">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="ABOUT APPLICATION" TextColor="{StaticResource Primary-700}" FontAttributes="Bold" FontSize="11" CharacterSpacing="1"/>
+                    
+                    <Grid ColumnDefinitions="*, Auto" Margin="0,5,0,0">
+                        <Label Text="Application Version" FontSize="14"/>
+                        <Label Grid.Column="1" Text="{Binding AppVersion, StringFormat='v{0}'}" Style="{StaticResource LabelLight}" FontSize="14"/>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Text="Database Core Connection" FontSize="14"/>
+                        <Label Grid.Column="1" Text="Secure REST API" Style="{StaticResource LabelLight}" FontSize="14" TextColor="#00E676" FontAttributes="Bold"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- LOGOUT BUTTON -->
+            <Button Text="Logout from Device" 
+                    Command="{Binding LogoutCommand}" 
+                    BackgroundColor="#D32F2F" 
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="10" 
+                    HeightRequest="50" 
+                    Margin="0,20,0,0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

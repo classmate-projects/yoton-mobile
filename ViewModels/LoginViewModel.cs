@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Services;
@@ -33,6 +33,8 @@ namespace Yoton_Mobile.ViewModels
             }
 
             Preferences.Set("auth_token", token.Token);
+            Preferences.Set("user_name", token.Name);
+            Preferences.Set("user_role", token.Role);
 
             Application.Current.MainPage = new AppShell();
         }

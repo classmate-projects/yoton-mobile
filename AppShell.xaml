@@ -3,11 +3,82 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:Yoton_Mobile.Pages"
-    x:Class="Yoton_Mobile.AppShell">
+    x:Class="Yoton_Mobile.AppShell"
+    FlyoutBehavior="Flyout"
+    Shell.NavBarIsVisible="False">
 
-    <FlyoutItem Title="Home">
-        <ShellContent ContentTemplate="{DataTemplate pages:HomePage}" 
-                      Shell.NavBarIsVisible="False" />
+    <!-- Flyout Side Menu Header with Profile details -->
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="{StaticResource Primary-700}" 
+              Padding="20" 
+              HeightRequest="150" 
+              RowDefinitions="Auto, Auto, Auto" 
+              ColumnDefinitions="Auto, *">
+            
+            <Border Grid.RowSpan="3" Grid.Column="0"
+                    WidthRequest="60" HeightRequest="60"
+                    StrokeThickness="0"
+                    Background="White"
+                    StrokeShape="RoundRectangle 30"
+                    Margin="0,0,15,0"
+                    VerticalOptions="Center">
+                <Label Text="{Binding UserInitials}"
+                       TextColor="{StaticResource Primary-700}"
+                       FontAttributes="Bold"
+                       FontSize="24"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
+
+            <Label Grid.Row="0" Grid.Column="1"
+                   Text="{Binding UserName}"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   VerticalOptions="End" />
+
+            <Label Grid.Row="1" Grid.Column="1"
+                   Text="{Binding UserRole, StringFormat='Patient Portal | Role: {0}'}"
+                   TextColor="{StaticResource Primary-100}"
+                   FontSize="13"
+                   VerticalOptions="Start" />
+
+            <Label Grid.Row="2" Grid.Column="1"
+                   Text="🟢 Active Health Portal"
+                   TextColor="#00E676"
+                   FontSize="11"
+                   FontAttributes="Bold"
+                   VerticalOptions="Start" />
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <!-- Main Navigation: Dashboard with bottom tabs -->
+    <FlyoutItem Title="Dashboard" Route="dashboard" FlyoutDisplayOptions="AsSingleItem">
+        <Tab Title="Home">
+            <ShellContent ContentTemplate="{DataTemplate pages:HomePage}" Shell.NavBarIsVisible="False" />
+        </Tab>
+        <Tab Title="Appointments">
+            <ShellContent ContentTemplate="{DataTemplate pages:AppointmentsPage}" Shell.NavBarIsVisible="False" />
+        </Tab>
+        <Tab Title="Medical Records">
+            <ShellContent ContentTemplate="{DataTemplate pages:RecordsPage}" Shell.NavBarIsVisible="False" />
+        </Tab>
+        <Tab Title="Messages">
+            <ShellContent ContentTemplate="{DataTemplate pages:MessagesPage}" Shell.NavBarIsVisible="False" />
+        </Tab>
+    </FlyoutItem>
+
+    <!-- Extra Side Menu Items -->
+    <FlyoutItem Title="Patient Perspective" Route="patient_perspective">
+        <ShellContent ContentTemplate="{DataTemplate pages:PatientPerspectivePage}" Shell.NavBarIsVisible="False" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Support &amp; Care Circle" Route="support">
+        <ShellContent ContentTemplate="{DataTemplate pages:SupportPage}" Shell.NavBarIsVisible="False" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Settings" Route="settings">
+        <ShellContent ContentTemplate="{DataTemplate pages:SettingsPage}" Shell.NavBarIsVisible="False" />
     </FlyoutItem>
 
 </Shell>

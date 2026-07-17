@@ -2,68 +2,115 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Yoton_Mobile.Pages.WelcomePage"
-             NavigationPage.HasNavigationBar="False">
-    <Grid RowDefinitions="1*, 4*, 2*, 1*"
-          Padding="15">
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0D0E11}">
 
-        <!--        TOP BACKGROUND         -->
-        <Grid Grid.Row="0">
-            <StackLayout VerticalOptions="Center">
-                <Label Text="Yoton Health"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Start"
-                       Style="{StaticResource H1}" />
-                <Label Text="Welcome to Yoton Health"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"
-                       Style="{StaticResource H2}"
-                       Margin="0,10,0,0" />
+    <Grid RowDefinitions="*, Auto" Padding="20">
+
+        <!-- HERO & ILLUSTRATION SECTION -->
+        <VerticalStackLayout Grid.Row="0" Spacing="25" VerticalOptions="Center">
+            
+            <!-- Dynamic Medical Illustration Container -->
+            <Grid HeightRequest="200" WidthRequest="200" HorizontalOptions="Center" x:Name="illustrationGroup">
+                <!-- Outer Pulse Rings -->
+                <Border StrokeThickness="1" Stroke="{StaticResource Primary-500}" StrokeShape="RoundRectangle 90" WidthRequest="180" HeightRequest="180" Opacity="0.1" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Border StrokeThickness="1" Stroke="{StaticResource Secondary-500}" StrokeShape="RoundRectangle 70" WidthRequest="140" HeightRequest="140" Opacity="0.2" HorizontalOptions="Center" VerticalOptions="Center"/>
                 
-            </StackLayout>
-        </Grid>
-        <!--         GET STARTED           -->
-        <StackLayout Grid.Row="1">
-            <Label Text="Experience outpatient excellence through precision medicine and streamlined digital healthcare tailored for your recovery."
-                   HorizontalTextAlignment="Center"
-                   Style="{StaticResource BodyMedium}"/>
-        </StackLayout>
-        
-        <!--      ICONS (Clinical/Secure)  -->
-        <Grid Grid.Row="2"
-              RowDefinitions="1*,1*"
-              ColumnDefinitions="*,*"
-              HorizontalOptions="Fill"
-              Margin="30,10,30,10">
-            <Button Grid.Row="0"
-                    Grid.ColumnSpan="2"
-                    Text="Get Started"
-                    Command="{Binding LoginCommand}" 
-                    Style="{StaticResource PrimaryButton}"
-                    Margin="30,20" />
-            <Label Text="Clinical Grade"
-                   Grid.Row="1"
-                   Grid.Column="0"
-                   Style="{StaticResource LabelDefault}"/>
-            <Label Text="Secure"
-                   Grid.Row="1"
-                   Grid.Column="1"
-                   Style="{StaticResource LabelDefault}"/>
+                <!-- Center Graphic Shield -->
+                <Border WidthRequest="100" HeightRequest="100"
+                        StrokeThickness="0"
+                        Background="{AppThemeBinding Light=#F0F4FF, Dark=#1A2238}"
+                        StrokeShape="RoundRectangle 50"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Border.Shadow>
+                        <Shadow Brush="{StaticResource Primary-500}" Offset="0,4" Radius="15" Opacity="0.15" />
+                    </Border.Shadow>
+                    
+                    <Grid>
+                        <!-- Centered stethoscope/heart shield icon -->
+                        <Label Text="🛡️" FontSize="42" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        <Label Text="⚡" FontSize="18" TextColor="{StaticResource Secondary-500}" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,35,0,0"/>
+                    </Grid>
+                </Border>
+            </Grid>
 
-        </Grid>
-        <!--          FOOTER TEXT          -->
-        <StackLayout Grid.Row="3"
-                     HorizontalOptions="Center"
-                     Margin="0,80,0,20">
-
-            <VerticalStackLayout>
-                <Label Text="Privacy Policy | Terms of Service" 
-                       Style="{StaticResource LabelDefault}"
+            <!-- Brand Header -->
+            <VerticalStackLayout Spacing="8" HorizontalOptions="Center" x:Name="headerStack" Opacity="0">
+                <Label Text="Yoton Health"
+                       Style="{StaticResource H1}"
+                       FontAttributes="Bold"
+                       FontSize="34"
                        HorizontalTextAlignment="Center"/>
-                <Label Text="{Binding Version, StringFormat='v1.0.4 Clinical Version | v{0} Applicaiton Version'}"
-                       Style="{StaticResource LabelLight}" 
-                       HorizontalTextAlignment="Center"/>
+                
+                <Label Text="Experience outpatient excellence through precision medicine and streamlined digital healthcare."
+                       Style="{StaticResource BodyMedium}"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource Neutral-700}, Dark={StaticResource Neutral-300}}"
+                       Margin="10,0" />
             </VerticalStackLayout>
-        </StackLayout>
+
+        </VerticalStackLayout>
+
+        <!-- FOOTER & BUTTON ACTIONS -->
+        <VerticalStackLayout Grid.Row="1" Spacing="25" Margin="0,0,0,20">
+            
+            <!-- Get Started Button with Soft Shadow -->
+            <Border StrokeThickness="0" Background="Transparent" WidthRequest="260" HorizontalOptions="Center">
+                <Border.Shadow>
+                    <Shadow Brush="#0A6CFF" Offset="0,6" Radius="12" Opacity="0.25" />
+                </Border.Shadow>
+                
+                <Button x:Name="getStartedBtn"
+                        Clicked="OnGetStartedClicked"
+                        Text="Get Started"
+                        Command="{Binding LoginCommand}"
+                        CornerRadius="25"
+                        HeightRequest="50"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        TextColor="White">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="{StaticResource Primary-500}" Offset="0.0"/>
+                            <GradientStop Color="{StaticResource Secondary-500}" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+            </Border>
+
+            <!-- Clinical Badges in Footer -->
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="15" HorizontalOptions="Center" WidthRequest="280" x:Name="badgesGrid" Opacity="0">
+                <!-- Badge 1 -->
+                <Border Grid.Column="0" StrokeThickness="0.5" Stroke="#330A6CFF" Background="{AppThemeBinding Light=#F9FAFB, Dark=#1C1F23}" Padding="10,8">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <Label Text="🧬" FontSize="14" VerticalOptions="Center"/>
+                        <Label Text="Clinical Grade" FontSize="11" FontAttributes="Bold" Style="{StaticResource LabelDefault}" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Badge 2 -->
+                <Border Grid.Column="1" StrokeThickness="0.5" Stroke="#3300E676" Background="{AppThemeBinding Light=#F9FAFB, Dark=#1C1F23}" Padding="10,8">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <Label Text="🔒" FontSize="14" VerticalOptions="Center"/>
+                        <Label Text="Secure HIPAA" FontSize="11" FontAttributes="Bold" Style="{StaticResource LabelDefault}" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Version Information -->
+            <Label Text="{Binding Version, StringFormat='v1.0.4 Clinical Grade | v{0}'}"
+                   Style="{StaticResource LabelLight}"
+                   FontSize="11"
+                   HorizontalTextAlignment="Center" />
+            
+        </VerticalStackLayout>
 
     </Grid>
 </ContentPage>

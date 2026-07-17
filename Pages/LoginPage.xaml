@@ -2,24 +2,150 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Yoton_Mobile.Pages.LoginPage"
-             NavigationPage.HasNavigationBar="False">
-    <VerticalStackLayout Padding="30" Spacing="15" VerticalOptions="Center">
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#0D0E11}">
 
-        <Label Text="Login"
-               FontSize="26"
-               HorizontalOptions="Center" />
+    <Grid>
+        <!-- BACKGROUND DECORATIVE ELEMENTS -->
+        <Border x:Name="bgBubble1" WidthRequest="250" HeightRequest="250" StrokeThickness="0" Background="#0D0A6CFF" StrokeShape="RoundRectangle 125" HorizontalOptions="End" VerticalOptions="Start" Margin="0,-100,-80,0"/>
+        <Border x:Name="bgBubble2" WidthRequest="180" HeightRequest="180" StrokeThickness="0" Background="#0D00E676" StrokeShape="RoundRectangle 90" HorizontalOptions="Start" VerticalOptions="End" Margin="-60,0,0,-60"/>
 
-        <Entry Placeholder="Email or Phone"
-               Text="{Binding Email}" />
+        <!-- MAIN SCROLL VIEW FOR PREVENTING KEYBOARD OVERLAYS -->
+        <ScrollView VerticalOptions="Center">
+            <VerticalStackLayout Padding="30" Spacing="25">
+                
+                <!-- BRAND HEADER CARD -->
+                <Border StrokeThickness="0" 
+                        Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" 
+                        Padding="25,30">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,8" Radius="20" Opacity="0.06"/>
+                    </Border.Shadow>
 
-        <Entry Placeholder="Password"
-               IsPassword="True"
-               Text="{Binding Password}" />
+                    <VerticalStackLayout Spacing="20">
+                        <!-- Small Pulsing Medical Icon -->
+                        <Border x:Name="clinicalIcon"
+                                WidthRequest="60" HeightRequest="60"
+                                StrokeThickness="0"
+                                Background="{StaticResource Primary-100}"
+                                StrokeShape="RoundRectangle 30"
+                                HorizontalOptions="Center">
+                            <Label Text="✚" 
+                                   TextColor="{StaticResource Primary-500}" 
+                                   FontAttributes="Bold" 
+                                   FontSize="22" 
+                                   HorizontalOptions="Center" 
+                                   VerticalOptions="Center"/>
+                        </Border>
 
-        <Button Text="Login"
-                Command="{Binding LoginCommand}"
-                BackgroundColor="#007AFF"
-                TextColor="White" />
+                        <!-- Brand Titles -->
+                        <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                            <Label Text="Sign In" 
+                                   Style="{StaticResource H2}" 
+                                   FontAttributes="Bold" 
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Access your Yoton Health outpatient dashboard" 
+                                   Style="{StaticResource LabelLight}" 
+                                   FontSize="13" 
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
 
-    </VerticalStackLayout>
+                        <!-- INPUT FORM FIELDS -->
+                        <VerticalStackLayout Spacing="15" Margin="0,10,0,0">
+                            
+                            <!-- Email Input -->
+                            <Label Text="Email Address" Style="{StaticResource LabelBold}" FontSize="12" Margin="4,0"/>
+                            <Border x:Name="emailBorder" Padding="12,0" BackgroundColor="{AppThemeBinding Light=#F9FAFB, Dark=#15171C}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Source={x:Reference emailEntry}, Path=IsFocused}" Value="True">
+                                        <Setter Property="Stroke" Value="{StaticResource Primary-500}" />
+                                        <Setter Property="StrokeThickness" Value="1.5" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Source={x:Reference emailEntry}, Path=IsFocused}" Value="False">
+                                        <Setter Property="Stroke" Value="{AppThemeBinding Light=#E5E7EB, Dark=#2A2E33}" />
+                                        <Setter Property="StrokeThickness" Value="1" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+
+                                <Entry x:Name="emailEntry"
+                                       Placeholder="username@example.com"
+                                       Text="{Binding Email}"
+                                       Keyboard="Email"
+                                       HeightRequest="45"
+                                       BackgroundColor="Transparent"/>
+                            </Border>
+
+                            <!-- Password Input -->
+                            <Label Text="Password" Style="{StaticResource LabelBold}" FontSize="12" Margin="4,0"/>
+                            <Border x:Name="passwordBorder" Padding="12,0" BackgroundColor="{AppThemeBinding Light=#F9FAFB, Dark=#15171C}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Source={x:Reference passwordEntry}, Path=IsFocused}" Value="True">
+                                        <Setter Property="Stroke" Value="{StaticResource Primary-500}" />
+                                        <Setter Property="StrokeThickness" Value="1.5" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Source={x:Reference passwordEntry}, Path=IsFocused}" Value="False">
+                                        <Setter Property="Stroke" Value="{AppThemeBinding Light=#E5E7EB, Dark=#2A2E33}" />
+                                        <Setter Property="StrokeThickness" Value="1" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+
+                                <Entry x:Name="passwordEntry"
+                                       Placeholder="••••••••"
+                                       IsPassword="True"
+                                       Text="{Binding Password}"
+                                       HeightRequest="45"
+                                       BackgroundColor="Transparent"/>
+                            </Border>
+
+                            <!-- Forgot Password Link -->
+                            <Button Text="Forgot Password?"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Primary-500}"
+                                    FontSize="12"
+                                    FontAttributes="Bold"
+                                    HorizontalOptions="End"
+                                    Margin="0,-5,0,0"
+                                    Padding="0"
+                                    HeightRequest="25"/>
+                        </VerticalStackLayout>
+
+                        <!-- GRADIENT SIGN IN ACTION BUTTON -->
+                        <Border StrokeThickness="0" Background="Transparent" Margin="0,10,0,0">
+                            <Border.Shadow>
+                                <Shadow Brush="#0A6CFF" Offset="0,4" Radius="10" Opacity="0.2"/>
+                            </Border.Shadow>
+                            
+                            <Button x:Name="loginBtn"
+                                    Clicked="OnLoginClicked"
+                                    Text="Authenticate Securely"
+                                    Command="{Binding LoginCommand}"
+                                    CornerRadius="12"
+                                    HeightRequest="48"
+                                    FontAttributes="Bold"
+                                    FontSize="15"
+                                    TextColor="White">
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="{StaticResource Primary-500}" Offset="0.0"/>
+                                        <GradientStop Color="{StaticResource Secondary-500}" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+                
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Yoton_Mobile.ViewModels"
+             x:Class="Yoton_Mobile.Pages.PatientPerspectivePage"
+             Title="Patient Perspective"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Title & Info -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Patient Perspective" Style="{StaticResource H2}" FontAttributes="Bold" />
+                <Label Text="Log your subjective recovery status to keep your care circle informed." Style="{StaticResource LabelLight}" />
+            </VerticalStackLayout>
+
+            <!-- TRACKERS SECTION (Mood & Pain) -->
+            <Border StrokeThickness="0" Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" Padding="20">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                
+                <VerticalStackLayout Spacing="15">
+                    <!-- Mood Tracker -->
+                    <VerticalStackLayout Spacing="5">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Text="How are you feeling today?" FontAttributes="Bold" FontSize="15" />
+                            <Label Grid.Column="1" Text="{Binding MoodScore, StringFormat='{0:0}/10'}" FontAttributes="Bold" TextColor="{StaticResource Primary-500}" />
+                        </Grid>
+                        <Slider Minimum="1" Maximum="10" Value="{Binding MoodScore}" MinimumTrackColor="{StaticResource Primary-500}" MaximumTrackColor="{StaticResource Neutral-100}" />
+                        <Grid ColumnDefinitions="*, *, *" Margin="0,-5,0,0">
+                            <Label Text="😔 Poor" Style="{StaticResource LabelLight}" FontSize="12" HorizontalOptions="Start"/>
+                            <Label Text="😐 Normal" Style="{StaticResource LabelLight}" FontSize="12" HorizontalOptions="Center"/>
+                            <Label Text="😊 Great" Style="{StaticResource LabelLight}" FontSize="12" HorizontalOptions="End"/>
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Neutral-100}" Margin="0,5" />
+
+                    <!-- Pain Tracker -->
+                    <VerticalStackLayout Spacing="5">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Text="Pain Level (0 = No Pain)" FontAttributes="Bold" FontSize="15" />
+                            <Label Grid.Column="1" Text="{Binding PainScore, StringFormat='{0:0}/10'}" FontAttributes="Bold" TextColor="{StaticResource Tertiary-500}" />
+                        </Grid>
+                        <Slider Minimum="0" Maximum="10" Value="{Binding PainScore}" MinimumTrackColor="{StaticResource Tertiary-500}" MaximumTrackColor="{StaticResource Neutral-100}" />
+                        
+                        <!-- Pain Location -->
+                        <Label Text="Where is the pain located?" Style="{StaticResource LabelLight}" Margin="0,5,0,2"/>
+                        <Entry Text="{Binding PainLocation}" Placeholder="e.g. Lower back, right shoulder" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- DAILY TARGETS (Water & Steps) -->
+            <Label Text="Daily Vitals &amp; Activity" Style="{StaticResource H3}" FontAttributes="Bold" />
+
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                <!-- Water Tracker Card -->
+                <Border StrokeThickness="0" Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" Padding="15" Grid.Column="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Fill">
+                        <Label Text="💧 Water Intake" FontAttributes="Bold" FontSize="14" HorizontalOptions="Center"/>
+                        
+                        <Label HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding WaterIntakeCups}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource Primary-500}"/>
+                                    <Span Text=" / " FontSize="14"/>
+                                    <Span Text="{Binding WaterGoalCups}" FontSize="14" Style="{StaticResource LabelLight}"/>
+                                    <Span Text=" cups" FontSize="12"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <ProgressBar Progress="{Binding WaterProgress}" ProgressColor="{StaticResource Primary-500}" Margin="0,5" HeightRequest="6"/>
+
+                        <Button Text="+ Cup" 
+                                Command="{Binding IncrementWaterCommand}" 
+                                FontSize="12" 
+                                HeightRequest="35" 
+                                Padding="0" 
+                                BackgroundColor="{StaticResource Primary-500}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Step Tracker Card -->
+                <Border StrokeThickness="0" Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" Padding="15" Grid.Column="1">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Fill">
+                        <Label Text="👟 Daily Steps" FontAttributes="Bold" FontSize="14" HorizontalOptions="Center"/>
+
+                        <Label HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding StepCount}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource Secondary-500}"/>
+                                    <Span Text=" / " FontSize="14"/>
+                                    <Span Text="{Binding StepGoal}" FontSize="12" Style="{StaticResource LabelLight}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <ProgressBar Progress="{Binding StepProgress}" ProgressColor="{StaticResource Secondary-500}" Margin="0,5" HeightRequest="6"/>
+
+                        <Button Text="+ 500" 
+                                Command="{Binding AddStepsCommand}" 
+                                FontSize="12" 
+                                HeightRequest="35" 
+                                Padding="0" 
+                                BackgroundColor="{StaticResource Secondary-500}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- DAILY JOURNAL -->
+            <Label Text="Symptoms &amp; Recovery Journal" Style="{StaticResource H3}" FontAttributes="Bold" />
+            
+            <Border StrokeThickness="0" Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" Padding="15">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="10">
+                    <Editor Text="{Binding HealthJournal}" 
+                            Placeholder="Write notes about your symptoms, mobility, or medication side effects..." 
+                            HeightRequest="100" 
+                            AutoSize="TextChanges"/>
+                    
+                    <Button Text="Share Log with Doctors" 
+                            Command="{Binding SaveDailyLogCommand}" 
+                            Style="{StaticResource PrimaryButton}" 
+                            HorizontalOptions="End" 
+                            Margin="0,5,0,0"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

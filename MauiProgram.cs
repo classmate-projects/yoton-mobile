@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using SampleBrowser.Maui.Base.Hosting;
 using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Pages;
 using Yoton_Mobile.Services;
@@ -31,6 +32,7 @@ namespace Yoton_Mobile
                     fonts.AddFont("OpenSans-Bold.ttf", "OpenSansBold");
                     fonts.AddFont("OpenSans-Light.ttf", "OpenSansLight");
                 });
+            builder.ConfigureSampleBrowserBase();
 
             // HttpClient for API calls
             builder.Services.AddHttpClient("YotonApi", client =>
@@ -47,11 +49,24 @@ namespace Yoton_Mobile
             builder.Services.AddTransient<WelcomePage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<HomePage>();
+            builder.Services.AddTransient<SplashPage>();
+            builder.Services.AddTransient<AppointmentsPage>();
+            builder.Services.AddTransient<RecordsPage>();
+            builder.Services.AddTransient<MessagesPage>();
+            builder.Services.AddTransient<PatientPerspectivePage>();
+            builder.Services.AddTransient<SupportPage>();
+            builder.Services.AddTransient<SettingsPage>();
 
             // ViewModels
             builder.Services.AddTransient<WelcomeViewModel>();
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<HomeViewModel>();
+            builder.Services.AddTransient<AppointmentsViewModel>();
+            builder.Services.AddTransient<RecordsViewModel>();
+            builder.Services.AddTransient<MessagesViewModel>();
+            builder.Services.AddTransient<PatientPerspectiveViewModel>();
+            builder.Services.AddTransient<SupportViewModel>();
+            builder.Services.AddTransient<SettingsViewModel>();
 
             //Logging
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
