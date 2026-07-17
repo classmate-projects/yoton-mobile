@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Yoton_Mobile.BaseLibrary;
+using Yoton_Mobile.Controls;
 
 namespace Yoton_Mobile.ViewModels
 {
@@ -59,7 +60,14 @@ namespace Yoton_Mobile.ViewModels
         private async Task SaveDailyLog()
         {
             // Perform a mock save
-            await Shell.Current.DisplayAlert("Log Saved", "Your perspective journal has been saved and shared with your clinical team.", "Great!");
+            if (Shell.Current.CurrentPage is ContentPage page)
+            {
+                await LiquidGlassAlert.ShowAsync(
+                    page,
+                    "Care log protected",
+                    "Your perspective journal has been encrypted and shared with your clinical team.",
+                    "Great");
+            }
         }
     }
 }

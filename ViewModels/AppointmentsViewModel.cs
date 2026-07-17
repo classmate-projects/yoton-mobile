@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Yoton_Mobile.BaseLibrary;
+using Yoton_Mobile.Controls;
 
 namespace Yoton_Mobile.ViewModels
 {
@@ -78,7 +79,14 @@ namespace Yoton_Mobile.ViewModels
         [RelayCommand]
         private async Task ScheduleNewAppointment()
         {
-            await Shell.Current.DisplayAlert("Book Visit", "Appointment scheduling integration is coming soon!", "OK");
+            if (Shell.Current.CurrentPage is ContentPage page)
+            {
+                await LiquidGlassAlert.ShowAsync(
+                    page,
+                    "Scheduling is almost ready",
+                    "Appointment booking will be available in an upcoming Yoton Health release.",
+                    "Understood");
+            }
         }
     }
 }

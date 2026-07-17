@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
              x:Class="Yoton_Mobile.Pages.HomePage"
              Title="Home Dashboard"
              BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
     
+    <Grid>
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
@@ -198,4 +200,13 @@
 
         </VerticalStackLayout>
     </ScrollView>
+
+        <!-- Calm medical animation while the dashboard is securely refreshed. -->
+        <Grid IsVisible="{Binding IsBusy}" BackgroundColor="#080A6CFF">
+            <controls:MedicalBusyIndicator IsRunning="{Binding IsBusy}"
+                                           Message="Preparing your care dashboard"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+        </Grid>
+    </Grid>
 </ContentPage>

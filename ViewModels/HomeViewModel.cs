@@ -39,9 +39,20 @@ namespace Yoton_Mobile.ViewModels
 
         public async Task InitializeAsync()
         {
-            PatientName = Preferences.Get("user_name", "Patient User");
-            await LoadPatients();
-            LoadDashboardMetrics();
+            if (IsBusy)
+                return;
+
+            IsBusy = true;
+            try
+            {
+                PatientName = Preferences.Get("user_name", "Patient User");
+                await LoadPatients();
+                LoadDashboardMetrics();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private void LoadDashboardMetrics()
