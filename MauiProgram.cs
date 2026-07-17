@@ -32,7 +32,7 @@ namespace Yoton_Mobile
                     fonts.AddFont("OpenSans-Bold.ttf", "OpenSansBold");
                     fonts.AddFont("OpenSans-Light.ttf", "OpenSansLight");
                 });
-            builder.ConfigureSampleBrowserBase();
+            // builder.ConfigureSampleBrowserBase();
 
             // HttpClient for API calls
             builder.Services.AddHttpClient("YotonApi", client =>
