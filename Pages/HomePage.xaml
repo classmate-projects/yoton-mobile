@@ -22,21 +22,15 @@
                            FontSize="13" />
                 </VerticalStackLayout>
                 
-                <!-- Circular Initials Profile Button -->
-                <Border Grid.Column="1"
-                        WidthRequest="50" HeightRequest="50"
-                        StrokeThickness="0"
-                        Background="{StaticResource Primary-500}"
-                        StrokeShape="RoundRectangle 25"
-                        VerticalOptions="Center">
-                    <!-- Opens flyout on click -->
-                    <Label Text="P"
-                           TextColor="White"
-                           FontAttributes="Bold"
-                           FontSize="18"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                </Border>
+                <!-- The profile is shown once in Shell's side menu. -->
+                <Button Grid.Column="1"
+                        Text="☰"
+                        FontSize="25"
+                        TextColor="{StaticResource Primary-700}"
+                        BackgroundColor="Transparent"
+                        Padding="10,4"
+                        Clicked="OnMenuClicked"
+                        SemanticProperties.Description="Open profile and navigation menu" />
             </Grid>
 
             <!-- UPCOMING APPOINTMENT CARD -->

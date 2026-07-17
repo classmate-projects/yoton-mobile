@@ -1,6 +1,4 @@
-﻿using Yoton_Mobile.Helper;
-using Yoton_Mobile.Pages;
-using Yoton_Mobile.Services;
+﻿using Yoton_Mobile.Services;
 
 namespace Yoton_Mobile
 {

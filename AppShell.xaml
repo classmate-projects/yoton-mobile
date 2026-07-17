@@ -5,7 +5,10 @@
     xmlns:pages="clr-namespace:Yoton_Mobile.Pages"
     x:Class="Yoton_Mobile.AppShell"
     FlyoutBehavior="Flyout"
-    Shell.NavBarIsVisible="False">
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarBackgroundColor="White"
+    Shell.TabBarForegroundColor="{StaticResource Primary-500}"
+    Shell.TabBarUnselectedColor="{StaticResource Neutral-300}">
 
     <!-- Flyout Side Menu Header with Profile details -->
     <Shell.FlyoutHeader>
@@ -52,18 +55,18 @@
         </Grid>
     </Shell.FlyoutHeader>
 
-    <!-- Main Navigation: Dashboard with bottom tabs -->
+    <!-- Main Navigation: icon-only, floating bottom tabs (raised on Android). -->
     <FlyoutItem Title="Dashboard" Route="dashboard" FlyoutDisplayOptions="AsSingleItem">
-        <Tab Title="Home">
+        <Tab Title="" Icon="tab_home.svg">
             <ShellContent ContentTemplate="{DataTemplate pages:HomePage}" Shell.NavBarIsVisible="False" />
         </Tab>
-        <Tab Title="Appointments">
+        <Tab Title="" Icon="tab_calendar.svg">
             <ShellContent ContentTemplate="{DataTemplate pages:AppointmentsPage}" Shell.NavBarIsVisible="False" />
         </Tab>
-        <Tab Title="Medical Records">
+        <Tab Title="" Icon="tab_records.svg">
             <ShellContent ContentTemplate="{DataTemplate pages:RecordsPage}" Shell.NavBarIsVisible="False" />
         </Tab>
-        <Tab Title="Messages">
+        <Tab Title="" Icon="tab_messages.svg">
             <ShellContent ContentTemplate="{DataTemplate pages:MessagesPage}" Shell.NavBarIsVisible="False" />
         </Tab>
     </FlyoutItem>
