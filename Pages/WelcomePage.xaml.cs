@@ -19,26 +19,26 @@ public partial class WelcomePage : ContentPage
         {
             await (BindingContext as WelcomeViewModel)!.InitializeAsync();
 
-            // Set initial state
+            // Set initial hidden state
             headerStack.Opacity = 0;
-            headerStack.TranslationY = 20;
+            headerStack.TranslationY = 24;
             badgesGrid.Opacity = 0;
-            badgesGrid.TranslationY = 15;
+            badgesGrid.TranslationY = 16;
 
-            // Start pulse on the illustration
-            var pulseAnim = new Animation();
-            pulseAnim.Add(0, 0.5, new Animation(v => illustrationGroup.Scale = v, 1.0, 1.05, Easing.SinInOut));
-            pulseAnim.Add(0.5, 1, new Animation(v => illustrationGroup.Scale = v, 1.05, 1.0, Easing.SinInOut));
-            pulseAnim.Commit(this, "IllustrationPulse", length: 3000, repeat: () => true);
+            // Start subtle pulse on illustration
+            var pulse = new Animation();
+            pulse.Add(0, 0.5, new Animation(v => illustrationGroup.Scale = v, 1.0, 1.06, Easing.SinInOut));
+            pulse.Add(0.5, 1, new Animation(v => illustrationGroup.Scale = v, 1.06, 1.0, Easing.SinInOut));
+            pulse.Commit(this, "IllustrationPulse", length: 3200, repeat: () => true);
 
-            // Animate fade-in of text and description
-            _ = headerStack.FadeTo(1, 800, Easing.CubicOut);
-            await headerStack.TranslateTo(0, 0, 800, Easing.CubicOut);
+            // Fade + slide in brand copy
+            _ = headerStack.FadeTo(1, 900, Easing.CubicOut);
+            await headerStack.TranslateTo(0, 0, 900, Easing.CubicOut);
 
-            // Animate fade-in of clinical badges
-            await Task.Delay(100);
-            _ = badgesGrid.FadeTo(1, 600, Easing.CubicOut);
-            await badgesGrid.TranslateTo(0, 0, 600, Easing.CubicOut);
+            // Stagger badges entry
+            await Task.Delay(120);
+            _ = badgesGrid.FadeTo(1, 700, Easing.CubicOut);
+            await badgesGrid.TranslateTo(0, 0, 700, Easing.CubicOut);
         }
         catch (Exception ex)
         {
@@ -54,8 +54,7 @@ public partial class WelcomePage : ContentPage
 
     private async void OnGetStartedClicked(object sender, EventArgs e)
     {
-        // Scale down and up button pop interaction
-        await getStartedBtn.ScaleTo(0.92, 100, Easing.SinOut);
-        await getStartedBtn.ScaleTo(1.0, 100, Easing.SinIn);
+        await getStartedBtn.ScaleTo(0.94, 90, Easing.SinOut);
+        await getStartedBtn.ScaleTo(1.0, 90, Easing.SinIn);
     }
 }

@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-using SampleBrowser.Maui.Base.Hosting;
 using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Pages;
 using Yoton_Mobile.Services;
@@ -49,7 +47,6 @@ namespace Yoton_Mobile
             builder.Services.AddTransient<WelcomePage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<HomePage>();
-            builder.Services.AddTransient<SplashPage>();
             builder.Services.AddTransient<AppointmentsPage>();
             builder.Services.AddTransient<RecordsPage>();
             builder.Services.AddTransient<MessagesPage>();
@@ -83,7 +80,7 @@ namespace Yoton_Mobile
             };
 
 #if DEBUG
-            builder.Logging.AddDebug(); // debug logs
+            //builder.Logging.AddDebug(); // debug logs
 #endif
 
             return builder.Build(); // build the app
