@@ -5,7 +5,7 @@
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="{AppThemeBinding Light=#F4F7FF, Dark=#080B12}">
 
-    <Grid RowDefinitions="200, *">
+    <Grid RowDefinitions="250, *">
 
         <!-- GRADIENT HERO TOP SECTION -->
         <Grid Grid.Row="0">
@@ -60,8 +60,8 @@
         </Grid>
 
         <!-- FORM CARD OVERLAPPING HERO -->
-        <ScrollView Grid.Row="1" Margin="0,-28,0,0">
-            <VerticalStackLayout Padding="20,0,20,30" Spacing="0">
+            <VerticalStackLayout Grid.Row="1" Padding="20,0,20,80" Spacing="0"
+                                 VerticalOptions="End">
 
                 <!-- Main Form Card -->
                 <Border StrokeThickness="0"
@@ -205,6 +205,5 @@
                 </Border>
 
             </VerticalStackLayout>
-        </ScrollView>
     </Grid>
 </ContentPage>

@@ -79,7 +79,7 @@ namespace Yoton_Mobile.ViewModels
                 // Fallback for offline/test environments
                 Patients = new List<Patient>
                 {
-                    new Patient { OpId = 1, Name = "John Doe", Email = "john@example.com", Phone = "555-0199", Address = "NY City", DateOfBirth = "1988-12-05" }
+                    new Patient { OpId = "1", Name = "John Doe", Email = "john@example.com", Phone = "555-0199", Address = "NY City", DateOfBirth = "1988-12-05" }
                 };
             }
         }

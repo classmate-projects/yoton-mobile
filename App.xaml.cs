@@ -1,4 +1,6 @@
-﻿using Yoton_Mobile.Services;
+﻿using Yoton_Mobile.Helper;
+using Yoton_Mobile.Pages;
+using Yoton_Mobile.Services;
 
 namespace Yoton_Mobile
 {
@@ -13,8 +15,7 @@ namespace Yoton_Mobile
                 LogService.Write("⚠️ FirstChanceException: " + e.Exception.Message);
             };
 
-            //MainPage = new NavigationPage(ServiceHelper.GetService<HomePage>());
-            Application.Current.MainPage = new AppShell();
+            MainPage = new NavigationPage(ServiceHelper.GetService<WelcomePage>());
         }
     }
 }
