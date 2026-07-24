@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Yoton_Mobile.Resources.Styles.DarkTheme">
+
+    <Color x:Key="AppBackgroundColor">#1C1F23</Color>
+    <Color x:Key="BrandPrimaryColor">#66A6FF</Color>
+    <Color x:Key="PrimaryTextColor">#D5D7DA</Color>
+    <Color x:Key="SecondaryTextColor">#7A8088</Color>
+    <Color x:Key="EntryBackgroundColor">#2A2E33</Color>
+    <Color x:Key="ButtonBackgroundColor">#0055CC</Color>
+
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}" />
+    <SolidColorBrush x:Key="BrandPrimaryBrush" Color="{StaticResource BrandPrimaryColor}" />
+    <SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryTextColor}" />
+    <SolidColorBrush x:Key="SecondaryTextBrush" Color="{StaticResource SecondaryTextColor}" />
+    <SolidColorBrush x:Key="EntryBackgroundBrush" Color="{StaticResource EntryBackgroundColor}" />
+    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="{StaticResource ButtonBackgroundColor}" />
+
+</ResourceDictionary>
