@@ -60,7 +60,7 @@
         </Grid>
 
         <!-- FORM CARD OVERLAPPING HERO -->
-            <VerticalStackLayout Grid.Row="1" Padding="20,0,20,80" Spacing="0"
+            <VerticalStackLayout Grid.Row="1" Padding="20,0,20,120" Spacing="0"
                                  VerticalOptions="End">
 
                 <!-- Main Form Card -->

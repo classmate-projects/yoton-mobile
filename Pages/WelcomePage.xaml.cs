@@ -54,7 +54,7 @@ public partial class WelcomePage : ContentPage
 
     private async void OnGetStartedClicked(object sender, EventArgs e)
     {
-        await getStartedBtn.ScaleTo(0.94, 90, Easing.SinOut);
-        await getStartedBtn.ScaleTo(1.0, 90, Easing.SinIn);
+        await getStartedBtn.ScaleToAsync(0.94, 90, Easing.SinOut);
+        await getStartedBtn.ScaleToAsync(1.0, 90, Easing.SinIn);
     }
 }

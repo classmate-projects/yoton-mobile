@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  <!-- Medical Cross (rounded arms) centered at 228,228 -->
-  <!-- Horizontal arm -->
-  <rect x="130" y="198" width="196" height="60" rx="30" ry="30" fill="white" opacity="0.95"/>
-  <!-- Vertical arm -->
-  <rect x="198" y="130" width="60" height="196" rx="30" ry="30" fill="white" opacity="0.95"/>
-  <!-- Subtle heartbeat wave below cross -->
-  <polyline
-    points="100,320 140,320 155,295 170,345 185,295 200,320 356,320"
-    fill="none"
-    stroke="white"
-    stroke-width="8"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    opacity="0.45"/>
+  <defs>
+    <linearGradient id="fgg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00A7E6" />
+      <stop offset="100%" stop-color="#0077B6" />
+    </linearGradient>
+  </defs>
+  <!-- Heart + check foreground -->
+  <g transform="translate(0,0)">
+    <path d="M228 408s-24-18-54-42c-41-36-80-82-102-126C68 164 154 110 208 162c17 17 20 22 46 22s29-5 46-22c54-52 140-2 115 82-22 44-61 90-102 126-30 24-54 42-54 42z" fill="url(#fgg)"/>
+    <path d="M184 256c7 7 16 11 24 11s17-4 24-11l52-52c7-7 7-18 0-25s-18-7-25 0l-38 38-28-28c-7-7-18-7-25 0s-7 18 0 25l30 30z" fill="#FFFFFF" opacity="0.95"/>
+    <circle cx="76" cy="200" r="8" fill="#0077B6" />
+  </g>
 </svg>
