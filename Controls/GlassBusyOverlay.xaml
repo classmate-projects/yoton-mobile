@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
+             x:Class="Yoton_Mobile.Controls.GlassBusyOverlay"
+             x:Name="Root"
+             IsVisible="False"
+             Opacity="0"
+             SemanticProperties.Description="Yoton Health is loading your care information">
+    <Grid BackgroundColor="#B3EAF2FB">
+        <!-- Oversized translucent blobs simulate a frosted, blurred backdrop. -->
+        <Border WidthRequest="300" HeightRequest="300" HorizontalOptions="Start" VerticalOptions="Start"
+                TranslationX="-130" TranslationY="-150" Background="#260A6CFF" StrokeThickness="0"
+                StrokeShape="RoundRectangle 150" />
+        <Border WidthRequest="240" HeightRequest="240" HorizontalOptions="End" VerticalOptions="End"
+                TranslationX="110" TranslationY="140" Background="#2200D1C6" StrokeThickness="0"
+                StrokeShape="RoundRectangle 120" />
+
+        <Border x:Name="Card" Padding="28,24" HorizontalOptions="Center" VerticalOptions="Center"
+                Stroke="#A6FFFFFF" StrokeThickness="1.2" StrokeShape="RoundRectangle 28">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#F2F9FDFF" Offset="0" />
+                    <GradientStop Color="#D6E5F7FF" Offset="0.55" />
+                    <GradientStop Color="#C6C9F4F6" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Shadow>
+                <Shadow Brush="#A000315C" Offset="0,16" Radius="30" Opacity="0.38" />
+            </Border.Shadow>
+
+            <controls:MedicalBusyIndicator x:Name="Indicator"
+                                            Message="{Binding Message, Source={x:Reference Root}}" />
+        </Border>
+    </Grid>
+</ContentView>

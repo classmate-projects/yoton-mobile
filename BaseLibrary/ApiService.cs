@@ -11,11 +11,11 @@ namespace Yoton_Mobile.BaseLibrary
             _factory = factory;
         }
 
-        private HttpClient CreateClient()
+        private async Task<HttpClient> CreateClientAsync()
         {
             var client = _factory.CreateClient("YotonApi");
 
-            var token = Preferences.Get("auth_token", null);
+            var token = await SecureStorage.Default.GetAsync("auth_token");
             if (!string.IsNullOrEmpty(token))
             {
                 client.DefaultRequestHeaders.Authorization =
@@ -27,13 +27,13 @@ namespace Yoton_Mobile.BaseLibrary
 
         public async Task<T?> GetAsync<T>(string url)
         {
-            var client = CreateClient();
+            var client = await CreateClientAsync();
             return await client.GetFromJsonAsync<T>(url);
         }
 
         public async Task<T?> PostAsync<T>(string url, object data)
         {
-            var client = CreateClient();
+            var client = await CreateClientAsync();
             var response = await client.PostAsJsonAsync(url, data);
 
             if (!response.IsSuccessStatusCode)

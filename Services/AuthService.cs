@@ -25,8 +25,9 @@ namespace Yoton_Mobile.Services
             if (result == null)
                 return null;
 
-            // Save token
-            Preferences.Set("auth_token", result.Token);
+            // Save token in encrypted, OS-backed storage (Keychain/Keystore) rather than
+            // Preferences, which is plaintext and included in Android's default app backups.
+            await SecureStorage.Default.SetAsync("auth_token", result.Token);
 
             return result;
         }

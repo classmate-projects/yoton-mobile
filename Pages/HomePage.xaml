@@ -6,8 +6,8 @@
              Title="Home Dashboard"
              BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
     
-    <Grid>
-    <ScrollView>
+    <Grid RowDefinitions="*, Auto">
+    <ScrollView Grid.Row="0">
         <VerticalStackLayout Padding="20" Spacing="20">
 
             <!-- HEADER SECTION -->
@@ -201,12 +201,11 @@
         </VerticalStackLayout>
     </ScrollView>
 
-        <!-- Calm medical animation while the dashboard is securely refreshed. -->
-        <Grid IsVisible="{Binding IsBusy}" BackgroundColor="#080A6CFF">
-            <controls:MedicalBusyIndicator IsRunning="{Binding IsBusy}"
-                                           Message="Preparing your care dashboard"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-        </Grid>
+        <controls:GlassTabBar Grid.Row="1" SelectedRoute="home" />
+
+        <!-- Calm medical animation, behind a frosted glass blur, while the dashboard is securely refreshed. -->
+        <controls:GlassBusyOverlay Grid.RowSpan="2"
+                                    IsRunning="{Binding IsBusy}"
+                                    Message="Preparing your care dashboard" />
     </Grid>
 </ContentPage>

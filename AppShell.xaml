@@ -55,19 +55,19 @@
         </Grid>
     </Shell.FlyoutHeader>
 
-    <!-- Main Navigation: icon-only, floating bottom tabs (raised on Android). -->
+    <!-- Main Navigation: native tab bar is hidden; each tab page hosts its own GlassTabBar instead. -->
     <FlyoutItem Title="Dashboard" Route="dashboard" FlyoutDisplayOptions="AsSingleItem">
-        <Tab Title="" Icon="tab_home.svg">
-            <ShellContent ContentTemplate="{DataTemplate pages:HomePage}" Shell.NavBarIsVisible="False" />
+        <Tab Title="" Icon="tab_home.svg" Route="home">
+            <ShellContent ContentTemplate="{DataTemplate pages:HomePage}" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" />
         </Tab>
-        <Tab Title="" Icon="tab_calendar.svg">
-            <ShellContent ContentTemplate="{DataTemplate pages:AppointmentsPage}" Shell.NavBarIsVisible="False" />
+        <Tab Title="" Icon="tab_calendar.svg" Route="appointments">
+            <ShellContent ContentTemplate="{DataTemplate pages:AppointmentsPage}" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" />
         </Tab>
-        <Tab Title="" Icon="tab_records.svg">
-            <ShellContent ContentTemplate="{DataTemplate pages:RecordsPage}" Shell.NavBarIsVisible="False" />
+        <Tab Title="" Icon="tab_records.svg" Route="records">
+            <ShellContent ContentTemplate="{DataTemplate pages:RecordsPage}" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" />
         </Tab>
-        <Tab Title="" Icon="tab_messages.svg">
-            <ShellContent ContentTemplate="{DataTemplate pages:MessagesPage}" Shell.NavBarIsVisible="False" />
+        <Tab Title="" Icon="tab_messages.svg" Route="messages">
+            <ShellContent ContentTemplate="{DataTemplate pages:MessagesPage}" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" />
         </Tab>
     </FlyoutItem>
 

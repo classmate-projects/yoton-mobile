@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
              x:Class="Yoton_Mobile.Pages.AppointmentsPage"
              Title="Appointments"
              BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
 
-    <Grid RowDefinitions="*, Auto">
+    <Grid RowDefinitions="*, Auto, Auto">
         <!-- Main Scrollable List -->
         <ScrollView Grid.Row="0">
             <VerticalStackLayout Padding="20" Spacing="20">
@@ -105,10 +106,12 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="0" />
             </Border.StrokeShape>
-            <Button Text="Schedule New Consultation" 
-                    Command="{Binding ScheduleNewAppointmentCommand}" 
-                    Style="{StaticResource PrimaryButton}" 
+            <Button Text="Schedule New Consultation"
+                    Command="{Binding ScheduleNewAppointmentCommand}"
+                    Style="{StaticResource PrimaryButton}"
                     HorizontalOptions="FillAndExpand" />
         </Border>
+
+        <controls:GlassTabBar Grid.Row="2" SelectedRoute="appointments" />
     </Grid>
 </ContentPage>

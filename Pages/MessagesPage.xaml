@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
              x:Class="Yoton_Mobile.Pages.MessagesPage"
              Title="Secure Chats"
              BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
 
-    <Grid RowDefinitions="*, Auto">
+    <Grid RowDefinitions="*, Auto, Auto">
         
         <!-- MESSAGES CHAT HISTORY -->
         <CollectionView Grid.Row="0" 
@@ -110,6 +111,8 @@
                         VerticalOptions="Center"/>
             </Grid>
         </Border>
+
+        <controls:GlassTabBar Grid.Row="2" SelectedRoute="messages" />
 
     </Grid>
 </ContentPage>

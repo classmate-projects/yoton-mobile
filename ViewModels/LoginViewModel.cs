@@ -32,7 +32,6 @@ namespace Yoton_Mobile.ViewModels
                 return;
             }
 
-            Preferences.Set("auth_token", token.Token);
             Preferences.Set("user_name", token.Name);
             Preferences.Set("user_role", token.Role);
 

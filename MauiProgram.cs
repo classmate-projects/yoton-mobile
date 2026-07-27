@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui;
 using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Pages;
 using Yoton_Mobile.Services;
@@ -13,6 +14,8 @@ namespace Yoton_Mobile
 
             builder
                 .UseMauiApp<App>() // start the app
+                .UseMauiCommunityToolkit()
+                .UseMauiCommunityToolkitMediaElement()
                 .ConfigureFonts(fonts =>
                 {
                     // Public Sans
@@ -32,6 +35,16 @@ namespace Yoton_Mobile
                 });
             // builder.ConfigureSampleBrowserBase();
 
+#if ANDROID
+            // Entry draws its own underline via the native EditText background on Android;
+            // our custom Border-wrapped entries (LoginPage, etc.) already provide the outline, so strip it.
+            Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+            {
+                handler.PlatformView.BackgroundTintList =
+                    Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+            });
+#endif
+
             // HttpClient for API calls
             builder.Services.AddHttpClient("YotonApi", client =>
             {
@@ -44,6 +57,7 @@ namespace Yoton_Mobile
             builder.Services.AddSingleton<AuthService>();
 
             // Pages
+            builder.Services.AddTransient<SplashVideoPage>();
             builder.Services.AddTransient<WelcomePage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<HomePage>();

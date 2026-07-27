@@ -32,6 +32,7 @@ namespace Yoton_Mobile.ViewModels
         private void Logout()
         {
             Preferences.Clear();
+            SecureStorage.Default.RemoveAll();
             var welcomePage = ServiceHelper.GetService<WelcomePage>();
             Application.Current.MainPage = new NavigationPage(welcomePage);
         }
