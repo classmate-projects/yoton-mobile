@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using Yoton_Mobile.Helper;
 
@@ -28,7 +29,19 @@ public partial class SplashVideoPage : ContentPage
 
     private void OnMediaEnded(object sender, EventArgs e) => ContinueToApp();
 
+    private void OnMediaFailed(object sender, MediaFailedEventArgs e) => ContinueToApp();
+
     private void OnSkipTapped(object sender, EventArgs e) => ContinueToApp();
+
+    private void OnStateChanged(object sender, MediaStateChangedEventArgs e)
+    {
+        // Wait for an actual frame to be playing before revealing the native video
+        // surface; hiding the mask on Buffering/Opening exposes its black background.
+        if (e.NewState == MediaElementState.Playing)
+        {
+            SplashMask.IsVisible = false;
+        }
+    }
 
     private void ContinueToApp()
     {

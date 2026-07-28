@@ -17,6 +17,13 @@
                                ShouldAutoPlay="True"
                                ShouldLoopPlayback="False"
                                ShouldShowPlaybackControls="False"
-                               MediaEnded="OnMediaEnded" />
+                               MediaEnded="OnMediaEnded"
+                               MediaFailed="OnMediaFailed"
+                               StateChanged="OnStateChanged" />
+
+        <!-- Covers the black frame Android's video surface briefly shows when it is
+             first attached to the window, before the first real video frame renders.
+             Removed as soon as playback actually starts. -->
+        <BoxView x:Name="SplashMask" Color="White" InputTransparent="True" />
     </Grid>
 </ContentPage>
