@@ -6,7 +6,23 @@ namespace Yoton_Mobile
     {
         public string UserName => Preferences.Get("user_name", "Patient User");
         public string UserRole => Preferences.Get("user_role", "Patient");
-        public string UserInitials => !string.IsNullOrEmpty(UserName) ? UserName[0].ToString().ToUpper() : "P";
+        public string UserInitials => ComputeInitials(UserName);
+
+        // First + last name initial (e.g. "John Smith" -> "JS"), falling back gracefully
+        // for single-word or empty names.
+        public static string ComputeInitials(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return "P";
+
+            var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (parts.Length == 0)
+                return "P";
+
+            var first = parts[0][0].ToString().ToUpper();
+            var last = parts.Length > 1 ? parts[^1][0].ToString().ToUpper() : string.Empty;
+            return first + last;
+        }
 
         public AppShell()
         {

@@ -69,8 +69,8 @@
                            Style="{StaticResource H3}" 
                            FontAttributes="Bold" />
                     
-                    <Label Text="Cardiology Specialist" 
-                           Style="{StaticResource LabelLight}" 
+                    <Label Text="{Binding NextAppointmentSpecialty}"
+                           Style="{StaticResource LabelLight}"
                            Margin="0,-8,0,0"/>
 
                     <BoxView HeightRequest="1" Color="{StaticResource Neutral-100}" Margin="0,5" />

@@ -9,4 +9,10 @@ public partial class AppointmentsPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await (BindingContext as AppointmentsViewModel).InitializeAsync();
+    }
 }

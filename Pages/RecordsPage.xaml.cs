@@ -9,4 +9,10 @@ public partial class RecordsPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await (BindingContext as RecordsViewModel).InitializeAsync();
+    }
 }

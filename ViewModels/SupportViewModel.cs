@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Yoton_Mobile.BaseLibrary;
 
 namespace Yoton_Mobile.ViewModels
@@ -13,8 +14,10 @@ namespace Yoton_Mobile.ViewModels
 
     public partial class SupportViewModel : BaseViewModel
     {
+        // Personal emergency/care-circle contacts are patient-entered data with no backing
+        // API yet, so this starts empty rather than showing another patient's fixture data.
         [ObservableProperty]
-        List<ContactItem> careCircle;
+        List<ContactItem> careCircle = new();
 
         [ObservableProperty]
         string clinicName = "Yoton Clinic Center";
@@ -28,42 +31,34 @@ namespace Yoton_Mobile.ViewModels
         public SupportViewModel()
         {
             Title = "Support & Care Circle";
-            LoadCareCircle();
         }
 
-        private void LoadCareCircle()
+        [RelayCommand]
+        private async Task CallContact(ContactItem contact)
         {
-            CareCircle = new List<ContactItem>
+            if (contact?.Phone == null)
+                return;
+
+            await CallNumber(contact.Phone);
+        }
+
+        [RelayCommand]
+        private async Task CallClinic()
+        {
+            await CallNumber(ClinicPhone);
+        }
+
+        private static async Task CallNumber(string phoneNumber)
+        {
+            try
             {
-                new ContactItem
-                {
-                    Name = "Dr. Michael Chen",
-                    Role = "Primary Care Physician",
-                    Phone = "+1 (555) 012-3456",
-                    Email = "m.chen@yotonhealth.com"
-                },
-                new ContactItem
-                {
-                    Name = "Sarah Connor (Wife)",
-                    Role = "Emergency Contact / Next of Kin",
-                    Phone = "+1 (555) 987-6543",
-                    Email = "sarah.c@gmail.com"
-                },
-                new ContactItem
-                {
-                    Name = "Dr. Sarah Jenkins",
-                    Role = "Cardiologist",
-                    Phone = "+1 (555) 345-6789",
-                    Email = "s.jenkins@yotonhealth.com"
-                },
-                new ContactItem
-                {
-                    Name = "Walgreens Pharmacy #1458",
-                    Role = "Preferred Pharmacy",
-                    Phone = "+1 (555) 765-4321",
-                    Email = "rx.1458@walgreens.com"
-                }
-            };
+                PhoneDialer.Open(phoneNumber);
+            }
+            catch (Exception)
+            {
+                // No dialer available on this device (e.g. desktop/emulator without telephony) — ignore.
+            }
+            await Task.CompletedTask;
         }
     }
 }

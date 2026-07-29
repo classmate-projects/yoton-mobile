@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Yoton_Mobile.BaseLibrary;
+using Yoton_Mobile.Models;
 
 namespace Yoton_Mobile.ViewModels
 {
@@ -23,74 +24,109 @@ namespace Yoton_Mobile.ViewModels
 
     public partial class RecordsViewModel : BaseViewModel
     {
-        [ObservableProperty]
-        List<PrescriptionItem> activePrescriptions;
+        private readonly ApiService _api;
 
         [ObservableProperty]
-        List<LabResultItem> labResults;
+        List<PrescriptionItem> activePrescriptions = new();
 
-        public RecordsViewModel()
+        [ObservableProperty]
+        List<LabResultItem> labResults = new();
+
+        public RecordsViewModel(ApiService api)
         {
+            _api = api;
             Title = "Medical Records";
-            LoadRecords();
         }
 
-        private void LoadRecords()
+        public async Task InitializeAsync()
         {
-            ActivePrescriptions = new List<PrescriptionItem>
-            {
-                new PrescriptionItem
-                {
-                    DrugName = "Lisinopril 10mg",
-                    Dosage = "1 Tablet",
-                    Frequency = "Once daily (Morning)",
-                    DoctorName = "Dr. Michael Chen",
-                    RefillsLeft = "3 Refills remaining"
-                },
-                new PrescriptionItem
-                {
-                    DrugName = "Atorvastatin 20mg",
-                    Dosage = "1 Tablet",
-                    Frequency = "Once daily (Bedtime)",
-                    DoctorName = "Dr. Sarah Jenkins",
-                    RefillsLeft = "2 Refills remaining"
-                },
-                new PrescriptionItem
-                {
-                    DrugName = "Metformin 500mg",
-                    Dosage = "1 Tablet",
-                    Frequency = "Twice daily (With meals)",
-                    DoctorName = "Dr. Michael Chen",
-                    RefillsLeft = "5 Refills remaining"
-                }
-            };
+            if (IsBusy)
+                return;
 
-            LabResults = new List<LabResultItem>
+            IsBusy = true;
+            try
             {
-                new LabResultItem
-                {
-                    TestName = "Comprehensive Metabolic Panel (CMP)",
-                    Date = "July 10, 2026",
-                    DoctorName = "Dr. Michael Chen",
-                    Status = "Reviewed",
-                    ResultSummary = "All vitals in normal range. Kidney & liver functions stable."
-                },
-                new LabResultItem
-                {
-                    TestName = "Lipid Panel (Cholesterol Test)",
-                    Date = "July 10, 2026",
-                    DoctorName = "Dr. Sarah Jenkins",
-                    Status = "Reviewed",
-                    ResultSummary = "LDL decreased by 12% since last test. Continue current dose."
-                },
-                new LabResultItem
-                {
-                    TestName = "HbA1c (Blood Sugar Tracker)",
-                    Date = "May 15, 2026",
-                    DoctorName = "Dr. Michael Chen",
-                    Status = "Reviewed",
-                    ResultSummary = "HbA1c level: 5.8% (Pre-diabetes management is effective)."
-                }
+                await LoadRecords();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        private async Task LoadRecords()
+        {
+            try
+            {
+                var prescriptionsResponse = await _api.GetAsync<ApiEnvelope<List<MyMedication>>>(APILibrary.Patient.Prescriptions);
+                var medications = prescriptionsResponse?.Data ?? new List<MyMedication>();
+
+                ActivePrescriptions = medications
+                    .Where(m => m.Status == "Active")
+                    .OrderByDescending(m => m.StartedAt)
+                    .Select(ToPrescriptionItem)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                ActivePrescriptions = new List<PrescriptionItem>();
+            }
+
+            try
+            {
+                var testResultsResponse = await _api.GetAsync<ApiEnvelope<List<MyTestResult>>>(APILibrary.Patient.TestResults);
+                var testResults = testResultsResponse?.Data ?? new List<MyTestResult>();
+
+                LabResults = testResults
+                    .OrderByDescending(t => t.RequestedDate)
+                    .Select(ToLabResultItem)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                LabResults = new List<LabResultItem>();
+            }
+        }
+
+        private static PrescriptionItem ToPrescriptionItem(MyMedication m) => new()
+        {
+            DrugName = m.Dosage != null ? $"{m.DrugName} {m.Dosage}" : m.DrugName,
+            Dosage = m.Dosage ?? "As directed",
+            Frequency = m.Frequency ?? "As directed",
+            DoctorName = m.DoctorName ?? "Unassigned",
+            RefillsLeft = DescribeDuration(m)
+        };
+
+        private static string DescribeDuration(MyMedication m)
+        {
+            if (!m.DurationDays.HasValue)
+                return "Ongoing";
+
+            var remaining = m.DurationDays.Value - (DateTime.UtcNow - m.StartedAt).Days;
+            return remaining > 0 ? $"{remaining} day(s) remaining" : "Course complete";
+        }
+
+        private static LabResultItem ToLabResultItem(MyTestResult t) => new()
+        {
+            TestName = t.TestName,
+            Date = (t.CompletedDate ?? t.RequestedDate).ToString("MMMM d, yyyy"),
+            DoctorName = t.DoctorName ?? "Unassigned",
+            Status = t.Status,
+            ResultSummary = DescribeResult(t)
+        };
+
+        private static string DescribeResult(MyTestResult t)
+        {
+            if (t.HasResultFile)
+                return "Your result is ready. Tap to view the full report.";
+
+            return t.Status switch
+            {
+                "Requested" => "Awaiting sample collection.",
+                "SampleCollected" => "Sample collected, processing has begun.",
+                "Processing" => "Your test is being processed by the lab.",
+                "Scheduled" => "Your scan has been scheduled.",
+                _ => "Awaiting results."
             };
         }
     }

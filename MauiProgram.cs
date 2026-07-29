@@ -1,4 +1,5 @@
 using CommunityToolkit.Maui;
+using Plugin.Maui.Biometric;
 using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Pages;
 using Yoton_Mobile.Services;
@@ -55,6 +56,7 @@ namespace Yoton_Mobile
             builder.Services.AddSingleton<ApiService>();
             builder.Services.AddSingleton<NavigationService>();
             builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton(_ => BiometricAuthenticationService.Default);
 
             // Pages
             builder.Services.AddTransient<SplashVideoPage>();
@@ -67,6 +69,7 @@ namespace Yoton_Mobile
             builder.Services.AddTransient<PatientPerspectivePage>();
             builder.Services.AddTransient<SupportPage>();
             builder.Services.AddTransient<SettingsPage>();
+            builder.Services.AddTransient<BiometricLockPage>();
 
             // ViewModels
             builder.Services.AddTransient<WelcomeViewModel>();
@@ -78,6 +81,7 @@ namespace Yoton_Mobile
             builder.Services.AddTransient<PatientPerspectiveViewModel>();
             builder.Services.AddTransient<SupportViewModel>();
             builder.Services.AddTransient<SettingsViewModel>();
+            builder.Services.AddTransient<BiometricLockViewModel>();
 
             //Logging
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>

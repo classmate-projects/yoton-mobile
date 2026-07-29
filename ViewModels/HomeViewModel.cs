@@ -20,16 +20,16 @@ namespace Yoton_Mobile.ViewModels
         string patientName = "Patient";
 
         [ObservableProperty]
-        string nextAppointmentDoctor = "Dr. Sarah Jenkins";
+        string nextAppointmentDoctor = "No upcoming appointments";
 
         [ObservableProperty]
-        string nextAppointmentTime = "Monday, July 20 at 10:30 AM";
+        string nextAppointmentSpecialty = "Book a visit to get started";
+
+        [ObservableProperty]
+        string nextAppointmentTime = "";
 
         [ObservableProperty]
         List<PatientTask> todayTasks;
-
-        [ObservableProperty]
-        List<Patient> patients;
 
         public HomeViewModel(ApiService api)
         {
@@ -46,7 +46,8 @@ namespace Yoton_Mobile.ViewModels
             try
             {
                 PatientName = Preferences.Get("user_name", "Patient User");
-                await LoadPatients();
+                await LoadProfile();
+                await LoadNextAppointment();
                 LoadDashboardMetrics();
             }
             finally
@@ -65,22 +66,54 @@ namespace Yoton_Mobile.ViewModels
             };
         }
 
-        private async Task LoadPatients()
+        private async Task LoadProfile()
         {
             try
             {
-                var response = await _api.GetAsync<PatientResponse>(APILibrary.Patient.GetAllPatients);
+                var response = await _api.GetAsync<ApiEnvelope<MyProfile>>(APILibrary.Patient.Me);
 
-                if (response != null)
-                    Patients = response.Patients;
+                if (response?.Data != null && !string.IsNullOrWhiteSpace(response.Data.Name))
+                {
+                    PatientName = response.Data.Name;
+                    Preferences.Set("user_name", response.Data.Name);
+                }
             }
             catch (Exception)
             {
-                // Fallback for offline/test environments
-                Patients = new List<Patient>
+                // Keep the cached Preferences value when offline.
+            }
+        }
+
+        private async Task LoadNextAppointment()
+        {
+            try
+            {
+                var response = await _api.GetAsync<ApiEnvelope<List<MyAppointment>>>(APILibrary.Patient.Appointments);
+                var appointments = response?.Data ?? new List<MyAppointment>();
+
+                var next = appointments
+                    .Where(a => a.AppointmentDate >= DateTime.Now && a.Status != "Cancelled" && a.Status != "Completed")
+                    .OrderBy(a => a.AppointmentDate)
+                    .FirstOrDefault();
+
+                if (next != null)
                 {
-                    new Patient { OpId = "1", Name = "John Doe", Email = "john@example.com", Phone = "555-0199", Address = "NY City", DateOfBirth = "1988-12-05" }
-                };
+                    NextAppointmentDoctor = next.DoctorName;
+                    NextAppointmentSpecialty = next.SpecializationName ?? "General Consultation";
+                    NextAppointmentTime = next.AppointmentDate.ToString("dddd, MMMM d 'at' h:mm tt");
+                }
+                else
+                {
+                    NextAppointmentDoctor = "No upcoming appointments";
+                    NextAppointmentSpecialty = "Book a visit to get started";
+                    NextAppointmentTime = "";
+                }
+            }
+            catch (Exception)
+            {
+                NextAppointmentDoctor = "Unable to load appointments";
+                NextAppointmentSpecialty = "";
+                NextAppointmentTime = "";
             }
         }
     }

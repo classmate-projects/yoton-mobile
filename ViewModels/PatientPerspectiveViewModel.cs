@@ -14,7 +14,7 @@ namespace Yoton_Mobile.ViewModels
         double painScore = 3; // Default pain (Mild)
 
         [ObservableProperty]
-        string painLocation = "Left Knee";
+        string painLocation = "";
 
         [ObservableProperty]
         int waterIntakeCups = 5;
@@ -29,7 +29,7 @@ namespace Yoton_Mobile.ViewModels
         int stepGoal = 10000;
 
         [ObservableProperty]
-        string healthJournal = "Feeling much stronger today. Did my physical therapy exercises in the morning with minimal discomfort.";
+        string healthJournal = "";
 
         public double WaterProgress => (double)WaterIntakeCups / WaterGoalCups;
         public double StepProgress => (double)StepCount / StepGoal;

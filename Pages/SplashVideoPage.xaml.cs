@@ -43,13 +43,23 @@ public partial class SplashVideoPage : ContentPage
         }
     }
 
-    private void ContinueToApp()
+    private async void ContinueToApp()
     {
         if (_hasNavigated)
             return;
 
         _hasNavigated = true;
         SplashVideo.Stop();
-        Application.Current.MainPage = new NavigationPage(ServiceHelper.GetService<WelcomePage>());
+
+        // A returning user who previously opted into biometrics and still has a stored
+        // session token unlocks with Face ID/fingerprint instead of the marketing Welcome
+        // screen; everyone else (first run, logged out, or opted out) sees the normal flow.
+        var token = await SecureStorage.Default.GetAsync("auth_token");
+        var biometricEnabled = Preferences.Get("biometric_enabled", false);
+
+        if (!string.IsNullOrEmpty(token) && biometricEnabled)
+            Application.Current.MainPage = new NavigationPage(ServiceHelper.GetService<BiometricLockPage>());
+        else
+            Application.Current.MainPage = new NavigationPage(ServiceHelper.GetService<WelcomePage>());
     }
 }
