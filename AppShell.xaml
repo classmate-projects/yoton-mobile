@@ -1,20 +1,87 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Yoton_Mobile.AppShell"
-             xmlns:pages="clr-namespace:Yoton_Mobile.Pages">
-    <!-- First page -->
-    <ShellContent
-        Route="WelcomePage"
-        ContentTemplate="{DataTemplate pages:WelcomePage}" />
+<Shell 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:Yoton_Mobile.Pages"
+    x:Class="Yoton_Mobile.AppShell"
+    FlyoutBehavior="Flyout"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarBackgroundColor="White"
+    Shell.TabBarForegroundColor="{StaticResource Primary-500}"
+    Shell.TabBarUnselectedColor="{StaticResource Neutral-300}">
 
-    <!-- Login -->
-    <ShellContent
-        Route="LoginPage"
-        ContentTemplate="{DataTemplate pages:LoginPage}" />
+    <!-- Flyout Side Menu Header with Profile details -->
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="{StaticResource Primary-700}" 
+              Padding="20" 
+              HeightRequest="150" 
+              RowDefinitions="Auto, Auto, Auto" 
+              ColumnDefinitions="Auto, *">
+            
+            <Border Grid.RowSpan="3" Grid.Column="0"
+                    WidthRequest="60" HeightRequest="60"
+                    StrokeThickness="0"
+                    Background="White"
+                    StrokeShape="RoundRectangle 30"
+                    Margin="0,0,15,0"
+                    VerticalOptions="Center">
+                <Label Text="{Binding UserInitials}"
+                       TextColor="{StaticResource Primary-700}"
+                       FontAttributes="Bold"
+                       FontSize="24"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
 
-    <!-- Home -->
-    <ShellContent
-        Route="HomePage"
-        ContentTemplate="{DataTemplate pages:HomePage}" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   Text="{Binding UserName}"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   VerticalOptions="End" />
+
+            <Label Grid.Row="1" Grid.Column="1"
+                   Text="{Binding UserRole, StringFormat='Patient Portal | Role: {0}'}"
+                   TextColor="{StaticResource Primary-100}"
+                   FontSize="13"
+                   VerticalOptions="Start" />
+
+            <Label Grid.Row="2" Grid.Column="1"
+                   Text="🟢 Active Health Portal"
+                   TextColor="#00E676"
+                   FontSize="11"
+                   FontAttributes="Bold"
+                   VerticalOptions="Start" />
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <!-- Main Navigation: native tab bar is hidden; each tab page hosts its own GlassTabBar instead. -->
+    <FlyoutItem Title="Dashboard" Route="dashboard" FlyoutDisplayOptions="AsSingleItem">
+        <Tab Title="" Icon="tab_home.svg" Route="home">
+            <ShellContent ContentTemplate="{DataTemplate pages:HomePage}" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" />
+        </Tab>
+        <Tab Title="" Icon="tab_calendar.svg" Route="appointments">
+            <ShellContent ContentTemplate="{DataTemplate pages:AppointmentsPage}" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" />
+        </Tab>
+        <Tab Title="" Icon="tab_records.svg" Route="records">
+            <ShellContent ContentTemplate="{DataTemplate pages:RecordsPage}" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" />
+        </Tab>
+        <Tab Title="" Icon="tab_messages.svg" Route="messages">
+            <ShellContent ContentTemplate="{DataTemplate pages:MessagesPage}" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" />
+        </Tab>
+    </FlyoutItem>
+
+    <!-- Extra Side Menu Items -->
+    <FlyoutItem Title="Patient Perspective" Route="patient_perspective">
+        <ShellContent ContentTemplate="{DataTemplate pages:PatientPerspectivePage}" Shell.NavBarIsVisible="False" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Support &amp; Care Circle" Route="support">
+        <ShellContent ContentTemplate="{DataTemplate pages:SupportPage}" Shell.NavBarIsVisible="False" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Settings" Route="settings">
+        <ShellContent ContentTemplate="{DataTemplate pages:SettingsPage}" Shell.NavBarIsVisible="False" />
+    </FlyoutItem>
+
 </Shell>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Yoton_Mobile.Pages.SupportPage"
+             x:Name="Root"
+             Title="Support &amp; Care Circle"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Header -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Clinic &amp; Support Circle" Style="{StaticResource H2}" FontAttributes="Bold" />
+                <Label Text="Direct communication channels for emergency, pharmacy, and clinic support." Style="{StaticResource LabelLight}" />
+            </VerticalStackLayout>
+
+            <!-- CLINIC INFORMATION CARD -->
+            <Border StrokeThickness="0" Background="{StaticResource Primary-700}" Padding="20">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="PRIMARY MEDICAL CENTER" TextColor="{StaticResource Primary-100}" FontAttributes="Bold" FontSize="11" CharacterSpacing="1"/>
+                    <Label Text="{Binding ClinicName}" TextColor="White" Style="{StaticResource H3}" FontAttributes="Bold" />
+                    
+                    <BoxView HeightRequest="1" Color="{StaticResource Primary-300}" Margin="0,5" />
+
+                    <Grid ColumnDefinitions="Auto, *" ColumnSpacing="10">
+                        <Label Text="📞" FontSize="16" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{Binding ClinicPhone}" TextColor="White" FontAttributes="Bold" FontSize="14" VerticalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CallClinicCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="Auto, *" ColumnSpacing="10" Margin="0,5,0,0">
+                        <Label Text="📍" FontSize="16" VerticalOptions="Start"/>
+                        <Label Grid.Column="1" Text="{Binding ClinicAddress}" TextColor="{StaticResource Primary-100}" FontSize="13" VerticalOptions="Center"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- CARE CIRCLE LIST -->
+            <Label Text="Your Care Circle" Style="{StaticResource H3}" FontAttributes="Bold" Margin="0,10,0,0" />
+
+            <CollectionView ItemsSource="{Binding CareCircle}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="12" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="20" Spacing="4" HorizontalOptions="Center">
+                        <Label Text="No emergency contacts added yet." Style="{StaticResource LabelLight}" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeThickness="0" Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" Padding="15">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto" RowSpacing="3">
+                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}" FontAttributes="Bold" FontSize="15" />
+                                <Label Grid.Row="1" Grid.Column="0" Text="{Binding Role}" Style="{StaticResource LabelLight}" FontSize="12" />
+
+                                <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="15" Margin="0,4,0,0">
+                                    <Label Text="{Binding Phone, StringFormat='📞 {0}'}" FontSize="12" Style="{StaticResource LabelDefault}" />
+                                    <Label Text="{Binding Email, StringFormat='✉️ {0}'}" FontSize="12" Style="{StaticResource LabelLight}" />
+                                </HorizontalStackLayout>
+
+                                <!-- Call button -->
+                                <Button Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                                        Text="Call" FontSize="12"
+                                        HeightRequest="35" WidthRequest="60" Padding="0"
+                                        BackgroundColor="{StaticResource Secondary-500}"
+                                        TextColor="White"
+                                        VerticalOptions="Center"
+                                        Command="{Binding Path=BindingContext.CallContactCommand, Source={x:Reference Root}}"
+                                        CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

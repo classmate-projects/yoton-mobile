@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
+             x:Class="Yoton_Mobile.Pages.MessagesPage"
+             Title="Secure Chats"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
+
+    <Grid RowDefinitions="*, Auto, Auto">
+        
+        <!-- MESSAGES CHAT HISTORY -->
+        <CollectionView Grid.Row="0" 
+                        ItemsSource="{Binding Messages}" 
+                        Margin="15,10">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="15" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout Spacing="4">
+                        <!-- Message Bubble Container -->
+                        <Border Padding="14,10" StrokeThickness="0" MaximumWidthRequest="280">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+
+                            <Border.Triggers>
+                                <!-- Patient Message Bubble (Right aligned, Blue) -->
+                                <DataTrigger TargetType="Border" Binding="{Binding IsMe}" Value="True">
+                                    <Setter Property="HorizontalOptions" Value="End" />
+                                    <Setter Property="Background" Value="{StaticResource Primary-500}" />
+                                </DataTrigger>
+                                <!-- Provider Message Bubble (Left aligned, Gray/Dark) -->
+                                <DataTrigger TargetType="Border" Binding="{Binding IsMe}" Value="False">
+                                    <Setter Property="HorizontalOptions" Value="Start" />
+                                    <Setter Property="Background" Value="{AppThemeBinding Light=#E5E7EB, Dark=#2A2E33}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+
+                            <VerticalStackLayout Spacing="2">
+                                <!-- Sender Label (Only for Doctor messages) -->
+                                <Label Text="{Binding SenderName}" FontSize="11" FontAttributes="Bold">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="True">
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="False">
+                                            <Setter Property="TextColor" Value="{StaticResource Primary-700}" />
+                                            <Setter Property="IsVisible" Value="True" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+
+                                <!-- Message Text -->
+                                <Label Text="{Binding Content}" FontSize="14">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="True">
+                                            <Setter Property="TextColor" Value="White" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="False">
+                                            <Setter Property="TextColor" Value="{AppThemeBinding Light=#111827, Dark=#F9FAFB}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Timestamp -->
+                        <Label Text="{Binding Time}" FontSize="10" Style="{StaticResource LabelLight}" Margin="5,0">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="True">
+                                    <Setter Property="HorizontalOptions" Value="End" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="False">
+                                    <Setter Property="HorizontalOptions" Value="Start" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- INPUT ACTION BOTTOM BAR -->
+        <Border Grid.Row="1" 
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" 
+                Padding="10,12" 
+                StrokeThickness="1" 
+                Stroke="#E0E0E0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0" />
+            </Border.StrokeShape>
+            
+            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                <Entry Grid.Column="0"
+                       Text="{Binding NewMessageText}"
+                       Placeholder="Type a secure message..."
+                       VerticalOptions="Center"
+                       Keyboard="Chat"
+                       HeightRequest="42"/>
+                
+                <Button Grid.Column="1"
+                        Text="Send"
+                        Command="{Binding SendMessageCommand}"
+                        BackgroundColor="{StaticResource Primary-500}"
+                        TextColor="White"
+                        CornerRadius="8"
+                        WidthRequest="70"
+                        HeightRequest="42"
+                        Padding="0"
+                        VerticalOptions="Center"/>
+            </Grid>
+        </Border>
+
+        <controls:GlassTabBar Grid.Row="2" SelectedRoute="messages" />
+
+    </Grid>
+</ContentPage>

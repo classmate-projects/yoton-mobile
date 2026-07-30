@@ -15,9 +15,15 @@
             public const string Login = "/api/auth/login";
         }
 
+        // Patient self-service endpoints. Every route is scoped server-side to the
+        // logged-in patient's own JWT identity — no patientId is ever passed by the client.
         public static class Patient
         {
-            public const string GetAllPatients = "/api/reception/patient";
+            public const string Me = "/api/patient/me";
+            public const string Appointments = "/api/patient/appointments";
+            public const string TestResults = "/api/patient/test-results";
+            public const string Prescriptions = "/api/patient/prescriptions";
+            public const string Consultations = "/api/patient/consultations";
         }
     }
 }

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
+             x:Class="Yoton_Mobile.Pages.RecordsPage"
+             Title="Medical Records"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
+
+    <Grid RowDefinitions="*, Auto">
+    <ScrollView Grid.Row="0">
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <!-- Header -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Medical History" Style="{StaticResource H2}" FontAttributes="Bold" />
+                <Label Text="Access your laboratory reports, diagnostic evaluations, and active medications." Style="{StaticResource LabelLight}" />
+            </VerticalStackLayout>
+
+            <!-- PRESCRIPTIONS SECTION -->
+            <Grid ColumnDefinitions="*, Auto" Margin="0,10,0,0">
+                <Label Text="Active Prescriptions (Rx)" Style="{StaticResource H3}" FontAttributes="Bold" Grid.Column="0" />
+                <Label Text="💊" FontSize="18" Grid.Column="1" VerticalOptions="Center"/>
+            </Grid>
+
+            <CollectionView ItemsSource="{Binding ActivePrescriptions}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="12" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeThickness="0" Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" Padding="15">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <Label Text="{Binding DrugName}" FontAttributes="Bold" FontSize="16" TextColor="{StaticResource Primary-700}" />
+                                    <Label Grid.Column="1" Text="{Binding RefillsLeft}" FontSize="12" TextColor="{StaticResource Secondary-500}" FontAttributes="Bold" />
+                                </Grid>
+                                
+                                <Grid ColumnDefinitions="Auto, *" ColumnSpacing="5" Margin="0,2,0,0">
+                                    <Label Text="⚖️" FontSize="14" VerticalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="{Binding Dosage, StringFormat='Dosage: {0}'}" Style="{StaticResource LabelDefault}" VerticalOptions="Center"/>
+                                </Grid>
+                                
+                                <Grid ColumnDefinitions="Auto, *" ColumnSpacing="5">
+                                    <Label Text="🔁" FontSize="14" VerticalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="{Binding Frequency}" Style="{StaticResource LabelDefault}" VerticalOptions="Center"/>
+                                </Grid>
+
+                                <BoxView HeightRequest="1" Color="{StaticResource Neutral-100}" Margin="0,5" />
+
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <Label Text="{Binding DoctorName, StringFormat='Prescribed by: {0}'}" Style="{StaticResource LabelLight}" FontSize="11" />
+                                    <Button Grid.Column="1" Text="Refill Rx" FontSize="11" HeightRequest="26" Padding="10,0" BackgroundColor="{StaticResource Secondary-500}" TextColor="White"/>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- LAB RESULTS SECTION -->
+            <Grid ColumnDefinitions="*, Auto" Margin="0,15,0,0">
+                <Label Text="Laboratory Results" Style="{StaticResource H3}" FontAttributes="Bold" Grid.Column="0" />
+                <Label Text="🔬" FontSize="18" Grid.Column="1" VerticalOptions="Center"/>
+            </Grid>
+
+            <CollectionView ItemsSource="{Binding LabResults}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="12" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeThickness="0" Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" Padding="15">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <Label Text="{Binding TestName}" FontAttributes="Bold" FontSize="15" />
+                                    <Border Grid.Column="1" BackgroundColor="{StaticResource Secondary-100}" Padding="6,2" StrokeThickness="0" StrokeShape="RoundRectangle 4">
+                                        <Label Text="{Binding Status}" TextColor="{StaticResource Secondary-700}" FontSize="11" FontAttributes="Bold"/>
+                                    </Border>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                                    <Label Text="{Binding Date, StringFormat='Checked: {0}'}" Style="{StaticResource LabelLight}" FontSize="12" />
+                                    <Label Text="{Binding DoctorName, StringFormat='Physician: {0}'}" Style="{StaticResource LabelLight}" FontSize="12" HorizontalOptions="End" />
+                                </Grid>
+
+                                <BoxView HeightRequest="1" Color="{StaticResource Neutral-100}" Margin="0,5" />
+
+                                <Label Text="{Binding ResultSummary}" Style="{StaticResource BodySmall}" FontSize="13" TextColor="{StaticResource Neutral-700}" />
+                                
+                                <Button Text="View Detailed PDF Report" FontSize="12" HeightRequest="32" Padding="15,0" BackgroundColor="{StaticResource Neutral-100}" TextColor="{StaticResource Neutral-900}" HorizontalOptions="Start"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+        <controls:GlassTabBar Grid.Row="1" SelectedRoute="records" />
+    </Grid>
+</ContentPage>

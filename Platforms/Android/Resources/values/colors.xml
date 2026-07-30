@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#512BD4</color>
-    <color name="colorPrimaryDark">#2B0B98</color>
-    <color name="colorAccent">#2B0B98</color>
+	<!-- Primary Brand Color -->
+	<color name="colorPrimary">#0A6CFF</color>
+
+	<!-- Darker shade for status bar -->
+	<color name="colorPrimaryDark">#0055CC</color>
+
+	<!-- Accent color (used for highlights, FAB, switches, etc.) -->
+	<color name="colorAccent">#008C8C</color>
+
+	<!-- Optional: Add tertiary + neutral if needed -->
+	<color name="colorTertiary">#D95A00</color>
+	<color name="colorNeutral">#1C1F23</color>
 </resources>

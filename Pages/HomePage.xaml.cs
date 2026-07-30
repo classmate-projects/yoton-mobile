@@ -14,4 +14,9 @@ public partial class HomePage : ContentPage
         base.OnAppearing();
         await (BindingContext as HomeViewModel).InitializeAsync();
     }
+
+    private void OnMenuClicked(object sender, EventArgs e)
+    {
+        Shell.Current.FlyoutIsPresented = true;
+    }
 }
