@@ -25,18 +25,15 @@ jobs:
 
       - name: Publish signed Android AAB (Play Store)
         env:
-          SIGN_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          SIGN_KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          SIGN_STORE_PASS: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          AndroidSigningKeyStore: ${{ github.workspace }}/yoton-release.keystore
+          AndroidSigningKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          AndroidSigningKeyPass: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          AndroidSigningStorePass: ${{ secrets.ANDROID_STORE_PASSWORD }}
         run: >
           dotnet publish Yoton-Mobile.csproj
           -f net10.0-android
           -c Release
           -p:AndroidPackageFormat=aab
-          -p:AndroidSigningKeyStore="${{ github.workspace }}/yoton-release.keystore"
-          -p:AndroidSigningKeyAlias="$SIGN_ALIAS"
-          -p:AndroidSigningKeyPass="$SIGN_KEY_PASS"
-          -p:AndroidSigningStorePass="$SIGN_STORE_PASS"
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
@@ -46,18 +43,15 @@ jobs:
 
       - name: Publish signed Android APK (sideload/testing)
         env:
-          SIGN_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          SIGN_KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          SIGN_STORE_PASS: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          AndroidSigningKeyStore: ${{ github.workspace }}/yoton-release.keystore
+          AndroidSigningKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          AndroidSigningKeyPass: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          AndroidSigningStorePass: ${{ secrets.ANDROID_STORE_PASSWORD }}
         run: >
           dotnet publish Yoton-Mobile.csproj
           -f net10.0-android
           -c Release
           -p:AndroidPackageFormat=apk
-          -p:AndroidSigningKeyStore="${{ github.workspace }}/yoton-release.keystore"
-          -p:AndroidSigningKeyAlias="$SIGN_ALIAS"
-          -p:AndroidSigningKeyPass="$SIGN_KEY_PASS"
-          -p:AndroidSigningStorePass="$SIGN_STORE_PASS"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
