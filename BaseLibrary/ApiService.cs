@@ -41,5 +41,24 @@ namespace Yoton_Mobile.BaseLibrary
 
             return await response.Content.ReadFromJsonAsync<T>();
         }
+
+        // Unlike PostAsync, this always attempts to parse the response body regardless of
+        // status code, so business-rule failures (e.g. "slot already booked", HTTP 200 with
+        // a false "status" field, or a 400 validation message) reach the caller instead of
+        // collapsing into a generic null.
+        public async Task<T?> PostForResultAsync<T>(string url, object data)
+        {
+            var client = await CreateClientAsync();
+            var response = await client.PostAsJsonAsync(url, data);
+
+            try
+            {
+                return await response.Content.ReadFromJsonAsync<T>();
+            }
+            catch (Exception)
+            {
+                return default;
+            }
+        }
     }
 }

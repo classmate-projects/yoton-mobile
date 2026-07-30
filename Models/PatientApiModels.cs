@@ -64,4 +64,42 @@ namespace Yoton_Mobile.Models
         public string Status { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
     }
+
+    // ---------------- SELF-SERVICE BOOKING ----------------
+
+    public class SpecializationDoctors
+    {
+        public string? SpecializationId { get; set; }
+        public string SpecializationName { get; set; } = string.Empty;
+        public List<DoctorCard> Doctors { get; set; } = new();
+    }
+
+    public class DoctorCard
+    {
+        public string? DoctorId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? SpecializationId { get; set; }
+        public string? SpecializationName { get; set; }
+        public int ExperienceYears { get; set; }
+        public decimal ConsultationFee { get; set; }
+    }
+
+    // PII-free by design — a patient may see THAT a slot is shared (BookedCount/MaxCapacity)
+    // but never WHO else is booked into it. See Yoton_API.Controllers.PatientController.
+    public class PatientSlot
+    {
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public bool IsAvailable { get; set; }
+        public bool IsPast { get; set; }
+        public int BookedCount { get; set; }
+        public int MaxCapacity { get; set; } = 1;
+    }
+
+    public class BookingResult
+    {
+        public bool Status { get; set; }
+        public string? Message { get; set; }
+        public MyAppointment? Data { get; set; }
+    }
 }

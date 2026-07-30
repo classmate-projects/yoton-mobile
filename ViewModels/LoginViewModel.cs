@@ -28,20 +28,44 @@ namespace Yoton_Mobile.ViewModels
         [RelayCommand]
         public async Task LoginAsync()
         {
-            var token = await _auth.LoginAsync(Email, Password);
-
-            if (token == null)
-            {
-                await Shell.Current.DisplayAlert("Error", "Invalid login", "OK");
+            if (IsBusy)
                 return;
+
+            IsBusy = true;
+            try
+            {
+                var token = await _auth.LoginAsync(Email, Password);
+
+                if (token == null)
+                {
+                    await Shell.Current.DisplayAlert("Error", "Invalid login", "OK");
+                    return;
+                }
+
+                if (!string.Equals(token.Role, "patient", StringComparison.OrdinalIgnoreCase))
+                {
+                    // AuthService already saved the token optimistically before we knew the
+                    // role — discard it so a non-patient session never lingers on this device.
+                    Preferences.Clear();
+                    SecureStorage.Default.RemoveAll();
+                    await Shell.Current.DisplayAlert(
+                        "Access restricted",
+                        "This app is only available to patients registered with Yoton Clinic.",
+                        "OK");
+                    return;
+                }
+
+                Preferences.Set("user_name", token.Name);
+                Preferences.Set("user_role", token.Role);
+
+                await OfferBiometricEnrollmentAsync();
+
+                Application.Current.MainPage = new AppShell();
             }
-
-            Preferences.Set("user_name", token.Name);
-            Preferences.Set("user_role", token.Role);
-
-            await OfferBiometricEnrollmentAsync();
-
-            Application.Current.MainPage = new AppShell();
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         // Ask once, on the very first successful login, whether the user wants to unlock

@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Models;
+using Yoton_Mobile.Services;
 
 namespace Yoton_Mobile.ViewModels
 {
@@ -19,14 +20,10 @@ namespace Yoton_Mobile.ViewModels
         [ObservableProperty]
         string patientName = "Patient";
 
+        // Shown as a horizontal carousel on the dashboard — capped at 5 so the card list
+        // stays quick to skim; the Appointments tab shows the full list.
         [ObservableProperty]
-        string nextAppointmentDoctor = "No upcoming appointments";
-
-        [ObservableProperty]
-        string nextAppointmentSpecialty = "Book a visit to get started";
-
-        [ObservableProperty]
-        string nextAppointmentTime = "";
+        List<AppointmentItem> upcomingAppointments = new();
 
         [ObservableProperty]
         List<PatientTask> todayTasks;
@@ -47,7 +44,7 @@ namespace Yoton_Mobile.ViewModels
             {
                 PatientName = Preferences.Get("user_name", "Patient User");
                 await LoadProfile();
-                await LoadNextAppointment();
+                await LoadUpcomingAppointments();
                 LoadDashboardMetrics();
             }
             finally
@@ -78,42 +75,39 @@ namespace Yoton_Mobile.ViewModels
                     Preferences.Set("user_name", response.Data.Name);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LogService.Write($"Failed to load profile: {ex}");
                 // Keep the cached Preferences value when offline.
             }
         }
 
-        private async Task LoadNextAppointment()
+        // Used by the page's foreground poll timer — deliberately doesn't toggle IsBusy so
+        // the glass busy overlay doesn't flash every minute while the patient is browsing.
+        public Task RefreshSilentlyAsync() => LoadUpcomingAppointments();
+
+        private async Task LoadUpcomingAppointments()
         {
             try
             {
                 var response = await _api.GetAsync<ApiEnvelope<List<MyAppointment>>>(APILibrary.Patient.Appointments);
                 var appointments = response?.Data ?? new List<MyAppointment>();
 
-                var next = appointments
+                UpcomingAppointments = appointments
                     .Where(a => a.AppointmentDate >= DateTime.Now && a.Status != "Cancelled" && a.Status != "Completed")
                     .OrderBy(a => a.AppointmentDate)
-                    .FirstOrDefault();
+                    .Take(5)
+                    .Select(AppointmentsViewModel.ToAppointmentItem)
+                    .ToList();
 
-                if (next != null)
-                {
-                    NextAppointmentDoctor = next.DoctorName;
-                    NextAppointmentSpecialty = next.SpecializationName ?? "General Consultation";
-                    NextAppointmentTime = next.AppointmentDate.ToString("dddd, MMMM d 'at' h:mm tt");
-                }
-                else
-                {
-                    NextAppointmentDoctor = "No upcoming appointments";
-                    NextAppointmentSpecialty = "Book a visit to get started";
-                    NextAppointmentTime = "";
-                }
+                // Diffed against the full list (not just the 5 shown here) so a confirmation
+                // outside the top-5 window still surfaces the one-time nudge.
+                await AppointmentsViewModel.NotifyNewlyConfirmedAsync(appointments);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                NextAppointmentDoctor = "Unable to load appointments";
-                NextAppointmentSpecialty = "";
-                NextAppointmentTime = "";
+                LogService.Write($"Failed to load upcoming appointments: {ex}");
+                UpcomingAppointments = new List<AppointmentItem>();
             }
         }
     }
