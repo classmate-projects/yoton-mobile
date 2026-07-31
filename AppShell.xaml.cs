@@ -4,12 +4,9 @@ namespace Yoton_Mobile
 {
     public partial class AppShell : Shell
     {
-        public string UserName => Preferences.Get("user_name", "Patient User");
-        public string UserRole => Preferences.Get("user_role", "Patient");
-        public string UserInitials => ComputeInitials(UserName);
-
         // First + last name initial (e.g. "John Smith" -> "JS"), falling back gracefully
-        // for single-word or empty names.
+        // for single-word or empty names. Used by MoreViewModel/SettingsViewModel for
+        // their profile headers.
         public static string ComputeInitials(string? name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -27,7 +24,6 @@ namespace Yoton_Mobile
         public AppShell()
         {
             InitializeComponent();
-            BindingContext = this;
 
             Routing.RegisterRoute(nameof(WelcomePage), typeof(WelcomePage));
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
@@ -35,6 +31,7 @@ namespace Yoton_Mobile
             Routing.RegisterRoute(nameof(AppointmentsPage), typeof(AppointmentsPage));
             Routing.RegisterRoute(nameof(RecordsPage), typeof(RecordsPage));
             Routing.RegisterRoute(nameof(MessagesPage), typeof(MessagesPage));
+            Routing.RegisterRoute(nameof(MorePage), typeof(MorePage));
             Routing.RegisterRoute(nameof(PatientPerspectivePage), typeof(PatientPerspectivePage));
             Routing.RegisterRoute(nameof(SupportPage), typeof(SupportPage));
             Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));

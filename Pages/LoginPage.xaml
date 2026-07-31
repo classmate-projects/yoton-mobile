@@ -127,6 +127,7 @@
                                        VerticalOptions="Center"/>
                                 <Button Grid.Column="1"
                                         Text="Forgot Password?"
+                                        Clicked="OnForgotPasswordClicked"
                                         BackgroundColor="Transparent"
                                         TextColor="{StaticResource Primary-500}"
                                         FontFamily="NotoSansRegular"

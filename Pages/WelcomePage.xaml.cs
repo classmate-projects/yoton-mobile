@@ -22,6 +22,10 @@ public partial class WelcomePage : ContentPage
             // Set initial hidden state
             headerStack.Opacity = 0;
             headerStack.TranslationY = 24;
+            featuresStack.Opacity = 0;
+            featuresStack.TranslationY = 14;
+            getStartedWrap.Opacity = 0;
+            getStartedWrap.Scale = 0.88;
             badgesGrid.Opacity = 0;
             badgesGrid.TranslationY = 16;
 
@@ -35,10 +39,26 @@ public partial class WelcomePage : ContentPage
             _ = headerStack.FadeTo(1, 900, Easing.CubicOut);
             await headerStack.TranslateTo(0, 0, 900, Easing.CubicOut);
 
-            // Stagger badges entry
-            await Task.Delay(120);
+            // Stagger the "what you can do" highlights in next
+            await Task.Delay(100);
+            _ = featuresStack.FadeTo(1, 600, Easing.CubicOut);
+            await featuresStack.TranslateTo(0, 0, 600, Easing.CubicOut);
+
+            // Get Started pops in with a little more presence, since it's the primary action
+            await Task.Delay(80);
+            _ = getStartedWrap.FadeTo(1, 500, Easing.CubicOut);
+            await getStartedWrap.ScaleTo(1, 500, Easing.SpringOut);
+
+            // Stagger badges entry last
+            await Task.Delay(100);
             _ = badgesGrid.FadeTo(1, 700, Easing.CubicOut);
             await badgesGrid.TranslateTo(0, 0, 700, Easing.CubicOut);
+
+            // Gentle continuous "breathing" pulse invites the tap once everything has settled in.
+            var ctaPulse = new Animation();
+            ctaPulse.Add(0, 0.5, new Animation(v => getStartedWrap.Scale = v, 1.0, 1.03, Easing.SinInOut));
+            ctaPulse.Add(0.5, 1, new Animation(v => getStartedWrap.Scale = v, 1.03, 1.0, Easing.SinInOut));
+            ctaPulse.Commit(this, "GetStartedPulse", length: 1800, repeat: () => true);
         }
         catch (Exception ex)
         {
@@ -50,6 +70,7 @@ public partial class WelcomePage : ContentPage
     {
         base.OnDisappearing();
         this.AbortAnimation("IllustrationPulse");
+        this.AbortAnimation("GetStartedPulse");
     }
 
     private async void OnGetStartedClicked(object sender, EventArgs e)

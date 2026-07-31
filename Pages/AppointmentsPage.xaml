@@ -196,7 +196,12 @@
                 <!-- UPCOMING SECTION -->
                 <Label Text="Upcoming Visits" Style="{StaticResource H3}" FontAttributes="Bold" Margin="0,10,0,0" />
 
-                <CollectionView ItemsSource="{Binding UpcomingAppointments}">
+                <!-- Gated on IsBusy so the "No upcoming appointments" empty view can't flash
+                     before the first load actually returns data. -->
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Margin="0,10" />
+
+                <CollectionView ItemsSource="{Binding UpcomingAppointments}"
+                                IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBool}}">
                     <CollectionView.EmptyView>
                         <VerticalStackLayout Padding="20" Spacing="4" HorizontalOptions="Center">
                             <Label Text="No upcoming appointments." Style="{StaticResource LabelLight}" HorizontalTextAlignment="Center" />
@@ -257,7 +262,8 @@
                 <!-- PAST SECTION -->
                 <Label Text="Past Visits" Style="{StaticResource H3}" FontAttributes="Bold" Margin="0,15,0,0" />
 
-                <CollectionView ItemsSource="{Binding PastAppointments}">
+                <CollectionView ItemsSource="{Binding PastAppointments}"
+                                IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBool}}">
                     <CollectionView.EmptyView>
                         <VerticalStackLayout Padding="20" Spacing="4" HorizontalOptions="Center">
                             <Label Text="No past visits yet." Style="{StaticResource LabelLight}" HorizontalTextAlignment="Center" />

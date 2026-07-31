@@ -9,8 +9,6 @@ namespace Yoton_Mobile.ViewModels
     {
         public string Title { get; set; }
         public string Details { get; set; }
-        public bool IsCompleted { get; set; }
-        public string Time { get; set; }
     }
 
     public partial class HomeViewModel : BaseViewModel
@@ -26,7 +24,7 @@ namespace Yoton_Mobile.ViewModels
         List<AppointmentItem> upcomingAppointments = new();
 
         [ObservableProperty]
-        List<PatientTask> todayTasks;
+        List<PatientTask> todayTasks = new();
 
         public HomeViewModel(ApiService api)
         {
@@ -45,7 +43,7 @@ namespace Yoton_Mobile.ViewModels
                 PatientName = Preferences.Get("user_name", "Patient User");
                 await LoadProfile();
                 await LoadUpcomingAppointments();
-                LoadDashboardMetrics();
+                await LoadActiveMedications();
             }
             finally
             {
@@ -53,14 +51,32 @@ namespace Yoton_Mobile.ViewModels
             }
         }
 
-        private void LoadDashboardMetrics()
+        // Previously hardcoded sample data (specific drug names/doses/times) presented as if
+        // it were the patient's real schedule. There's no dose-tracking backend to say whether
+        // a given dose was actually taken today, so this shows real active prescriptions
+        // instead of fabricating one — genuinely useful without pretending to know more than we do.
+        private async Task LoadActiveMedications()
         {
-            TodayTasks = new List<PatientTask>
+            try
             {
-                new PatientTask { Title = "Morning Blood Pressure", Details = "Target: below 120/80", Time = "8:00 AM", IsCompleted = true },
-                new PatientTask { Title = "Take Lisinopril 10mg", Details = "1 Tablet with breakfast", Time = "8:30 AM", IsCompleted = false },
-                new PatientTask { Title = "Take Metformin 500mg", Details = "1 Tablet with dinner", Time = "7:00 PM", IsCompleted = false }
-            };
+                var response = await _api.GetAsync<ApiEnvelope<List<MyMedication>>>(APILibrary.Patient.Prescriptions);
+                var medications = response?.Data ?? new List<MyMedication>();
+
+                TodayTasks = medications
+                    .Where(m => m.Status == "Active")
+                    .OrderByDescending(m => m.StartedAt)
+                    .Select(m => new PatientTask
+                    {
+                        Title = m.DrugName,
+                        Details = string.Join(" • ", new[] { m.Dosage, m.Frequency }.Where(s => !string.IsNullOrWhiteSpace(s)))
+                    })
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                LogService.Write($"Failed to load active medications: {ex}");
+                TodayTasks = new List<PatientTask>();
+            }
         }
 
         private async Task LoadProfile()

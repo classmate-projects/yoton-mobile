@@ -16,7 +16,7 @@ namespace Yoton_Mobile
                 LogService.Write("⚠️ FirstChanceException: " + e.Exception.Message);
             };
 
-            MainPage = new NavigationPage(ServiceHelper.GetService<SplashVideoPage>());
+            MainPage = new NavigationPage(ServiceHelper.GetService<SplashPage>());
         }
         private void ApplyTheme()
         {

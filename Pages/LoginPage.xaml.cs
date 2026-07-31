@@ -1,3 +1,4 @@
+using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.ViewModels;
 
 namespace Yoton_Mobile.Pages;
@@ -45,5 +46,15 @@ public partial class LoginPage : ContentPage
         // Scale button down and up for quick pop animation
         await loginBtn.ScaleTo(0.94, 100, Easing.SinOut);
         await loginBtn.ScaleTo(1.0, 100, Easing.SinIn);
+    }
+
+    // Password reset (request + set-new-password) lives on the web app, which
+    // already has the full flow; the mobile app just needs to hand off to it
+    // rather than duplicating an email-input screen and magic-link handling.
+    private async void OnForgotPasswordClicked(object sender, EventArgs e)
+    {
+        await Browser.Default.OpenAsync(
+            $"{APILibrary.WebAppUrl}/forgot-password",
+            BrowserLaunchMode.SystemPreferred);
     }
 }

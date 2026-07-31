@@ -111,9 +111,31 @@
         <!-- FOOTER ACTIONS -->
         <VerticalStackLayout Grid.Row="1" Padding="30,0,30,36" Spacing="20">
 
+            <!-- WHAT YOU CAN DO -->
+            <VerticalStackLayout x:Name="featuresStack" Opacity="0" Spacing="12">
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="📅" FontSize="16" VerticalOptions="Center"/>
+                    <Label Text="Book &amp; manage appointments instantly" FontFamily="NotoSansRegular" FontSize="13"
+                           TextColor="{AppThemeBinding Light={StaticResource Neutral-700}, Dark={StaticResource Neutral-300}}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="🩺" FontSize="16" VerticalOptions="Center"/>
+                    <Label Text="Consult your care team from anywhere" FontFamily="NotoSansRegular" FontSize="13"
+                           TextColor="{AppThemeBinding Light={StaticResource Neutral-700}, Dark={StaticResource Neutral-300}}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="💊" FontSize="16" VerticalOptions="Center"/>
+                    <Label Text="Track prescriptions, labs &amp; records in one place" FontFamily="NotoSansRegular" FontSize="13"
+                           TextColor="{AppThemeBinding Light={StaticResource Neutral-700}, Dark={StaticResource Neutral-300}}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
             <!-- Get Started gradient button -->
-            <Border StrokeThickness="0" Background="Transparent"
-                    HorizontalOptions="Fill">
+            <Border x:Name="getStartedWrap" StrokeThickness="0" Background="Transparent"
+                    HorizontalOptions="Fill" Opacity="0">
                 <Border.Shadow>
                     <Shadow Brush="#0055CC" Offset="0,8" Radius="16" Opacity="0.28"/>
                 </Border.Shadow>

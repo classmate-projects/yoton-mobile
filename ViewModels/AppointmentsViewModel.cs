@@ -306,7 +306,17 @@ namespace Yoton_Mobile.ViewModels
             var nextIndex = currentIndex + 1;
 
             if (nextIndex >= PreferredDoctors.Count)
+            {
+                if (Shell.Current.CurrentPage is ContentPage exhaustedPage)
+                {
+                    await LiquidGlassAlert.ShowAsync(
+                        exhaustedPage,
+                        "No free slots",
+                        "None of your preferred doctors have a free slot on this date. Try a different date or add another doctor.",
+                        "OK");
+                }
                 return;
+            }
 
             var current = ActivePreference;
             var next = PreferredDoctors[nextIndex];

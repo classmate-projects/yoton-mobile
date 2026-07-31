@@ -123,48 +123,45 @@
                            SelectedIndicatorColor="{StaticResource Primary-500}"
                            HorizontalOptions="Center" />
 
-            <!-- TODAY'S SCHEDULE CHECKLIST -->
-            <Label Text="Today's Schedule" 
-                   Style="{StaticResource H3}" 
-                   FontAttributes="Bold" 
+            <!-- ACTIVE MEDICATIONS -->
+            <Label Text="Active Medications"
+                   Style="{StaticResource H3}"
+                   FontAttributes="Bold"
                    Margin="0,10,0,0" />
 
             <CollectionView ItemsSource="{Binding TodayTasks}">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="20" Spacing="4" HorizontalOptions="Center">
+                        <Label Text="No active medications on file." Style="{StaticResource LabelLight}" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border StrokeThickness="0" 
+                        <Border StrokeThickness="0"
                                 Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}"
                                 Padding="15">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="12" />
                             </Border.StrokeShape>
-                            
-                            <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="15">
-                                <!-- Checkbox Indicator -->
-                                <CheckBox Grid.Column="0" 
-                                          IsChecked="{Binding IsCompleted}" 
-                                          Color="{StaticResource Primary-500}" 
-                                          VerticalOptions="Center" />
-                                
+
+                            <Grid ColumnDefinitions="Auto, *" ColumnSpacing="15">
+                                <Label Grid.Column="0"
+                                       Text="💊"
+                                       FontSize="20"
+                                       VerticalOptions="Center" />
+
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                                    <Label Text="{Binding Title}" 
-                                           FontAttributes="Bold" 
-                                           FontSize="15" 
+                                    <Label Text="{Binding Title}"
+                                           FontAttributes="Bold"
+                                           FontSize="15"
                                            TextColor="{AppThemeBinding Light={StaticResource Neutral-900}, Dark={StaticResource Neutral-100}}"/>
-                                    <Label Text="{Binding Details}" 
-                                           Style="{StaticResource LabelLight}" 
+                                    <Label Text="{Binding Details}"
+                                           Style="{StaticResource LabelLight}"
                                            FontSize="13"/>
                                 </VerticalStackLayout>
-
-                                <Label Grid.Column="2" 
-                                       Text="{Binding Time}" 
-                                       TextColor="{StaticResource Primary-500}" 
-                                       FontSize="12" 
-                                       FontAttributes="Bold"
-                                       VerticalOptions="Center"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

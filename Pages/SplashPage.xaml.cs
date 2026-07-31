@@ -1,47 +1,48 @@
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
 using Yoton_Mobile.Helper;
 
 namespace Yoton_Mobile.Pages;
 
-public partial class SplashVideoPage : ContentPage
+// Replaces the old MP4-based splash (SplashVideoPage): a short, native logo-reveal
+// animation instead of a bundled video file — smaller app size, no codec/black-frame
+// edge cases, and it scales crisply on every screen density since the mark is a
+// vector asset (Resources/Images/app_logo.svg).
+public partial class SplashPage : ContentPage
 {
-    private const int FallbackTimeoutMs = 8000;
+    private const int FallbackTimeoutMs = 3500;
     private bool _hasNavigated;
 
-    public SplashVideoPage()
+    public SplashPage()
     {
         InitializeComponent();
-        SplashVideo.Source = MediaSource.FromResource("splash_video.mp4");
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        // Safety net in case the video fails to load or end (codec issues, slow device, etc).
+        // Safety net in case something prevents the animation sequence from completing.
         Dispatcher.StartTimer(TimeSpan.FromMilliseconds(FallbackTimeoutMs), () =>
         {
             ContinueToApp();
             return false;
         });
+
+        await Task.WhenAll(
+            LogoImage.FadeTo(1, 450, Easing.CubicOut),
+            LogoImage.ScaleTo(1, 450, Easing.CubicOut));
+
+        await Task.Delay(80);
+        await WordmarkLabel.FadeTo(1, 350, Easing.CubicOut);
+
+        // Small settle pulse so the reveal doesn't feel abrupt.
+        await LogoImage.ScaleTo(1.05, 220, Easing.SinOut);
+        await LogoImage.ScaleTo(1.0, 220, Easing.SinIn);
+
+        await Task.Delay(300);
+        ContinueToApp();
     }
-
-    private void OnMediaEnded(object sender, EventArgs e) => ContinueToApp();
-
-    private void OnMediaFailed(object sender, MediaFailedEventArgs e) => ContinueToApp();
 
     private void OnSkipTapped(object sender, EventArgs e) => ContinueToApp();
-
-    private void OnStateChanged(object sender, MediaStateChangedEventArgs e)
-    {
-        // Wait for an actual frame to be playing before revealing the native video
-        // surface; hiding the mask on Buffering/Opening exposes its black background.
-        if (e.NewState == MediaElementState.Playing)
-        {
-            SplashMask.IsVisible = false;
-        }
-    }
 
     private async void ContinueToApp()
     {
@@ -49,7 +50,6 @@ public partial class SplashVideoPage : ContentPage
             return;
 
         _hasNavigated = true;
-        SplashVideo.Stop();
 
         // A returning user who previously opted into biometrics and still has a stored
         // session token unlocks with Face ID/fingerprint instead of the marketing Welcome

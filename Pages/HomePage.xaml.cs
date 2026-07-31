@@ -42,9 +42,12 @@ public partial class HomePage : ContentPage
         }
     }
 
-    private void OnMenuClicked(object sender, EventArgs e)
+    private async void OnMenuClicked(object sender, EventArgs e)
     {
-        Shell.Current.FlyoutIsPresented = true;
+        // The flyout is gone — Settings/Support/Patient Perspective now live behind
+        // the "More" tab so they're reachable (and leavable) from the same
+        // persistent tab bar as everything else.
+        await Shell.Current.GoToAsync("//dashboard/more");
     }
 
     private async void OnBookAppointmentTapped(object sender, EventArgs e)

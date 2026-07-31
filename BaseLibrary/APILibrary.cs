@@ -5,9 +5,11 @@
 #if DEBUG
         // Development (Android Emulator)
         public const string BaseUrl = "http://10.0.2.2:5205";
+        public const string WebAppUrl = "http://10.0.2.2:3000";
 #else
         // Production Server
         public const string BaseUrl = "https://yoton-api.onrender.com";
+        public const string WebAppUrl = "https://yoton.netlify.app";
 #endif
 
         public static class Auth
