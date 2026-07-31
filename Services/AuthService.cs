@@ -22,7 +22,7 @@ namespace Yoton_Mobile.Services
 
             var result = await _api.PostAsync<LoginResponse>(APILibrary.Auth.Login, data);
 
-            if (result == null)
+            if (result?.Token == null)
                 return null;
 
             // Save token in encrypted, OS-backed storage (Keychain/Keystore) rather than

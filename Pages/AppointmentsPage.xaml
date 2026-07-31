@@ -186,10 +186,16 @@
                         <Label Text="Notes (optional)" Style="{StaticResource LabelLight}" FontSize="12" />
                         <Editor Text="{Binding BookingNotes}" Placeholder="Reason for visit" HeightRequest="70" AutoSize="TextChanges" />
 
-                        <Button Text="Send Request"
-                                Command="{Binding SubmitBookingRequestCommand}"
-                                Style="{StaticResource PrimaryButton}"
-                                IsEnabled="{Binding IsBookingSubmitting, Converter={StaticResource InvertedBool}}" />
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Button Grid.Column="0" Text="Send Request"
+                                    Command="{Binding SubmitBookingRequestCommand}"
+                                    Style="{StaticResource PrimaryButton}"
+                                    IsEnabled="{Binding IsBookingSubmitting, Converter={StaticResource InvertedBool}}" />
+                            <ActivityIndicator Grid.Column="1" Margin="10,0,0,0"
+                                                IsRunning="{Binding IsBookingSubmitting}"
+                                                IsVisible="{Binding IsBookingSubmitting}"
+                                                Color="{StaticResource Primary-500}" />
+                        </Grid>
                     </VerticalStackLayout>
                 </Border>
 
@@ -223,10 +229,10 @@
                                         <Label Grid.Column="1" Text="{Binding Status}" TextColor="{StaticResource Primary-500}" FontSize="12" FontAttributes="Bold">
                                             <Label.Triggers>
                                                 <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Pending">
-                                                    <Setter Property="TextColor" Value="#D97706" />
+                                                    <Setter Property="TextColor" Value="{StaticResource Warning-500}" />
                                                 </DataTrigger>
                                                 <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Completed">
-                                                    <Setter Property="TextColor" Value="#16A34A" />
+                                                    <Setter Property="TextColor" Value="{StaticResource Success-500}" />
                                                 </DataTrigger>
                                                 <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Cancelled">
                                                     <Setter Property="TextColor" Value="{StaticResource Neutral-500}" />
@@ -236,7 +242,7 @@
                                     </Grid>
                                     <Label Text="{Binding Specialty}" Style="{StaticResource LabelLight}" FontSize="13" Margin="0,-5,0,0" />
                                     
-                                    <BoxView HeightRequest="1" Color="{StaticResource Neutral-100}" Margin="0,5" />
+                                    <BoxView Style="{StaticResource Divider}" Margin="0,5" />
                                     
                                     <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
                                         <HorizontalStackLayout Grid.Column="0" Spacing="5">
@@ -284,7 +290,7 @@
                                     <Label Grid.Row="0" Grid.Column="1" Text="{Binding Status}" TextColor="{StaticResource Neutral-500}" FontSize="11" FontAttributes="Bold">
                                         <Label.Triggers>
                                             <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Completed">
-                                                <Setter Property="TextColor" Value="#16A34A" />
+                                                <Setter Property="TextColor" Value="{StaticResource Success-500}" />
                                             </DataTrigger>
                                         </Label.Triggers>
                                     </Label>

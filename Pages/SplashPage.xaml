@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Yoton_Mobile.Pages.SplashPage"
              NavigationPage.HasNavigationBar="False"
-             BackgroundColor="White">
+             BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Neutral-900}}">
 
     <Grid>
         <Grid.GestureRecognizers>
@@ -21,7 +21,7 @@
                    FontFamily="PublicSansBold"
                    FontAttributes="Bold"
                    FontSize="26"
-                   TextColor="{StaticResource Primary-900}"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary-900}, Dark={StaticResource Primary-300}}"
                    Opacity="0" />
         </VerticalStackLayout>
     </Grid>

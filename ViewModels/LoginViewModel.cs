@@ -36,9 +36,21 @@ namespace Yoton_Mobile.ViewModels
             {
                 var token = await _auth.LoginAsync(Email, Password);
 
+                // Login work is done — drop the busy overlay before showing any alert so the
+                // two don't stack visually.
+                IsBusy = false;
+
+                // LoginPage lives inside a NavigationPage before login succeeds — Shell.Current
+                // is only set once AppShell becomes MainPage, which happens further down after a
+                // successful *patient* login. LiquidGlassAlert.ShowAsync just needs the actual
+                // ContentPage it should render into, not Shell.Current.
+                var currentPage = ((Application.Current?.MainPage as NavigationPage)?.CurrentPage
+                    ?? Application.Current?.MainPage) as ContentPage;
+
                 if (token == null)
                 {
-                    await Shell.Current.DisplayAlert("Error", "Invalid login", "OK");
+                    if (currentPage != null)
+                        await LiquidGlassAlert.ShowAsync(currentPage, "Error", "Invalid login", "OK");
                     return;
                 }
 
@@ -46,12 +58,18 @@ namespace Yoton_Mobile.ViewModels
                 {
                     // AuthService already saved the token optimistically before we knew the
                     // role — discard it so a non-patient session never lingers on this device.
+                    // Worded for an end user who has no idea what "role" or "Yoton" internals
+                    // mean — just: this app is for patients, staff sign in on the web instead.
                     Preferences.Clear();
                     SecureStorage.Default.RemoveAll();
-                    await Shell.Current.DisplayAlert(
-                        "Access restricted",
-                        "This app is only available to patients registered with Yoton Clinic.",
-                        "OK");
+                    if (currentPage != null)
+                    {
+                        await LiquidGlassAlert.ShowAsync(
+                            currentPage,
+                            "This app is for patients only",
+                            "This account isn't a patient account. Doctors, reception, and other clinic staff should sign in through the Yoton web portal on a computer instead of this app.",
+                            "OK");
+                    }
                     return;
                 }
 

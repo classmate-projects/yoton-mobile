@@ -47,7 +47,11 @@ public partial class LiquidGlassAlert : ContentView
             Message = message,
             ConfirmText = confirmText,
             CancelText = cancelText ?? "Close",
-            HasCancelAction = true
+            // Only show a second button when the caller actually wants a real choice
+            // (a distinct cancelText). Most callers just show a single info message —
+            // hardcoding this to true meant every one of those got a redundant
+            // "Close" button next to "OK" with no real difference between them.
+            HasCancelAction = cancelText != null
         };
 
         host.Children.Add(alert);
