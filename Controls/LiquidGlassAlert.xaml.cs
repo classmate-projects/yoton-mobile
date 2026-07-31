@@ -13,13 +13,25 @@ public partial class LiquidGlassAlert : ContentView
     public static readonly BindableProperty CancelTextProperty = BindableProperty.Create(
         nameof(CancelText), typeof(string), typeof(LiquidGlassAlert), "Not now");
     public static readonly BindableProperty HasCancelActionProperty = BindableProperty.Create(
-        nameof(HasCancelAction), typeof(bool), typeof(LiquidGlassAlert), false);
+        nameof(HasCancelAction), typeof(bool), typeof(LiquidGlassAlert), false,
+        propertyChanged: OnHasCancelActionChanged);
 
     public string Title { get => (string)GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
     public string Message { get => (string)GetValue(MessageProperty); set => SetValue(MessageProperty, value); }
     public string ConfirmText { get => (string)GetValue(ConfirmTextProperty); set => SetValue(ConfirmTextProperty, value); }
     public string CancelText { get => (string)GetValue(CancelTextProperty); set => SetValue(CancelTextProperty, value); }
     public bool HasCancelAction { get => (bool)GetValue(HasCancelActionProperty); set => SetValue(HasCancelActionProperty, value); }
+
+    // The button row is a 2-column Grid so Confirm/Cancel can sit side by side. Hiding
+    // CancelButton with IsVisible="False" removes it visually but its column still
+    // reserves half the row's width, so ConfirmButton was rendering squeezed into a
+    // sliver. When there's no cancel action, span ConfirmButton across both columns
+    // so it actually fills the row.
+    private static void OnHasCancelActionChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var alert = (LiquidGlassAlert)bindable;
+        Grid.SetColumnSpan(alert.ConfirmButton, (bool)newValue ? 1 : 2);
+    }
 
     public LiquidGlassAlert()
     {

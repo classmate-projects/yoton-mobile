@@ -57,35 +57,8 @@
                         <Border.Shadow>
                             <Shadow Brush="#0055CC" Offset="0,8" Radius="22" Opacity="0.18"/>
                         </Border.Shadow>
-                        <Grid>
-                            <!-- Cross horizontal -->
-                            <Border WidthRequest="48" HeightRequest="14" StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 7"
-                                    HorizontalOptions="Center" VerticalOptions="Center">
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                        <GradientStop Color="{StaticResource Primary-500}" Offset="0"/>
-                                        <GradientStop Color="{StaticResource Secondary-500}" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                            </Border>
-                            <!-- Cross vertical -->
-                            <Border WidthRequest="14" HeightRequest="48" StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 7"
-                                    HorizontalOptions="Center" VerticalOptions="Center">
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="{StaticResource Primary-500}" Offset="0"/>
-                                        <GradientStop Color="{StaticResource Secondary-500}" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                            </Border>
-                            <!-- Pulse wave accent -->
-                            <Label Text="〰" FontSize="13"
-                                   TextColor="{StaticResource Secondary-500}"
-                                   HorizontalOptions="Center" VerticalOptions="Center"
-                                   Margin="0,40,0,0" Opacity="0.5"/>
-                        </Grid>
+                        <Image Source="app_logo" WidthRequest="66" HeightRequest="66"
+                               Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
                     </Border>
                 </Grid>
 

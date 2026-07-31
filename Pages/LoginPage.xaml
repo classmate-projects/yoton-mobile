@@ -34,19 +34,13 @@
             <!-- Hero text -->
             <VerticalStackLayout VerticalOptions="End" HorizontalOptions="Start"
                                  Padding="28,0,28,24" Spacing="5">
-                <!-- Small pulsing clinical icon -->
+                <!-- Small pulsing brand mark -->
                 <Border x:Name="clinicalIcon" WidthRequest="44" HeightRequest="44"
                         StrokeThickness="0"
-                        Background="#33FFFFFF"
+                        Background="White"
                         StrokeShape="RoundRectangle 22">
-                    <Grid>
-                        <Border WidthRequest="20" HeightRequest="6" StrokeThickness="0"
-                                Background="White" StrokeShape="RoundRectangle 3"
-                                HorizontalOptions="Center" VerticalOptions="Center"/>
-                        <Border WidthRequest="6" HeightRequest="20" StrokeThickness="0"
-                                Background="White" StrokeShape="RoundRectangle 3"
-                                HorizontalOptions="Center" VerticalOptions="Center"/>
-                    </Grid>
+                    <Image Source="app_logo" WidthRequest="28" HeightRequest="28"
+                           Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
                 </Border>
                 <Label Text="Welcome Back"
                        FontFamily="PublicSansBold"

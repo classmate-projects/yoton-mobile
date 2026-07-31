@@ -49,13 +49,27 @@
                 <CarouselView.EmptyView>
                     <Border StrokeThickness="0"
                             Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}"
-                            Padding="20">
+                            Padding="20"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="16" />
                         </Border.StrokeShape>
-                        <Label Text="No upcoming appointments — tap Book Appointment below to schedule one."
-                               Style="{StaticResource LabelLight}"
-                               HorizontalTextAlignment="Center" />
+                        <VerticalStackLayout Spacing="8"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center">
+                            <Label Text="📅"
+                                   FontSize="32"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="No upcoming appointments"
+                                   FontAttributes="Bold"
+                                   FontSize="15"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Tap Book Appointment below to schedule one."
+                                   Style="{StaticResource LabelLight}"
+                                   FontSize="13"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
                     </Border>
                 </CarouselView.EmptyView>
                 <CarouselView.ItemTemplate>

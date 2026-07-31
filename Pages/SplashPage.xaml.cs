@@ -4,8 +4,7 @@ namespace Yoton_Mobile.Pages;
 
 // Replaces the old MP4-based splash (SplashVideoPage): a short, native logo-reveal
 // animation instead of a bundled video file — smaller app size, no codec/black-frame
-// edge cases, and it scales crisply on every screen density since the mark is a
-// vector asset (Resources/Images/app_logo.svg).
+// edge cases. The mark itself is Resources/Images/app_logo.png (transparent background).
 public partial class SplashPage : ContentPage
 {
     private const int FallbackTimeoutMs = 3500;

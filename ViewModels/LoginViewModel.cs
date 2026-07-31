@@ -50,7 +50,7 @@ namespace Yoton_Mobile.ViewModels
                 if (token == null)
                 {
                     if (currentPage != null)
-                        await LiquidGlassAlert.ShowAsync(currentPage, "Error", "Invalid login", "OK");
+                        await LiquidGlassAlert.ShowAsync(currentPage, "Error", "Invalid login", "Retry");
                     return;
                 }
 
