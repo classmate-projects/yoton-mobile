@@ -25,12 +25,15 @@ public partial class LiquidGlassAlert : ContentView
     // The button row is a 2-column Grid so Confirm/Cancel can sit side by side. Hiding
     // CancelButton with IsVisible="False" removes it visually but its column still
     // reserves half the row's width, so ConfirmButton was rendering squeezed into a
-    // sliver. When there's no cancel action, span ConfirmButton across both columns
-    // so it actually fills the row.
+    // sliver. XAML defaults ConfirmButton to Column=0/ColumnSpan=2 (spanning the full
+    // row) to match HasCancelAction's own default of false; when a real cancel action
+    // is requested, shift it back into just column 1 alongside CancelButton.
     private static void OnHasCancelActionChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var alert = (LiquidGlassAlert)bindable;
-        Grid.SetColumnSpan(alert.ConfirmButton, (bool)newValue ? 1 : 2);
+        var hasCancel = (bool)newValue;
+        Grid.SetColumn(alert.ConfirmButton, hasCancel ? 1 : 0);
+        Grid.SetColumnSpan(alert.ConfirmButton, hasCancel ? 1 : 2);
     }
 
     public LiquidGlassAlert()
