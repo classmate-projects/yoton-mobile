@@ -158,15 +158,29 @@
                                         <Setter Property="StrokeThickness" Value="1.5"/>
                                     </DataTrigger>
                                 </Border.Triggers>
-                                <Entry x:Name="passwordEntry"
-                                       Placeholder="Enter secure password"
-                                       IsPassword="True"
-                                       Text="{Binding Password}"
-                                       HeightRequest="48"
-                                       BackgroundColor="Transparent"
-                                       FontFamily="NotoSansRegular"
-                                       FontSize="14"
-                                       PlaceholderColor="{StaticResource Neutral-300}"/>
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <Entry x:Name="passwordEntry"
+                                           Placeholder="Enter secure password"
+                                           IsPassword="True"
+                                           Text="{Binding Password}"
+                                           HeightRequest="48"
+                                           BackgroundColor="Transparent"
+                                           FontFamily="NotoSansRegular"
+                                           FontSize="14"
+                                           PlaceholderColor="{StaticResource Neutral-300}"/>
+                                    <ImageButton Grid.Column="1"
+                                                 x:Name="togglePasswordButton"
+                                                 Source="eye_hidden.svg"
+                                                 Clicked="OnTogglePasswordClicked"
+                                                 BackgroundColor="Transparent"
+                                                 WidthRequest="24"
+                                                 HeightRequest="24"
+                                                 Padding="0"
+                                                 Aspect="AspectFit"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Center"
+                                                 SemanticProperties.Description="Show password"/>
+                                </Grid>
                             </Border>
                         </VerticalStackLayout>
 

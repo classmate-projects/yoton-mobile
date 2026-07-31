@@ -57,4 +57,16 @@ public partial class LoginPage : ContentPage
             $"{APILibrary.WebAppUrl}/forgot-password",
             BrowserLaunchMode.SystemPreferred);
     }
+
+    private void OnTogglePasswordClicked(object sender, EventArgs e)
+    {
+        passwordEntry.IsPassword = !passwordEntry.IsPassword;
+        togglePasswordButton.Source = passwordEntry.IsPassword ? "eye_hidden.svg" : "eye_visible.svg";
+        SemanticProperties.SetDescription(togglePasswordButton, passwordEntry.IsPassword ? "Show password" : "Hide password");
+
+        // Toggling IsPassword on some platforms resets the cursor to the start — put it
+        // back at the end so the user isn't left staring at the caret jumping mid-word.
+        var cursorPosition = passwordEntry.Text?.Length ?? 0;
+        passwordEntry.CursorPosition = cursorPosition;
+    }
 }
