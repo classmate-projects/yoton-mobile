@@ -169,7 +169,7 @@
             </Grid>
 
             <!-- Legal -->
-            <Label Text="{Binding Version, StringFormat='Yoton Health v1.0.4 · App v{0}'}"
+            <Label Text="{Binding Version, StringFormat='Yoton Health v{0}'}"
                    FontFamily="NotoSansLight"
                    FontSize="11"
                    TextColor="{StaticResource Neutral-500}"

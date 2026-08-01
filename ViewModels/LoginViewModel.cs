@@ -76,6 +76,20 @@ namespace Yoton_Mobile.ViewModels
                 Preferences.Set("user_name", token.Name);
                 Preferences.Set("user_role", token.Role);
 
+                if (token.IsDefaultPassword)
+                {
+                    if (currentPage != null)
+                        await OfferPasswordChangeAsync(currentPage);
+                }
+                else if (Preferences.Get("pending_password_reset_confirmation", false))
+                {
+                    // They were on the default password last time, agreed to change it, and
+                    // have now come back and logged in with a real one — this is the exact
+                    // moment to celebrate, shown once on the Home page below.
+                    Preferences.Remove("pending_password_reset_confirmation");
+                    Preferences.Set("show_security_confirmed", true);
+                }
+
                 await OfferBiometricEnrollmentAsync();
 
                 Application.Current.MainPage = new AppShell();
@@ -84,6 +98,31 @@ namespace Yoton_Mobile.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        // The server flags this whenever the typed password matches the deterministic
+        // temporary one CreatePatient assigns (BCrypt of their DOB) — patients who've
+        // never gotten around to setting a real password. Password reset itself lives
+        // on the web portal (same flow as "Forgot Password?"); this just offers it and,
+        // if accepted, remembers to celebrate once they come back with a real password.
+        private async Task OfferPasswordChangeAsync(ContentPage currentPage)
+        {
+            var accepted = await LiquidGlassAlert.ShowAsync(
+                currentPage,
+                "Update your password?",
+                "You're still signed in with the temporary password we set up for you. For your security, we recommend changing it now.",
+                "Change Password",
+                "Not now");
+
+            if (!accepted)
+                return;
+
+            Preferences.Set("pending_password_reset_confirmation", true);
+
+            var emailParam = Uri.EscapeDataString(Email ?? string.Empty);
+            await Browser.Default.OpenAsync(
+                $"{APILibrary.WebAppUrl}/forgot-password?email={emailParam}",
+                BrowserLaunchMode.SystemPreferred);
         }
 
         // Ask once, on the very first successful login, whether the user wants to unlock

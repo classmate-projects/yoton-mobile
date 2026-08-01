@@ -15,11 +15,13 @@ namespace Yoton_Mobile.ViewModels
 
         [ObservableProperty]
         Basedata baseData;
-        public string Version => BaseData?.mobileVersion ?? "Loading...";
-        partial void OnBaseDataChanged(Basedata value)
-        {
-            OnPropertyChanged(nameof(Version));
-        }
+
+        // Sourced from AppInfo (which reads ApplicationDisplayVersion in the .csproj), not
+        // the API — BaseData/mobileVersion below was never wired to a real versioned
+        // endpoint (APILibrary.BaseUrl is just the API's bare root URL), so this always
+        // showed "Loading..." forever in practice.
+        public string Version => AppInfo.Current.VersionString;
+
         public WelcomeViewModel(ApiService api,
                                 NavigationService nav)
         {

@@ -1,3 +1,4 @@
+using Yoton_Mobile.Controls;
 using Yoton_Mobile.ViewModels;
 
 namespace Yoton_Mobile.Pages;
@@ -15,6 +16,16 @@ public partial class HomePage : ContentPage
     {
         base.OnAppearing();
         await (BindingContext as HomeViewModel).InitializeAsync();
+
+        // Set by LoginViewModel the moment it detects the patient has come back and
+        // logged in with a real password after previously agreeing to change their
+        // default one — shown exactly once, here, since this is the first fully-loaded
+        // page reachable after that login.
+        if (Preferences.Get("show_security_confirmed", false))
+        {
+            Preferences.Remove("show_security_confirmed");
+            await SecurityConfirmedAlert.ShowAsync(this);
+        }
 
         // Catches a front-office confirmation (Pending -> Scheduled) while the patient is
         // sitting on the dashboard, without needing a real push notification (see
