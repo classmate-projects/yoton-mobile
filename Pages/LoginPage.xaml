@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
              x:Class="Yoton_Mobile.Pages.LoginPage"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="{AppThemeBinding Light=#F4F7FF, Dark=#080B12}">
@@ -33,19 +34,13 @@
             <!-- Hero text -->
             <VerticalStackLayout VerticalOptions="End" HorizontalOptions="Start"
                                  Padding="28,0,28,24" Spacing="5">
-                <!-- Small pulsing clinical icon -->
+                <!-- Small pulsing brand mark -->
                 <Border x:Name="clinicalIcon" WidthRequest="44" HeightRequest="44"
                         StrokeThickness="0"
-                        Background="#33FFFFFF"
+                        Background="White"
                         StrokeShape="RoundRectangle 22">
-                    <Grid>
-                        <Border WidthRequest="20" HeightRequest="6" StrokeThickness="0"
-                                Background="White" StrokeShape="RoundRectangle 3"
-                                HorizontalOptions="Center" VerticalOptions="Center"/>
-                        <Border WidthRequest="6" HeightRequest="20" StrokeThickness="0"
-                                Background="White" StrokeShape="RoundRectangle 3"
-                                HorizontalOptions="Center" VerticalOptions="Center"/>
-                    </Grid>
+                    <Image Source="app_logo" WidthRequest="28" HeightRequest="28"
+                           Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
                 </Border>
                 <Label Text="Welcome Back"
                        FontFamily="PublicSansBold"
@@ -126,6 +121,7 @@
                                        VerticalOptions="Center"/>
                                 <Button Grid.Column="1"
                                         Text="Forgot Password?"
+                                        Clicked="OnForgotPasswordClicked"
                                         BackgroundColor="Transparent"
                                         TextColor="{StaticResource Primary-500}"
                                         FontFamily="NotoSansRegular"
@@ -156,15 +152,29 @@
                                         <Setter Property="StrokeThickness" Value="1.5"/>
                                     </DataTrigger>
                                 </Border.Triggers>
-                                <Entry x:Name="passwordEntry"
-                                       Placeholder="Enter secure password"
-                                       IsPassword="True"
-                                       Text="{Binding Password}"
-                                       HeightRequest="48"
-                                       BackgroundColor="Transparent"
-                                       FontFamily="NotoSansRegular"
-                                       FontSize="14"
-                                       PlaceholderColor="{StaticResource Neutral-300}"/>
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <Entry x:Name="passwordEntry"
+                                           Placeholder="Enter secure password"
+                                           IsPassword="True"
+                                           Text="{Binding Password}"
+                                           HeightRequest="48"
+                                           BackgroundColor="Transparent"
+                                           FontFamily="NotoSansRegular"
+                                           FontSize="14"
+                                           PlaceholderColor="{StaticResource Neutral-300}"/>
+                                    <ImageButton Grid.Column="1"
+                                                 x:Name="togglePasswordButton"
+                                                 Source="eye_hidden.svg"
+                                                 Clicked="OnTogglePasswordClicked"
+                                                 BackgroundColor="Transparent"
+                                                 WidthRequest="24"
+                                                 HeightRequest="24"
+                                                 Padding="0"
+                                                 Aspect="AspectFit"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Center"
+                                                 SemanticProperties.Description="Show password"/>
+                                </Grid>
                             </Border>
                         </VerticalStackLayout>
 
@@ -177,6 +187,7 @@
                                     Clicked="OnLoginClicked"
                                     Text="Sign In Securely"
                                     Command="{Binding LoginCommand}"
+                                    IsEnabled="{Binding IsNotBusy}"
                                     CornerRadius="14"
                                     HeightRequest="52"
                                     FontFamily="PublicSansBold"
@@ -205,5 +216,9 @@
                 </Border>
 
             </VerticalStackLayout>
+
+        <controls:GlassBusyOverlay Grid.RowSpan="2"
+                                    IsRunning="{Binding IsBusy}"
+                                    Message="Signing you in" />
     </Grid>
 </ContentPage>

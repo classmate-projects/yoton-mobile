@@ -49,10 +49,8 @@
                             <Shadow Brush="#7C00E8E8" Offset="0,0" Radius="16" Opacity="0.9" />
                         </Border.Shadow>
                     </Border>
-                    <Border WidthRequest="34" HeightRequest="10" Background="#006F6F" StrokeThickness="0"
-                            StrokeShape="RoundRectangle 5" HorizontalOptions="Center" VerticalOptions="Center" />
-                    <Border WidthRequest="10" HeightRequest="34" Background="#006F6F" StrokeThickness="0"
-                            StrokeShape="RoundRectangle 5" HorizontalOptions="Center" VerticalOptions="Center" />
+                    <Image Source="app_logo" WidthRequest="42" HeightRequest="42"
+                           Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" />
                 </Grid>
 
                 <VerticalStackLayout Grid.Row="1" Spacing="8">
@@ -69,7 +67,7 @@
                             Clicked="OnCancelClicked" FontFamily="PublicSansBold" FontSize="14"
                             TextColor="#07569E" BackgroundColor="#5CFFFFFF" CornerRadius="15"
                             HeightRequest="48" IsVisible="{Binding HasCancelAction, Source={x:Reference Root}}" />
-                    <Button x:Name="ConfirmButton" Grid.Column="1" Text="{Binding ConfirmText, Source={x:Reference Root}}"
+                    <Button x:Name="ConfirmButton" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ConfirmText, Source={x:Reference Root}}"
                             Clicked="OnConfirmClicked" FontFamily="PublicSansBold" FontSize="14"
                             TextColor="White" CornerRadius="15" HeightRequest="48">
                         <Button.Background>

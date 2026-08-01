@@ -19,7 +19,7 @@
             <Shadow Brush="#4000315C" Offset="0,10" Radius="22" Opacity="0.3" />
         </Border.Shadow>
 
-        <Grid ColumnDefinitions="*, *, *, *">
+        <Grid ColumnDefinitions="*, *, *, *, *">
             <!-- HOME -->
             <Grid Grid.Column="0">
                 <Grid.GestureRecognizers>
@@ -105,6 +105,28 @@
                     </Border.Shadow>
                 </Border>
                 <Image x:Name="MessagesIcon" Source="tab_messages.svg" WidthRequest="22" HeightRequest="22"
+                       HorizontalOptions="Center" VerticalOptions="Center" Opacity="0.5" />
+            </Grid>
+
+            <!-- MORE -->
+            <Grid Grid.Column="4">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnMoreTapped" />
+                </Grid.GestureRecognizers>
+                <Border x:Name="MorePill" WidthRequest="46" HeightRequest="46" IsVisible="False"
+                        HorizontalOptions="Center" VerticalOptions="Center"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 23">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="{StaticResource Primary-500}" Offset="0" />
+                            <GradientStop Color="{StaticResource Secondary-500}" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow>
+                        <Shadow Brush="#660A6CFF" Offset="0,4" Radius="10" Opacity="0.6" />
+                    </Border.Shadow>
+                </Border>
+                <Image x:Name="MoreIcon" Source="tab_more.svg" WidthRequest="22" HeightRequest="22"
                        HorizontalOptions="Center" VerticalOptions="Center" Opacity="0.5" />
             </Grid>
         </Grid>

@@ -17,13 +17,13 @@ namespace Yoton_Mobile.ViewModels
         string painLocation = "";
 
         [ObservableProperty]
-        int waterIntakeCups = 5;
+        int waterIntakeCups = 0;
 
         [ObservableProperty]
         int waterGoalCups = 8;
 
         [ObservableProperty]
-        int stepCount = 6420;
+        int stepCount = 0;
 
         [ObservableProperty]
         int stepGoal = 10000;
@@ -59,14 +59,16 @@ namespace Yoton_Mobile.ViewModels
         [RelayCommand]
         private async Task SaveDailyLog()
         {
-            // Perform a mock save
+            // There's no backend endpoint for this journal yet — it only lives in memory for
+            // this session. Be upfront about that rather than claiming it was encrypted and
+            // shared with the care team, which was never actually true.
             if (Shell.Current.CurrentPage is ContentPage page)
             {
                 await LiquidGlassAlert.ShowAsync(
                     page,
-                    "Care log protected",
-                    "Your perspective journal has been encrypted and shared with your clinical team.",
-                    "Great");
+                    "Saved for now",
+                    "Your entries are kept on this device for this session only — sharing them with your care team isn't available yet.",
+                    "OK");
             }
         }
     }

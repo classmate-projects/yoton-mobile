@@ -49,7 +49,7 @@
                                     <Label Grid.Column="1" Text="{Binding Frequency}" Style="{StaticResource LabelDefault}" VerticalOptions="Center"/>
                                 </Grid>
 
-                                <BoxView HeightRequest="1" Color="{StaticResource Neutral-100}" Margin="0,5" />
+                                <BoxView Style="{StaticResource Divider}" Margin="0,5" />
 
                                 <Grid ColumnDefinitions="*, Auto">
                                     <Label Text="{Binding DoctorName, StringFormat='Prescribed by: {0}'}" Style="{StaticResource LabelLight}" FontSize="11" />
@@ -91,11 +91,11 @@
                                     <Label Text="{Binding DoctorName, StringFormat='Physician: {0}'}" Style="{StaticResource LabelLight}" FontSize="12" HorizontalOptions="End" />
                                 </Grid>
 
-                                <BoxView HeightRequest="1" Color="{StaticResource Neutral-100}" Margin="0,5" />
+                                <BoxView Style="{StaticResource Divider}" Margin="0,5" />
 
                                 <Label Text="{Binding ResultSummary}" Style="{StaticResource BodySmall}" FontSize="13" TextColor="{StaticResource Neutral-700}" />
                                 
-                                <Button Text="View Detailed PDF Report" FontSize="12" HeightRequest="32" Padding="15,0" BackgroundColor="{StaticResource Neutral-100}" TextColor="{StaticResource Neutral-900}" HorizontalOptions="Start"/>
+                                <Button Text="View Detailed PDF Report" FontSize="12" HeightRequest="32" Padding="15,0" BackgroundColor="{AppThemeBinding Light={StaticResource Neutral-100}, Dark={StaticResource Neutral-700}}" TextColor="{AppThemeBinding Light={StaticResource Neutral-900}, Dark={StaticResource Neutral-100}}" HorizontalOptions="Start"/>
                             </VerticalStackLayout>
                         </Border>
                     </DataTemplate>
@@ -106,5 +106,9 @@
     </ScrollView>
 
         <controls:GlassTabBar Grid.Row="1" SelectedRoute="records" />
+
+        <controls:GlassBusyOverlay Grid.RowSpan="2"
+                                    IsRunning="{Binding IsBusy}"
+                                    Message="Loading your records" />
     </Grid>
 </ContentPage>

@@ -16,7 +16,6 @@ namespace Yoton_Mobile
             builder
                 .UseMauiApp<App>() // start the app
                 .UseMauiCommunityToolkit()
-                .UseMauiCommunityToolkitMediaElement()
                 .ConfigureFonts(fonts =>
                 {
                     // Public Sans
@@ -59,13 +58,14 @@ namespace Yoton_Mobile
             builder.Services.AddSingleton(_ => BiometricAuthenticationService.Default);
 
             // Pages
-            builder.Services.AddTransient<SplashVideoPage>();
+            builder.Services.AddTransient<SplashPage>();
             builder.Services.AddTransient<WelcomePage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<AppointmentsPage>();
             builder.Services.AddTransient<RecordsPage>();
             builder.Services.AddTransient<MessagesPage>();
+            builder.Services.AddTransient<MorePage>();
             builder.Services.AddTransient<PatientPerspectivePage>();
             builder.Services.AddTransient<SupportPage>();
             builder.Services.AddTransient<SettingsPage>();
@@ -78,6 +78,7 @@ namespace Yoton_Mobile
             builder.Services.AddTransient<AppointmentsViewModel>();
             builder.Services.AddTransient<RecordsViewModel>();
             builder.Services.AddTransient<MessagesViewModel>();
+            builder.Services.AddTransient<MoreViewModel>();
             builder.Services.AddTransient<PatientPerspectiveViewModel>();
             builder.Services.AddTransient<SupportViewModel>();
             builder.Services.AddTransient<SettingsViewModel>();

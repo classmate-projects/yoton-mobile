@@ -36,7 +36,7 @@
                         </Grid>
                     </VerticalStackLayout>
 
-                    <BoxView HeightRequest="1" Color="{StaticResource Neutral-100}" Margin="0,5" />
+                    <BoxView Style="{StaticResource Divider}" Margin="0,5" />
 
                     <!-- Pain Tracker -->
                     <VerticalStackLayout Spacing="5">

@@ -29,8 +29,10 @@ namespace Yoton_Mobile.ViewModels
         [ObservableProperty]
         bool isBiometricEnabled;
 
+        // Sourced from AppInfo (which reads ApplicationDisplayVersion in the .csproj) rather
+        // than a hardcoded literal, so a version bump only ever needs to happen in one place.
         [ObservableProperty]
-        string appVersion = "1.0.4";
+        string appVersion = AppInfo.Current.VersionString;
 
         public SettingsViewModel(ApiService api)
         {

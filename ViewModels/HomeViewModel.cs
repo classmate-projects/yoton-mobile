@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Models;
+using Yoton_Mobile.Services;
 
 namespace Yoton_Mobile.ViewModels
 {
@@ -8,8 +9,6 @@ namespace Yoton_Mobile.ViewModels
     {
         public string Title { get; set; }
         public string Details { get; set; }
-        public bool IsCompleted { get; set; }
-        public string Time { get; set; }
     }
 
     public partial class HomeViewModel : BaseViewModel
@@ -19,17 +18,13 @@ namespace Yoton_Mobile.ViewModels
         [ObservableProperty]
         string patientName = "Patient";
 
+        // Shown as a horizontal carousel on the dashboard — capped at 5 so the card list
+        // stays quick to skim; the Appointments tab shows the full list.
         [ObservableProperty]
-        string nextAppointmentDoctor = "No upcoming appointments";
+        List<AppointmentItem> upcomingAppointments = new();
 
         [ObservableProperty]
-        string nextAppointmentSpecialty = "Book a visit to get started";
-
-        [ObservableProperty]
-        string nextAppointmentTime = "";
-
-        [ObservableProperty]
-        List<PatientTask> todayTasks;
+        List<PatientTask> todayTasks = new();
 
         public HomeViewModel(ApiService api)
         {
@@ -47,8 +42,8 @@ namespace Yoton_Mobile.ViewModels
             {
                 PatientName = Preferences.Get("user_name", "Patient User");
                 await LoadProfile();
-                await LoadNextAppointment();
-                LoadDashboardMetrics();
+                await LoadUpcomingAppointments();
+                await LoadActiveMedications();
             }
             finally
             {
@@ -56,14 +51,32 @@ namespace Yoton_Mobile.ViewModels
             }
         }
 
-        private void LoadDashboardMetrics()
+        // Previously hardcoded sample data (specific drug names/doses/times) presented as if
+        // it were the patient's real schedule. There's no dose-tracking backend to say whether
+        // a given dose was actually taken today, so this shows real active prescriptions
+        // instead of fabricating one — genuinely useful without pretending to know more than we do.
+        private async Task LoadActiveMedications()
         {
-            TodayTasks = new List<PatientTask>
+            try
             {
-                new PatientTask { Title = "Morning Blood Pressure", Details = "Target: below 120/80", Time = "8:00 AM", IsCompleted = true },
-                new PatientTask { Title = "Take Lisinopril 10mg", Details = "1 Tablet with breakfast", Time = "8:30 AM", IsCompleted = false },
-                new PatientTask { Title = "Take Metformin 500mg", Details = "1 Tablet with dinner", Time = "7:00 PM", IsCompleted = false }
-            };
+                var response = await _api.GetAsync<ApiEnvelope<List<MyMedication>>>(APILibrary.Patient.Prescriptions);
+                var medications = response?.Data ?? new List<MyMedication>();
+
+                TodayTasks = medications
+                    .Where(m => m.Status == "Active")
+                    .OrderByDescending(m => m.StartedAt)
+                    .Select(m => new PatientTask
+                    {
+                        Title = m.DrugName,
+                        Details = string.Join(" • ", new[] { m.Dosage, m.Frequency }.Where(s => !string.IsNullOrWhiteSpace(s)))
+                    })
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                LogService.Write($"Failed to load active medications: {ex}");
+                TodayTasks = new List<PatientTask>();
+            }
         }
 
         private async Task LoadProfile()
@@ -78,42 +91,39 @@ namespace Yoton_Mobile.ViewModels
                     Preferences.Set("user_name", response.Data.Name);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LogService.Write($"Failed to load profile: {ex}");
                 // Keep the cached Preferences value when offline.
             }
         }
 
-        private async Task LoadNextAppointment()
+        // Used by the page's foreground poll timer — deliberately doesn't toggle IsBusy so
+        // the glass busy overlay doesn't flash every minute while the patient is browsing.
+        public Task RefreshSilentlyAsync() => LoadUpcomingAppointments();
+
+        private async Task LoadUpcomingAppointments()
         {
             try
             {
                 var response = await _api.GetAsync<ApiEnvelope<List<MyAppointment>>>(APILibrary.Patient.Appointments);
                 var appointments = response?.Data ?? new List<MyAppointment>();
 
-                var next = appointments
+                UpcomingAppointments = appointments
                     .Where(a => a.AppointmentDate >= DateTime.Now && a.Status != "Cancelled" && a.Status != "Completed")
                     .OrderBy(a => a.AppointmentDate)
-                    .FirstOrDefault();
+                    .Take(5)
+                    .Select(AppointmentsViewModel.ToAppointmentItem)
+                    .ToList();
 
-                if (next != null)
-                {
-                    NextAppointmentDoctor = next.DoctorName;
-                    NextAppointmentSpecialty = next.SpecializationName ?? "General Consultation";
-                    NextAppointmentTime = next.AppointmentDate.ToString("dddd, MMMM d 'at' h:mm tt");
-                }
-                else
-                {
-                    NextAppointmentDoctor = "No upcoming appointments";
-                    NextAppointmentSpecialty = "Book a visit to get started";
-                    NextAppointmentTime = "";
-                }
+                // Diffed against the full list (not just the 5 shown here) so a confirmation
+                // outside the top-5 window still surfaces the one-time nudge.
+                await AppointmentsViewModel.NotifyNewlyConfirmedAsync(appointments);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                NextAppointmentDoctor = "Unable to load appointments";
-                NextAppointmentSpecialty = "";
-                NextAppointmentTime = "";
+                LogService.Write($"Failed to load upcoming appointments: {ex}");
+                UpcomingAppointments = new List<AppointmentItem>();
             }
         }
     }

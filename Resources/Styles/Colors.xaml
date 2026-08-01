@@ -31,4 +31,11 @@
     <Color x:Key="Neutral-300">#7A8088</Color>
     <Color x:Key="Neutral-100">#D5D7DA</Color>
 
+    <!-- SEMANTIC STATUS (same value both themes — always sit on a colored
+         chip/badge background, not the page background, so they don't need
+         a light/dark variant of their own) -->
+    <Color x:Key="Success-500">#16A34A</Color>
+    <Color x:Key="Warning-500">#D97706</Color>
+    <Color x:Key="Danger-500">#D32F2F</Color>
+
 </ResourceDictionary>

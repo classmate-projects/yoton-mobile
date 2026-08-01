@@ -1,3 +1,4 @@
+using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.ViewModels;
 
 namespace Yoton_Mobile.Pages;
@@ -45,5 +46,27 @@ public partial class LoginPage : ContentPage
         // Scale button down and up for quick pop animation
         await loginBtn.ScaleTo(0.94, 100, Easing.SinOut);
         await loginBtn.ScaleTo(1.0, 100, Easing.SinIn);
+    }
+
+    // Password reset (request + set-new-password) lives on the web app, which
+    // already has the full flow; the mobile app just needs to hand off to it
+    // rather than duplicating an email-input screen and magic-link handling.
+    private async void OnForgotPasswordClicked(object sender, EventArgs e)
+    {
+        await Browser.Default.OpenAsync(
+            $"{APILibrary.WebAppUrl}/forgot-password",
+            BrowserLaunchMode.SystemPreferred);
+    }
+
+    private void OnTogglePasswordClicked(object sender, EventArgs e)
+    {
+        passwordEntry.IsPassword = !passwordEntry.IsPassword;
+        togglePasswordButton.Source = passwordEntry.IsPassword ? "eye_hidden.svg" : "eye_visible.svg";
+        SemanticProperties.SetDescription(togglePasswordButton, passwordEntry.IsPassword ? "Show password" : "Hide password");
+
+        // Toggling IsPassword on some platforms resets the cursor to the start — put it
+        // back at the end so the user isn't left staring at the caret jumping mid-word.
+        var cursorPosition = passwordEntry.Text?.Length ?? 0;
+        passwordEntry.CursorPosition = cursorPosition;
     }
 }

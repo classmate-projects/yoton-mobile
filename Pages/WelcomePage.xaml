@@ -57,35 +57,8 @@
                         <Border.Shadow>
                             <Shadow Brush="#0055CC" Offset="0,8" Radius="22" Opacity="0.18"/>
                         </Border.Shadow>
-                        <Grid>
-                            <!-- Cross horizontal -->
-                            <Border WidthRequest="48" HeightRequest="14" StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 7"
-                                    HorizontalOptions="Center" VerticalOptions="Center">
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                        <GradientStop Color="{StaticResource Primary-500}" Offset="0"/>
-                                        <GradientStop Color="{StaticResource Secondary-500}" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                            </Border>
-                            <!-- Cross vertical -->
-                            <Border WidthRequest="14" HeightRequest="48" StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 7"
-                                    HorizontalOptions="Center" VerticalOptions="Center">
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="{StaticResource Primary-500}" Offset="0"/>
-                                        <GradientStop Color="{StaticResource Secondary-500}" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                            </Border>
-                            <!-- Pulse wave accent -->
-                            <Label Text="〰" FontSize="13"
-                                   TextColor="{StaticResource Secondary-500}"
-                                   HorizontalOptions="Center" VerticalOptions="Center"
-                                   Margin="0,40,0,0" Opacity="0.5"/>
-                        </Grid>
+                        <Image Source="app_logo" WidthRequest="66" HeightRequest="66"
+                               Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
                     </Border>
                 </Grid>
 
@@ -111,9 +84,31 @@
         <!-- FOOTER ACTIONS -->
         <VerticalStackLayout Grid.Row="1" Padding="30,0,30,36" Spacing="20">
 
+            <!-- WHAT YOU CAN DO -->
+            <VerticalStackLayout x:Name="featuresStack" Opacity="0" Spacing="12">
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="📅" FontSize="16" VerticalOptions="Center"/>
+                    <Label Text="Book &amp; manage appointments instantly" FontFamily="NotoSansRegular" FontSize="13"
+                           TextColor="{AppThemeBinding Light={StaticResource Neutral-700}, Dark={StaticResource Neutral-300}}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="🩺" FontSize="16" VerticalOptions="Center"/>
+                    <Label Text="Consult your care team from anywhere" FontFamily="NotoSansRegular" FontSize="13"
+                           TextColor="{AppThemeBinding Light={StaticResource Neutral-700}, Dark={StaticResource Neutral-300}}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="💊" FontSize="16" VerticalOptions="Center"/>
+                    <Label Text="Track prescriptions, labs &amp; records in one place" FontFamily="NotoSansRegular" FontSize="13"
+                           TextColor="{AppThemeBinding Light={StaticResource Neutral-700}, Dark={StaticResource Neutral-300}}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
             <!-- Get Started gradient button -->
-            <Border StrokeThickness="0" Background="Transparent"
-                    HorizontalOptions="Fill">
+            <Border x:Name="getStartedWrap" StrokeThickness="0" Background="Transparent"
+                    HorizontalOptions="Fill" Opacity="0">
                 <Border.Shadow>
                     <Shadow Brush="#0055CC" Offset="0,8" Radius="16" Opacity="0.28"/>
                 </Border.Shadow>
@@ -174,7 +169,7 @@
             </Grid>
 
             <!-- Legal -->
-            <Label Text="{Binding Version, StringFormat='Yoton Health v1.0.4 · App v{0}'}"
+            <Label Text="{Binding Version, StringFormat='Yoton Health v{0}'}"
                    FontFamily="NotoSansLight"
                    FontSize="11"
                    TextColor="{StaticResource Neutral-500}"

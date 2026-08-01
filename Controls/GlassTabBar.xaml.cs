@@ -40,6 +40,7 @@ public partial class GlassTabBar : ContentView
         SetTabState(AppointmentsPill, AppointmentsIcon, "tab_calendar", SelectedRoute == "appointments");
         SetTabState(RecordsPill, RecordsIcon, "tab_records", SelectedRoute == "records");
         SetTabState(MessagesPill, MessagesIcon, "tab_messages", SelectedRoute == "messages");
+        SetTabState(MorePill, MoreIcon, "tab_more", SelectedRoute == "more");
     }
 
     private static void SetTabState(Border pill, Image icon, string iconBaseName, bool selected)
@@ -53,6 +54,7 @@ public partial class GlassTabBar : ContentView
     private void OnAppointmentsTapped(object sender, EventArgs e) => _ = NavigateAsync("appointments", AppointmentsIcon);
     private void OnRecordsTapped(object sender, EventArgs e) => _ = NavigateAsync("records", RecordsIcon);
     private void OnMessagesTapped(object sender, EventArgs e) => _ = NavigateAsync("messages", MessagesIcon);
+    private void OnMoreTapped(object sender, EventArgs e) => _ = NavigateAsync("more", MoreIcon);
 
     private async Task NavigateAsync(string route, Image icon)
     {
