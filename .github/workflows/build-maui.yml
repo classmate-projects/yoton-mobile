@@ -1,10 +1,19 @@
+# Placeholder workflow template
+# NOTE:
+# This is a starter based on the conversation.
+# It builds Android and Windows, uploads artifacts,
+# and is intended to be extended with Discord notification.
+
 name: Build MAUI App
 
 on:
   workflow_dispatch:
   push:
-    tags:
-      - "v*"
+    branches:
+      - Development
+
+permissions:
+  contents: read
 
 jobs:
   build-android:
@@ -12,36 +21,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
 
-      - name: Restore workloads
-        run: dotnet workload restore Yoton-Mobile.csproj
+      - run: dotnet workload restore Yoton-Mobile.csproj
 
       - name: Decode signing keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > yoton-release.keystore
 
-      - name: Publish signed Android AAB (Play Store)
-        env:
-          AndroidSigningKeyStore: ${{ github.workspace }}/yoton-release.keystore
-          AndroidSigningKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          AndroidSigningKeyPass: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          AndroidSigningStorePass: ${{ secrets.ANDROID_STORE_PASSWORD }}
-        run: >
-          dotnet publish Yoton-Mobile.csproj
-          -f net10.0-android
-          -c Release
-          -p:AndroidPackageFormat=aab
-
-      - name: Upload AAB artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-release-aab
-          path: bin/Release/net10.0-android/*-Signed.aab
-
-      - name: Publish signed Android APK (sideload/testing)
+      - name: Publish APK
         env:
           AndroidSigningKeyStore: ${{ github.workspace }}/yoton-release.keystore
           AndroidSigningKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
@@ -53,40 +42,58 @@ jobs:
           -c Release
           -p:AndroidPackageFormat=apk
 
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: android-release-apk
           path: bin/Release/net10.0-android/*-Signed.apk
-
-  # iOS and MacCatalyst jobs are intentionally omitted: producing a real
-  # installable/signed build for either requires enrolling in the Apple
-  # Developer Program ($99/yr) plus a signing certificate and provisioning
-  # profile. Add them back (see git history / ask for the snippet) once
-  # that's in place.
 
   build-windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
 
-      - name: Restore workloads
-        run: dotnet workload restore Yoton-Mobile.csproj
+      - run: dotnet workload restore Yoton-Mobile.csproj
 
-      - name: Publish Windows (unpackaged)
-        run: >
+      - run: >
           dotnet publish Yoton-Mobile.csproj
           -f net10.0-windows10.0.19041.0
           -c Release
           -p:RuntimeIdentifierOverride=win10-x64
 
-      - name: Upload Windows artifact
-        uses: actions/upload-artifact@v4
+      - shell: pwsh
+        run: |
+          Compress-Archive `
+            -Path "bin/Release/net10.0-windows10.0.19041.0/win-x64/publish/*" `
+            -DestinationPath "Yoton-Mobile-Windows.zip"
+
+      - uses: actions/upload-artifact@v4
         with:
           name: windows-release
-          path: bin/Release/net10.0-windows10.0.19041.0/win-x64/publish/**
+          path: Yoton-Mobile-Windows.zip
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [build-android, build-windows]
+    steps:
+      - name: Notify Discord
+        run: |
+          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{
+            \"embeds\": [{
+              \"title\": \"🚀 New Development Build\",
+              \"description\": \"Artifacts are ready.\",
+              \"fields\": [
+                {\"name\":\"Project\",\"value\":\"Yoton Mobile\",\"inline\":true},
+                {\"name\":\"Branch\",\"value\":\"Development\",\"inline\":true},
+                {\"name\":\"Triggered By\",\"value\":\"${{ github.actor }}\",\"inline\":true},
+                {\"name\":\"Workflow Run\",\"value\":\"${RUN_URL}\"}
+              ]
+            }]
+          }" \
+          "${{ secrets.DISCORD_WEBHOOK }}"
