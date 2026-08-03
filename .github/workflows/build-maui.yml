@@ -1,9 +1,3 @@
-# Placeholder workflow template
-# NOTE:
-# This is a starter based on the conversation.
-# It builds Android and Windows, uploads artifacts,
-# and is intended to be extended with Discord notification.
-
 name: Build MAUI App
 
 on:
@@ -18,6 +12,8 @@ permissions:
 jobs:
   build-android:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +22,12 @@ jobs:
           dotnet-version: "10.0.x"
 
       - run: dotnet workload restore Yoton-Mobile.csproj
+
+      - name: Get app version
+        id: version
+        run: |
+          VERSION=$(grep -oP '(?<=<ApplicationDisplayVersion>).*?(?=</ApplicationDisplayVersion>)' Yoton-Mobile.csproj)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Decode signing keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > yoton-release.keystore
@@ -42,58 +44,88 @@ jobs:
           -c Release
           -p:AndroidPackageFormat=apk
 
+      - name: Rename APK
+        run: |
+          mkdir -p out
+          cp bin/Release/net10.0-android/*-Signed.apk out/Yoton-Mobile.apk
+
       - uses: actions/upload-artifact@v4
         with:
           name: android-release-apk
-          path: bin/Release/net10.0-android/*-Signed.apk
+          path: out/Yoton-Mobile.apk
 
-  build-windows:
-    runs-on: windows-latest
+  release:
+    runs-on: ubuntu-latest
+    needs: build-android
+    permissions:
+      contents: write
+    outputs:
+      download_url: ${{ steps.publish.outputs.download_url }}
+      release_date: ${{ steps.publish.outputs.release_date }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/download-artifact@v4
         with:
-          dotnet-version: "10.0.x"
+          name: android-release-apk
+          path: apk
 
-      - run: dotnet workload restore Yoton-Mobile.csproj
-
-      - run: >
-          dotnet publish Yoton-Mobile.csproj
-          -f net10.0-windows10.0.19041.0
-          -c Release
-          -p:RuntimeIdentifierOverride=win10-x64
-
-      - shell: pwsh
+      - name: Replace previous latest release
         run: |
-          Compress-Archive `
-            -Path "bin/Release/net10.0-windows10.0.19041.0/win-x64/publish/*" `
-            -DestinationPath "Yoton-Mobile-Windows.zip"
+          gh release delete development-latest --repo "${{ github.repository }}" --yes --cleanup-tag || true
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: windows-release
-          path: Yoton-Mobile-Windows.zip
+      - name: Publish latest release
+        id: publish
+        run: |
+          RELEASE_DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
+          gh release create development-latest apk/Yoton-Mobile.apk \
+            --repo "${{ github.repository }}" \
+            --title "Yoton v${{ needs.build-android.outputs.version }}" \
+            --notes "Latest automated build from the Development branch." \
+            --latest
+
+          DOWNLOAD_URL=$(gh release view development-latest --repo "${{ github.repository }}" --json assets --jq '.assets[0].browser_download_url')
+          echo "download_url=$DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
+          echo "release_date=$RELEASE_DATE" >> "$GITHUB_OUTPUT"
 
   notify:
     runs-on: ubuntu-latest
-    needs: [build-android, build-windows]
+    needs: [build-android, release]
     steps:
       - name: Notify Discord
+        env:
+          VERSION: ${{ needs.build-android.outputs.version }}
+          DOWNLOAD_URL: ${{ needs.release.outputs.download_url }}
+          RELEASE_DATE: ${{ needs.release.outputs.release_date }}
+          ACTOR: ${{ github.actor }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message || 'Manual workflow run' }}
         run: |
-          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          COMMIT_MSG_ESCAPED=$(echo "$COMMIT_MESSAGE" | head -c 500 | jq -Rs .)
+
           curl -H "Content-Type: application/json" \
           -X POST \
           -d "{
+            \"content\": \"**📦 New Yoton Development Build**\",
             \"embeds\": [{
-              \"title\": \"🚀 New Development Build\",
-              \"description\": \"Artifacts are ready.\",
+              \"title\": \"Yoton v${VERSION}\",
+              \"description\": \"**[⬇️ Click here to download the APK](${DOWNLOAD_URL})**\",
+              \"color\": 5814783,
               \"fields\": [
-                {\"name\":\"Project\",\"value\":\"Yoton Mobile\",\"inline\":true},
-                {\"name\":\"Branch\",\"value\":\"Development\",\"inline\":true},
-                {\"name\":\"Triggered By\",\"value\":\"${{ github.actor }}\",\"inline\":true},
-                {\"name\":\"Workflow Run\",\"value\":\"${RUN_URL}\"}
-              ]
+                {\"name\": \"Version\", \"value\": \"${VERSION}\", \"inline\": true},
+                {\"name\": \"Release Date\", \"value\": \"${RELEASE_DATE}\", \"inline\": true},
+                {\"name\": \"Generated By\", \"value\": \"${ACTOR}\", \"inline\": true},
+                {\"name\": \"Commit Message\", \"value\": ${COMMIT_MSG_ESCAPED}, \"inline\": false}
+              ],
+              \"footer\": {\"text\": \"Yoton Mobile CI · Development branch\"}
+            }],
+            \"components\": [{
+              \"type\": 1,
+              \"components\": [{
+                \"type\": 2,
+                \"style\": 5,
+                \"label\": \"Download APK\",
+                \"url\": \"${DOWNLOAD_URL}\"
+              }]
             }]
           }" \
           "${{ secrets.DISCORD_WEBHOOK }}"
