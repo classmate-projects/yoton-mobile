@@ -17,7 +17,7 @@
 
         <Border x:Name="GlassCard"
                 MaximumWidthRequest="390" Padding="24"
-                HorizontalOptions="Center" VerticalOptions="Center"
+                HorizontalOptions="Fill" VerticalOptions="Center"
                 Stroke="#A6FFFFFF" StrokeThickness="1.2"
                 StrokeShape="RoundRectangle 30">
             <Border.Background>

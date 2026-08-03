@@ -2,9 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
+             xmlns:behaviors="clr-namespace:Yoton_Mobile.Behaviors"
              x:Class="Yoton_Mobile.Pages.LoginPage"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="{AppThemeBinding Light=#F4F7FF, Dark=#080B12}">
+
+    <ContentPage.Behaviors>
+        <behaviors:DismissKeyboardBehavior />
+    </ContentPage.Behaviors>
 
     <Grid RowDefinitions="250, *">
 
@@ -55,7 +60,11 @@
         </Grid>
 
         <!-- FORM CARD OVERLAPPING HERO -->
-            <VerticalStackLayout Grid.Row="1" Padding="20,0,20,120" Spacing="0"
+        <!-- ScrollView lets the form scroll the focused Entry into view once the soft
+             keyboard shrinks the available height (see MainActivity's AdjustResize) —
+             without it, the keyboard just covers the password field / sign-in button. -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,0,20,120" Spacing="0"
                                  VerticalOptions="End">
 
                 <!-- Main Form Card -->
@@ -216,6 +225,7 @@
                 </Border>
 
             </VerticalStackLayout>
+        </ScrollView>
 
         <controls:GlassBusyOverlay Grid.RowSpan="2"
                                     IsRunning="{Binding IsBusy}"
