@@ -84,7 +84,13 @@ jobs:
             --notes "Latest automated build from the Development branch." \
             --latest
 
-          DOWNLOAD_URL=$(gh release view development-latest --repo "${{ github.repository }}" --json assets --jq '.assets[0].browser_download_url')
+          DOWNLOAD_URL=$(gh api "repos/${{ github.repository }}/releases/tags/development-latest" --jq '.assets[0].browser_download_url')
+
+          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
+            echo "::error::Could not resolve APK download URL from release assets"
+            exit 1
+          fi
+
           echo "download_url=$DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
           echo "release_date=$RELEASE_DATE" >> "$GITHUB_OUTPUT"
 
