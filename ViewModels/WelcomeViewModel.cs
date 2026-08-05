@@ -1,8 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Helper;
-using Yoton_Mobile.Models;
 using Yoton_Mobile.Pages;
 using Yoton_Mobile.Services;
 
@@ -10,49 +8,14 @@ namespace Yoton_Mobile.ViewModels
 {
     public partial class WelcomeViewModel : BaseViewModel
     {
-        private readonly ApiService _api;
         private readonly NavigationService _nav;
 
-        [ObservableProperty]
-        Basedata baseData;
-
-        // Sourced from AppInfo (which reads ApplicationDisplayVersion in the .csproj), not
-        // the API — BaseData/mobileVersion below was never wired to a real versioned
-        // endpoint (APILibrary.BaseUrl is just the API's bare root URL), so this always
-        // showed "Loading..." forever in practice.
         public string Version => AppInfo.Current.VersionString;
 
-        public WelcomeViewModel(ApiService api,
-                                NavigationService nav)
+        public WelcomeViewModel(NavigationService nav)
         {
             LogService.Write("WelcomeViewModel created");
-            LogService.Write("ApiService null? " + (api == null));
-            LogService.Write("NavigationService null? " + (nav == null));
-
-            _api = api;
             _nav = nav;
-        }
-
-        public async Task InitializeAsync()
-        {
-            LogService.Write("InitializeAsync started");
-
-            try
-            {
-                await LoadAPI();
-            }
-            catch (Exception ex)
-            {
-                LogService.Write("❌ InitializeAsync Error: " + ex);
-            }
-        }
-
-        private async Task LoadAPI()
-        {
-            var response = await _api.GetAsync<Basedata>(APILibrary.BaseUrl);
-
-            if (response != null)
-                BaseData = response;
         }
 
         [RelayCommand]

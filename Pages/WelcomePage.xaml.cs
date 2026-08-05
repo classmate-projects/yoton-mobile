@@ -17,8 +17,6 @@ public partial class WelcomePage : ContentPage
 
         try
         {
-            await (BindingContext as WelcomeViewModel)!.InitializeAsync();
-
             // Set initial hidden state
             headerStack.Opacity = 0;
             headerStack.TranslationY = 24;

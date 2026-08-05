@@ -16,7 +16,7 @@
                     <Label Text="Welcome back," 
                            Style="{StaticResource LabelLight}" 
                            FontSize="15" />
-                    <Label Text="{Binding PatientName, StringFormat='{0} 👋'}" 
+                    <Label Text="{Binding PatientName}" 
                            Style="{StaticResource H2}" 
                            FontAttributes="Bold" />
                     <Label Text="Here is your health status today." 

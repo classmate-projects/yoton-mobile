@@ -15,11 +15,9 @@ namespace Yoton_Mobile.Services
                 File.AppendAllText(LogFilePath, log);
             }
             catch (Exception ex)
-            {   
+            {
                 Debug.WriteLine("LogService Error: " + ex.Message);
             }
         }
-
-        public static string GetLogFilePath() => LogFilePath;
     }
 }

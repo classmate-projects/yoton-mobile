@@ -2,9 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
+             xmlns:behaviors="clr-namespace:Yoton_Mobile.Behaviors"
              x:Class="Yoton_Mobile.Pages.MessagesPage"
              Title="Secure Chats"
              BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
+
+    <ContentPage.Behaviors>
+        <behaviors:DismissKeyboardBehavior />
+    </ContentPage.Behaviors>
 
     <Grid RowDefinitions="*, Auto, Auto">
         
