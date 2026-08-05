@@ -15,13 +15,6 @@ public partial class WelcomePage : ContentPage
     {
         base.OnAppearing();
 
-        // Previously awaited before anything below ran, so the whole page sat fully
-        // transparent (every stack below starts at Opacity=0) for as long as this network
-        // round-trip took — including a cold start if the API host had spun down. The
-        // fetched BaseData isn't read anywhere in the app (see WelcomeViewModel), so there's
-        // nothing here worth blocking the reveal on; let it run in the background instead.
-        _ = (BindingContext as WelcomeViewModel)?.InitializeAsync();
-
         try
         {
             // Set initial hidden state
