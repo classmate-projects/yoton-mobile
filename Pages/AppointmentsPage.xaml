@@ -84,7 +84,7 @@
 
                         <!-- Doctor carousel with basic info -->
                         <Label Text="Doctors" Style="{StaticResource LabelLight}" FontSize="12" />
-                        <CarouselView ItemsSource="{Binding DoctorCards}" PeekAreaInsets="16" HeightRequest="160">
+                        <CarouselView ItemsSource="{Binding DoctorCards}" PeekAreaInsets="16" HeightRequest="160" Loop="False">
                             <CarouselView.EmptyView>
                                 <Label Text="No doctors available in this department yet." Style="{StaticResource LabelLight}" FontSize="12" />
                             </CarouselView.EmptyView>
