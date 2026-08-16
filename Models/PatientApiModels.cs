@@ -37,6 +37,7 @@ namespace Yoton_Mobile.Models
         public DateTime RequestedDate { get; set; }
         public DateTime? CompletedDate { get; set; }
         public bool HasResultFile { get; set; }
+        public string? ResultFilePath { get; set; }
     }
 
     public class MyMedication
@@ -45,11 +46,34 @@ namespace Yoton_Mobile.Models
         public string DrugName { get; set; } = string.Empty;
         public string? Dosage { get; set; }
         public string? Frequency { get; set; }
+        public string? Route { get; set; }
+        public string? Instructions { get; set; }
         public int? DurationDays { get; set; }
         public string Status { get; set; } = string.Empty; // Active | Discontinued
         public string? DoctorName { get; set; }
         public DateTime StartedAt { get; set; }
         public DateTime? EndedAt { get; set; }
+    }
+
+    // View-only — no payment initiation, there is no payment gateway anywhere in this app.
+    public class MyBillItem
+    {
+        public string? Description { get; set; }
+        public decimal Amount { get; set; }
+    }
+
+    public class MyBill
+    {
+        public string? BillId { get; set; }
+        public decimal TotalAmount { get; set; }
+        public decimal Discount { get; set; }
+        public decimal Tax { get; set; }
+        public decimal NetAmount { get; set; }
+        public string Status { get; set; } = string.Empty; // Pending, Paid, Cancelled
+        public string? PaymentMethod { get; set; }
+        public DateTime? PaymentDate { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public List<MyBillItem> Items { get; set; } = new();
     }
 
     public class MyConsultation

@@ -68,5 +68,35 @@ namespace Yoton_Mobile.BaseLibrary
                 return default;
             }
         }
+
+        // multipart/form-data POST - for endpoints that accept file attachments alongside
+        // plain fields (e.g. chat messages with an attached image). fields' keys must match
+        // the target [FromForm] request DTO's property names case-insensitively (ASP.NET
+        // Core's model binder isn't case-sensitive here, unlike JSON body binding).
+        public async Task<T?> PostMultipartAsync<T>(string url, Dictionary<string, string> fields, IEnumerable<(string FieldName, string FileName, Stream Content)>? files = null)
+        {
+            var client = await CreateClientAsync();
+            using var content = new MultipartFormDataContent();
+
+            foreach (var (key, value) in fields)
+                content.Add(new StringContent(value ?? string.Empty), key);
+
+            if (files != null)
+            {
+                foreach (var (fieldName, fileName, stream) in files)
+                    content.Add(new StreamContent(stream), fieldName, fileName);
+            }
+
+            var response = await client.PostAsync(url, content);
+
+            try
+            {
+                return await response.Content.ReadFromJsonAsync<T>(JsonOptions);
+            }
+            catch (Exception)
+            {
+                return default;
+            }
+        }
     }
 }

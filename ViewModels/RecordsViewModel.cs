@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Models;
+using Yoton_Mobile.Services;
 
 namespace Yoton_Mobile.ViewModels
 {
@@ -9,6 +11,7 @@ namespace Yoton_Mobile.ViewModels
         public string DrugName { get; set; }
         public string Dosage { get; set; }
         public string Frequency { get; set; }
+        public string Instructions { get; set; }
         public string DoctorName { get; set; }
         public string RefillsLeft { get; set; }
     }
@@ -20,6 +23,17 @@ namespace Yoton_Mobile.ViewModels
         public string DoctorName { get; set; }
         public string Status { get; set; }
         public string ResultSummary { get; set; }
+        public string? ResultFilePath { get; set; }
+        public bool HasResultFile => !string.IsNullOrEmpty(ResultFilePath);
+    }
+
+    public class BillItemDisplay
+    {
+        public string BillId { get; set; }
+        public string DateLabel { get; set; }
+        public string NetAmountLabel { get; set; }
+        public string Status { get; set; }
+        public string SummaryLine { get; set; }
     }
 
     public partial class RecordsViewModel : BaseViewModel
@@ -31,6 +45,9 @@ namespace Yoton_Mobile.ViewModels
 
         [ObservableProperty]
         List<LabResultItem> labResults = new();
+
+        [ObservableProperty]
+        List<BillItemDisplay> bills = new();
 
         public RecordsViewModel(ApiService api)
         {
@@ -86,6 +103,37 @@ namespace Yoton_Mobile.ViewModels
             {
                 LabResults = new List<LabResultItem>();
             }
+
+            try
+            {
+                var billsResponse = await _api.GetAsync<ApiEnvelope<List<MyBill>>>(APILibrary.Patient.Bills);
+                var myBills = billsResponse?.Data ?? new List<MyBill>();
+
+                Bills = myBills
+                    .OrderByDescending(b => b.CreatedAt)
+                    .Select(ToBillItemDisplay)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                Bills = new List<BillItemDisplay>();
+            }
+        }
+
+        [RelayCommand]
+        private async Task ViewReport(LabResultItem item)
+        {
+            var url = BackendAsset.Url(item?.ResultFilePath);
+            if (url == null) return;
+
+            try
+            {
+                await Browser.Default.OpenAsync(url, BrowserLaunchMode.SystemPreferred);
+            }
+            catch (Exception ex)
+            {
+                LogService.Write($"Failed to open report: {ex}");
+            }
         }
 
         private static PrescriptionItem ToPrescriptionItem(MyMedication m) => new()
@@ -93,6 +141,7 @@ namespace Yoton_Mobile.ViewModels
             DrugName = m.Dosage != null ? $"{m.DrugName} {m.Dosage}" : m.DrugName,
             Dosage = m.Dosage ?? "As directed",
             Frequency = m.Frequency ?? "As directed",
+            Instructions = m.Instructions ?? (m.Route != null ? $"Route: {m.Route}" : "No special instructions"),
             DoctorName = m.DoctorName ?? "Unassigned",
             RefillsLeft = DescribeDuration(m)
         };
@@ -112,7 +161,19 @@ namespace Yoton_Mobile.ViewModels
             Date = (t.CompletedDate ?? t.RequestedDate).ToString("MMMM d, yyyy"),
             DoctorName = t.DoctorName ?? "Unassigned",
             Status = t.Status,
-            ResultSummary = DescribeResult(t)
+            ResultSummary = DescribeResult(t),
+            ResultFilePath = t.ResultFilePath
+        };
+
+        private static BillItemDisplay ToBillItemDisplay(MyBill b) => new()
+        {
+            BillId = b.BillId,
+            DateLabel = b.CreatedAt.ToString("MMMM d, yyyy"),
+            NetAmountLabel = $"${b.NetAmount:0.00}",
+            Status = b.Status,
+            SummaryLine = b.Items.Count > 0
+                ? string.Join(", ", b.Items.Select(i => i.Description).Take(3))
+                : "No itemized charges yet"
         };
 
         private static string DescribeResult(MyTestResult t)

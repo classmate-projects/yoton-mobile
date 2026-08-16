@@ -9,4 +9,10 @@ public partial class MessagesPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await (BindingContext as MessagesViewModel).InitializeAsync();
+    }
 }

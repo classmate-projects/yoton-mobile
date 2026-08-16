@@ -55,6 +55,7 @@ namespace Yoton_Mobile
             builder.Services.AddSingleton<ApiService>();
             builder.Services.AddSingleton<NavigationService>();
             builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton<ChatRealtimeService>();
             builder.Services.AddSingleton(_ => BiometricAuthenticationService.Default);
 
             // Pages
@@ -65,6 +66,7 @@ namespace Yoton_Mobile
             builder.Services.AddTransient<AppointmentsPage>();
             builder.Services.AddTransient<RecordsPage>();
             builder.Services.AddTransient<MessagesPage>();
+            builder.Services.AddTransient<ChatThreadPage>();
             builder.Services.AddTransient<MorePage>();
             builder.Services.AddTransient<PatientPerspectivePage>();
             builder.Services.AddTransient<SupportPage>();
@@ -78,6 +80,7 @@ namespace Yoton_Mobile
             builder.Services.AddTransient<AppointmentsViewModel>();
             builder.Services.AddTransient<RecordsViewModel>();
             builder.Services.AddTransient<MessagesViewModel>();
+            builder.Services.AddTransient<ChatThreadViewModel>();
             builder.Services.AddTransient<MoreViewModel>();
             builder.Services.AddTransient<PatientPerspectiveViewModel>();
             builder.Services.AddTransient<SupportViewModel>();

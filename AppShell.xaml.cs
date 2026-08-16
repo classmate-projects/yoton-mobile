@@ -31,6 +31,7 @@ namespace Yoton_Mobile
             Routing.RegisterRoute(nameof(AppointmentsPage), typeof(AppointmentsPage));
             Routing.RegisterRoute(nameof(RecordsPage), typeof(RecordsPage));
             Routing.RegisterRoute(nameof(MessagesPage), typeof(MessagesPage));
+            Routing.RegisterRoute(nameof(ChatThreadPage), typeof(ChatThreadPage));
             Routing.RegisterRoute(nameof(MorePage), typeof(MorePage));
             Routing.RegisterRoute(nameof(PatientPerspectivePage), typeof(PatientPerspectivePage));
             Routing.RegisterRoute(nameof(SupportPage), typeof(SupportPage));

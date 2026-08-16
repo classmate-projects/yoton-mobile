@@ -26,10 +26,34 @@
             public const string TestResults = "/api/patient/test-results";
             public const string Prescriptions = "/api/patient/prescriptions";
             public const string Consultations = "/api/patient/consultations";
+            public const string Bills = "/api/patient/bills";
             public const string SpecializationsDoctors = "/api/patient/specializations-doctors";
 
             public static string DoctorSlots(string doctorId, string date) =>
                 $"/api/patient/doctor-slots/{doctorId}?date={date}";
+        }
+
+        // Shared with the web app's staff chat UI (same /api/chat/* controller, not nested
+        // under Patient above since it isn't patient-only) - identity is still always
+        // resolved server-side from the JWT, never passed by the client.
+        public static class Chat
+        {
+            public const string Contacts = "/api/chat/contacts";
+            public const string Conversations = "/api/chat/conversations";
+
+            public static string Messages(string conversationId) =>
+                $"/api/chat/conversations/{conversationId}/messages";
+
+            public const string SendMessage = "/api/chat/messages";
+
+            public static string MarkRead(string conversationId) =>
+                $"/api/chat/conversations/{conversationId}/read";
+
+            public static string Reactions(string messageId) =>
+                $"/api/chat/messages/{messageId}/reactions";
+
+            public static string Presence(string ids) =>
+                $"/api/chat/presence?ids={Uri.EscapeDataString(ids)}";
         }
     }
 }
