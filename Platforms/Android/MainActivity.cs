@@ -30,6 +30,14 @@ namespace Yoton_Mobile
             Window?.AddFlags(WindowManagerFlags.Secure);
         }
 
+        // MauiAppCompatActivity.OnBackPressed() is marked obsolete in favor of AndroidX's
+        // OnBackPressedDispatcher/OnBackPressedCallback, but migrating means re-deriving the
+        // "fall through to Shell/MAUI's own default back handling" case (disabling this
+        // callback, invoking the dispatcher, then re-enabling it) with no device/emulator
+        // available here to verify the fallthrough actually still pops pages correctly. The
+        // override itself still works today - suppressed locally rather than risking a
+        // silent regression in back navigation for a currently-harmless deprecation warning.
+#pragma warning disable CS0612
         public override void OnBackPressed()
         {
             if (!IsAtShellRoot())
@@ -48,6 +56,7 @@ namespace Yoton_Mobile
             _lastBackPressAt = now;
             Toast.Make("Press back again to exit", ToastDuration.Short).Show();
         }
+#pragma warning restore CS0612
 
         // True only when the Home tab is selected and nothing is pushed on top of it (no
         // detail page, no modal) — every other case keeps Android/Shell's normal back

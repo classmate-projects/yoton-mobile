@@ -19,7 +19,7 @@ namespace Yoton_Mobile.ViewModels
         private DateTime _lastTypingSentAt = DateTime.MinValue;
 
         [ObservableProperty]
-        ChatConversationItem conversation;
+        ChatConversationItem? conversation;
 
         [ObservableProperty]
         ObservableCollection<ChatMessageItem> messages = new();
@@ -53,7 +53,7 @@ namespace Yoton_Mobile.ViewModels
             _chat = chat;
         }
 
-        partial void OnConversationChanged(ChatConversationItem value)
+        partial void OnConversationChanged(ChatConversationItem? value)
         {
             Title = value?.OtherName ?? "Messages";
             _ = LoadAsync();
@@ -138,6 +138,9 @@ namespace Yoton_Mobile.ViewModels
                 var results = await Microsoft.Maui.Storage.FilePicker.Default.PickMultipleAsync();
                 foreach (var file in results)
                 {
+                    if (file == null || string.IsNullOrEmpty(file.FullPath))
+                        continue;
+
                     var info = new FileInfo(file.FullPath);
                     if (info.Exists && info.Length > MaxAttachmentBytes)
                     {

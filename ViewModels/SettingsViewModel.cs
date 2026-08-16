@@ -38,7 +38,7 @@ namespace Yoton_Mobile.ViewModels
         {
             _api = api;
             Title = "Settings";
-            IsDarkModeEnabled = Application.Current.UserAppTheme == AppTheme.Dark;
+            IsDarkModeEnabled = Application.Current!.UserAppTheme == AppTheme.Dark;
             IsBiometricEnabled = Preferences.Get("biometric_enabled", false);
         }
 
@@ -86,7 +86,7 @@ namespace Yoton_Mobile.ViewModels
 
         partial void OnIsDarkModeEnabledChanged(bool value)
         {
-            Application.Current.UserAppTheme = value ? AppTheme.Dark : AppTheme.Light;
+            Application.Current!.UserAppTheme = value ? AppTheme.Dark : AppTheme.Light;
         }
 
         partial void OnIsBiometricEnabledChanged(bool value)
@@ -100,7 +100,7 @@ namespace Yoton_Mobile.ViewModels
             Preferences.Clear();
             SecureStorage.Default.RemoveAll();
             var welcomePage = ServiceHelper.GetService<WelcomePage>();
-            Application.Current.MainPage = new NavigationPage(welcomePage);
+            Application.Current!.Windows[0].Page = new NavigationPage(welcomePage);
         }
     }
 }

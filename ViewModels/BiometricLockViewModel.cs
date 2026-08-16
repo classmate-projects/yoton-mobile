@@ -63,7 +63,7 @@ namespace Yoton_Mobile.ViewModels
                 if (response.Status == BiometricResponseStatus.Success)
                 {
                     _failedAttempts = 0;
-                    Application.Current.MainPage = new AppShell();
+                    Application.Current!.Windows[0].Page = new AppShell();
                     return;
                 }
 
@@ -100,7 +100,7 @@ namespace Yoton_Mobile.ViewModels
         [RelayCommand]
         private void UsePasswordInstead()
         {
-            Application.Current.MainPage = new NavigationPage(ServiceHelper.GetService<LoginPage>());
+            Application.Current!.Windows[0].Page = new NavigationPage(ServiceHelper.GetService<LoginPage>());
         }
     }
 }

@@ -15,7 +15,7 @@ public partial class AppointmentsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await (BindingContext as AppointmentsViewModel).InitializeAsync();
+        await (BindingContext as AppointmentsViewModel)!.InitializeAsync();
 
         // Catches a front-office confirmation (Pending -> Scheduled) while the patient is
         // sitting on this page, without needing a real push notification (see

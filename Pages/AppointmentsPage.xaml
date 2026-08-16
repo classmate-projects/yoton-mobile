@@ -332,7 +332,7 @@
             <Button Text="Schedule New Consultation"
                     Command="{Binding ScheduleNewAppointmentCommand}"
                     Style="{StaticResource PrimaryButton}"
-                    HorizontalOptions="FillAndExpand">
+                    HorizontalOptions="Fill">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button" Binding="{Binding IsBookingPanelOpen}" Value="True">
                         <Setter Property="Text" Value="Close" />

@@ -52,17 +52,17 @@ public partial class GlassBusyOverlay : ContentView
         Card.Opacity = 0;
         Card.Scale = 0.9;
         await Task.WhenAll(
-            this.FadeTo(1, 220, Easing.CubicOut),
-            Card.FadeTo(1, 280, Easing.CubicOut),
-            Card.ScaleTo(1, 320, Easing.CubicOut));
+            this.FadeToAsync(1, 220, Easing.CubicOut),
+            Card.FadeToAsync(1, 280, Easing.CubicOut),
+            Card.ScaleToAsync(1, 320, Easing.CubicOut));
     }
 
     private async Task DismissAsync()
     {
         await Task.WhenAll(
-            Card.FadeTo(0, 150, Easing.CubicIn),
-            Card.ScaleTo(0.94, 150, Easing.CubicIn),
-            this.FadeTo(0, 200, Easing.CubicIn));
+            Card.FadeToAsync(0, 150, Easing.CubicIn),
+            Card.ScaleToAsync(0.94, 150, Easing.CubicIn),
+            this.FadeToAsync(0, 200, Easing.CubicIn));
         IsVisible = false;
         Indicator.IsRunning = false;
     }
