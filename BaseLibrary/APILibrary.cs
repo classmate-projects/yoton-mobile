@@ -26,6 +26,7 @@
             public const string TestResults = "/api/patient/test-results";
             public const string Prescriptions = "/api/patient/prescriptions";
             public const string Consultations = "/api/patient/consultations";
+            public const string Bills = "/api/patient/bills";
             public const string SpecializationsDoctors = "/api/patient/specializations-doctors";
 
             public static string DoctorSlots(string doctorId, string date) =>

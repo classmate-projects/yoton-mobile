@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Foundation;
 using UIKit;
 
@@ -14,6 +16,13 @@ namespace Yoton_Mobile
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate
     {
+        // Apple provides no API to block the screenshot gesture itself - a hard platform
+        // limitation, not a gap here. Android's MainActivity.cs gets genuine prevention via
+        // FLAG_SECURE; iOS can only detect a screenshot after it happened (for a warning) and
+        // block screen recording/AirPlay mirroring specifically, by covering the screen for
+        // as long as it's active - see FinishedLaunching below.
+        private UIView? _captureOverlay;
+
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
@@ -31,6 +40,16 @@ namespace Yoton_Mobile
                 SetCurrentPageBottomPadding(0);
             });
 
+            NSNotificationCenter.DefaultCenter.AddObserver(UIApplication.UserDidTakeScreenshotNotification, _ =>
+            {
+                Toast.Make("Screenshots of this content aren't permitted", ToastDuration.Short).Show();
+            });
+
+            NSNotificationCenter.DefaultCenter.AddObserver(UIScreen.CapturedDidChangeNotification, _ =>
+            {
+                SetCaptureOverlayVisible(UIScreen.MainScreen.Captured);
+            });
+
             return result;
         }
 
@@ -42,6 +61,37 @@ namespace Yoton_Mobile
 
             var p = page.Padding;
             page.Padding = new Microsoft.Maui.Thickness(p.Left, p.Top, p.Right, bottom);
+        }
+
+        private void SetCaptureOverlayVisible(bool visible)
+        {
+            var keyWindow = UIApplication.SharedApplication.Windows.FirstOrDefault(w => w.IsKeyWindow);
+            if (keyWindow == null)
+                return;
+
+            if (!visible)
+            {
+                _captureOverlay?.RemoveFromSuperview();
+                _captureOverlay = null;
+                return;
+            }
+
+            if (_captureOverlay != null)
+                return;
+
+            _captureOverlay = new UIView(keyWindow.Bounds)
+            {
+                BackgroundColor = UIColor.Black,
+                AutoresizingMask = UIViewAutoresizing.FlexibleDimensions
+            };
+            _captureOverlay.AddSubview(new UILabel(keyWindow.Bounds)
+            {
+                Text = "Content hidden for your security",
+                TextColor = UIColor.White,
+                TextAlignment = UITextAlignment.Center,
+                AutoresizingMask = UIViewAutoresizing.FlexibleDimensions
+            });
+            keyWindow.AddSubview(_captureOverlay);
         }
     }
 }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
              x:Class="Yoton_Mobile.Pages.RecordsPage"
+             x:Name="Root"
              Title="Medical Records"
              BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
 
@@ -47,6 +48,11 @@
                                 <Grid ColumnDefinitions="Auto, *" ColumnSpacing="5">
                                     <Label Text="🔁" FontSize="14" VerticalOptions="Center"/>
                                     <Label Grid.Column="1" Text="{Binding Frequency}" Style="{StaticResource LabelDefault}" VerticalOptions="Center"/>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="Auto, *" ColumnSpacing="5">
+                                    <Label Text="📋" FontSize="14" VerticalOptions="Start"/>
+                                    <Label Grid.Column="1" Text="{Binding Instructions}" Style="{StaticResource LabelDefault}" FontSize="12" />
                                 </Grid>
 
                                 <BoxView Style="{StaticResource Divider}" Margin="0,5" />
@@ -94,8 +100,54 @@
                                 <BoxView Style="{StaticResource Divider}" Margin="0,5" />
 
                                 <Label Text="{Binding ResultSummary}" Style="{StaticResource BodySmall}" FontSize="13" TextColor="{StaticResource Neutral-700}" />
-                                
-                                <Button Text="View Detailed PDF Report" FontSize="12" HeightRequest="32" Padding="15,0" BackgroundColor="{AppThemeBinding Light={StaticResource Neutral-100}, Dark={StaticResource Neutral-700}}" TextColor="{AppThemeBinding Light={StaticResource Neutral-900}, Dark={StaticResource Neutral-100}}" HorizontalOptions="Start"/>
+
+                                <Button Text="View Detailed Report"
+                                        FontSize="12" HeightRequest="32" Padding="15,0"
+                                        IsVisible="{Binding HasResultFile}"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource Neutral-100}, Dark={StaticResource Neutral-700}}"
+                                        TextColor="{AppThemeBinding Light={StaticResource Neutral-900}, Dark={StaticResource Neutral-100}}"
+                                        HorizontalOptions="Start"
+                                        Command="{Binding Path=BindingContext.ViewReportCommand, Source={x:Reference Root}}"
+                                        CommandParameter="{Binding .}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- BILLS SECTION — view-only, no payment initiation here -->
+            <Grid ColumnDefinitions="*, Auto" Margin="0,15,0,0">
+                <Label Text="Bills" Style="{StaticResource H3}" FontAttributes="Bold" Grid.Column="0" />
+                <Label Text="🧾" FontSize="18" Grid.Column="1" VerticalOptions="Center"/>
+            </Grid>
+
+            <CollectionView ItemsSource="{Binding Bills}">
+                <CollectionView.EmptyView>
+                    <Label Text="No bills yet." Style="{StaticResource LabelLight}" Margin="0,5" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="12" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeThickness="0" Background="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" Padding="15">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <Label Text="{Binding NetAmountLabel}" FontAttributes="Bold" FontSize="16" TextColor="{StaticResource Primary-700}" />
+                                    <Border Grid.Column="1" BackgroundColor="{StaticResource Secondary-100}" Padding="6,2" StrokeThickness="0" StrokeShape="RoundRectangle 4">
+                                        <Label Text="{Binding Status}" TextColor="{StaticResource Secondary-700}" FontSize="11" FontAttributes="Bold"/>
+                                    </Border>
+                                </Grid>
+
+                                <Label Text="{Binding SummaryLine}" Style="{StaticResource LabelDefault}" FontSize="12" LineBreakMode="TailTruncation" />
+
+                                <BoxView Style="{StaticResource Divider}" Margin="0,5" />
+
+                                <Label Text="{Binding DateLabel}" Style="{StaticResource LabelLight}" FontSize="11" />
                             </VerticalStackLayout>
                         </Border>
                     </DataTemplate>
