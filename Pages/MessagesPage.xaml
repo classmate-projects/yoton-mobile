@@ -2,120 +2,94 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:Yoton_Mobile.Controls"
-             xmlns:behaviors="clr-namespace:Yoton_Mobile.Behaviors"
+             xmlns:converters="clr-namespace:Yoton_Mobile.Converters"
              x:Class="Yoton_Mobile.Pages.MessagesPage"
+             x:Name="Root"
              Title="Secure Chats"
              BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121417}">
 
-    <ContentPage.Behaviors>
-        <behaviors:DismissKeyboardBehavior />
-    </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <converters:InvertedBoolConverter x:Key="InvertedBool" />
+        <converters:IntGreaterThanZeroConverter x:Key="HasUnread" />
+        <converters:InitialsConverter x:Key="Initials" />
+        <converters:SetContainsConverter x:Key="SetContains" />
+    </ContentPage.Resources>
 
-    <Grid RowDefinitions="*, Auto, Auto">
-        
-        <!-- MESSAGES CHAT HISTORY -->
-        <CollectionView Grid.Row="0" 
-                        ItemsSource="{Binding Messages}" 
-                        Margin="15,10">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="15" />
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <VerticalStackLayout Spacing="4">
-                        <!-- Message Bubble Container -->
-                        <Border Padding="14,10" StrokeThickness="0" MaximumWidthRequest="280">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="12" />
-                            </Border.StrokeShape>
+    <Grid RowDefinitions="Auto, *, Auto">
 
-                            <Border.Triggers>
-                                <!-- Patient Message Bubble (Right aligned, Blue) -->
-                                <DataTrigger TargetType="Border" Binding="{Binding IsMe}" Value="True">
-                                    <Setter Property="HorizontalOptions" Value="End" />
-                                    <Setter Property="Background" Value="{StaticResource Primary-500}" />
-                                </DataTrigger>
-                                <!-- Provider Message Bubble (Left aligned, Gray/Dark) -->
-                                <DataTrigger TargetType="Border" Binding="{Binding IsMe}" Value="False">
-                                    <Setter Property="HorizontalOptions" Value="Start" />
-                                    <Setter Property="Background" Value="{AppThemeBinding Light=#E5E7EB, Dark=#2A2E33}" />
-                                </DataTrigger>
-                            </Border.Triggers>
+        <VerticalStackLayout Grid.Row="0" Padding="20,15,20,10" Spacing="4">
+            <Label Text="Messages" Style="{StaticResource H2}" FontAttributes="Bold" />
+            <Label Text="Chat securely with your care team and the front desk." Style="{StaticResource LabelLight}" />
+        </VerticalStackLayout>
 
-                            <VerticalStackLayout Spacing="2">
-                                <!-- Sender Label (Only for Doctor messages) -->
-                                <Label Text="{Binding SenderName}" FontSize="11" FontAttributes="Bold">
-                                    <Label.Triggers>
-                                        <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="True">
-                                            <Setter Property="IsVisible" Value="False" />
-                                        </DataTrigger>
-                                        <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="False">
-                                            <Setter Property="TextColor" Value="{StaticResource Primary-700}" />
-                                            <Setter Property="IsVisible" Value="True" />
-                                        </DataTrigger>
-                                    </Label.Triggers>
-                                </Label>
-
-                                <!-- Message Text -->
-                                <Label Text="{Binding Content}" FontSize="14">
-                                    <Label.Triggers>
-                                        <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="True">
-                                            <Setter Property="TextColor" Value="White" />
-                                        </DataTrigger>
-                                        <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="False">
-                                            <Setter Property="TextColor" Value="{AppThemeBinding Light=#111827, Dark=#F9FAFB}" />
-                                        </DataTrigger>
-                                    </Label.Triggers>
-                                </Label>
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <!-- Timestamp -->
-                        <Label Text="{Binding Time}" FontSize="10" Style="{StaticResource LabelLight}" Margin="5,0">
-                            <Label.Triggers>
-                                <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="True">
-                                    <Setter Property="HorizontalOptions" Value="End" />
-                                </DataTrigger>
-                                <DataTrigger TargetType="Label" Binding="{Binding IsMe}" Value="False">
-                                    <Setter Property="HorizontalOptions" Value="Start" />
-                                </DataTrigger>
-                            </Label.Triggers>
-                        </Label>
+        <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding Conversations}">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="20" Spacing="4" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="No conversations yet." Style="{StaticResource LabelLight}" HorizontalTextAlignment="Center" />
                     </VerticalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="1" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="20,14" ColumnDefinitions="Auto, *, Auto" ColumnSpacing="12"
+                              BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Path=BindingContext.OpenConversationCommand, Source={x:Reference Root}}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
 
-        <!-- INPUT ACTION BOTTOM BAR -->
-        <Border Grid.Row="1" 
-                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}" 
-                Padding="10,12" 
-                StrokeThickness="1" 
-                Stroke="#E0E0E0">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="0" />
-            </Border.StrokeShape>
-            
-            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
-                <Entry Grid.Column="0"
-                       Text="{Binding NewMessageText}"
-                       Placeholder="Type a secure message..."
-                       VerticalOptions="Center"
-                       Keyboard="Chat"
-                       HeightRequest="42"/>
-                
-                <Button Grid.Column="1"
-                        Text="Send"
-                        Command="{Binding SendMessageCommand}"
-                        Style="{StaticResource PrimaryButton}"
-                        WidthRequest="70"
-                        HeightRequest="42"
-                        Padding="0"
-                        VerticalOptions="Center"/>
-            </Grid>
-        </Border>
+                            <Grid Grid.Column="0" WidthRequest="46" HeightRequest="46" VerticalOptions="Start">
+                                <Border StrokeThickness="0" Background="{StaticResource Primary-100}">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="23" />
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding OtherName, Converter={StaticResource Initials}}"
+                                           FontAttributes="Bold" FontSize="16"
+                                           TextColor="{StaticResource Primary-700}"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                                <Border WidthRequest="12" HeightRequest="12" StrokeThickness="2"
+                                        Stroke="{AppThemeBinding Light=#FFFFFF, Dark=#1C1F23}"
+                                        Background="{StaticResource Success-500}"
+                                        HorizontalOptions="End" VerticalOptions="End">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="6" />
+                                    </Border.StrokeShape>
+                                    <Border.IsVisible>
+                                        <MultiBinding Converter="{StaticResource SetContains}">
+                                            <Binding Path="BindingContext.OnlinePresence" Source="{x:Reference Root}" />
+                                            <Binding Path="OtherId" />
+                                        </MultiBinding>
+                                    </Border.IsVisible>
+                                </Border>
+                            </Grid>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{Binding OtherName}" FontAttributes="Bold" FontSize="15" />
+                                <Label Text="{Binding LastMessage, TargetNullValue='Tap to start chatting'}"
+                                       Style="{StaticResource LabelLight}" FontSize="13" LineBreakMode="TailTruncation" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="End" VerticalOptions="Center">
+                                <Border IsVisible="{Binding UnreadCount, Converter={StaticResource HasUnread}}"
+                                        StrokeThickness="0" Background="{StaticResource Primary-500}"
+                                        Padding="7,2" HorizontalOptions="End">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10" />
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding UnreadCount}" TextColor="White" FontSize="11" FontAttributes="Bold" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
 
         <controls:GlassTabBar Grid.Row="2" SelectedRoute="messages" />
-
     </Grid>
 </ContentPage>
