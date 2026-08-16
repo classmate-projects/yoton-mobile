@@ -11,7 +11,7 @@ namespace Yoton_Mobile.BaseLibrary
         public bool IsNotBusy => !IsBusy;
 
         [ObservableProperty]
-        string title;
+        string title = string.Empty;
     }
 
 }

@@ -34,23 +34,23 @@ public partial class WelcomePage : ContentPage
             pulse.Commit(this, "IllustrationPulse", length: 3200, repeat: () => true);
 
             // Fade + slide in brand copy
-            _ = headerStack.FadeTo(1, 900, Easing.CubicOut);
-            await headerStack.TranslateTo(0, 0, 900, Easing.CubicOut);
+            _ = headerStack.FadeToAsync(1, 900, Easing.CubicOut);
+            await headerStack.TranslateToAsync(0, 0, 900, Easing.CubicOut);
 
             // Stagger the "what you can do" highlights in next
             await Task.Delay(100);
-            _ = featuresStack.FadeTo(1, 600, Easing.CubicOut);
-            await featuresStack.TranslateTo(0, 0, 600, Easing.CubicOut);
+            _ = featuresStack.FadeToAsync(1, 600, Easing.CubicOut);
+            await featuresStack.TranslateToAsync(0, 0, 600, Easing.CubicOut);
 
             // Get Started pops in with a little more presence, since it's the primary action
             await Task.Delay(80);
-            _ = getStartedWrap.FadeTo(1, 500, Easing.CubicOut);
-            await getStartedWrap.ScaleTo(1, 500, Easing.SpringOut);
+            _ = getStartedWrap.FadeToAsync(1, 500, Easing.CubicOut);
+            await getStartedWrap.ScaleToAsync(1, 500, Easing.SpringOut);
 
             // Stagger badges entry last
             await Task.Delay(100);
-            _ = badgesGrid.FadeTo(1, 700, Easing.CubicOut);
-            await badgesGrid.TranslateTo(0, 0, 700, Easing.CubicOut);
+            _ = badgesGrid.FadeToAsync(1, 700, Easing.CubicOut);
+            await badgesGrid.TranslateToAsync(0, 0, 700, Easing.CubicOut);
 
             // Gentle continuous "breathing" pulse invites the tap once everything has settled in.
             var ctaPulse = new Animation();
@@ -71,7 +71,7 @@ public partial class WelcomePage : ContentPage
         this.AbortAnimation("GetStartedPulse");
     }
 
-    private async void OnGetStartedClicked(object sender, EventArgs e)
+    private async void OnGetStartedClicked(object? sender, EventArgs e)
     {
         await getStartedBtn.ScaleToAsync(0.94, 90, Easing.SinOut);
         await getStartedBtn.ScaleToAsync(1.0, 90, Easing.SinIn);

@@ -13,7 +13,7 @@ public partial class ChatThreadPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await (BindingContext as ChatThreadViewModel).InitializeAsync();
+        await (BindingContext as ChatThreadViewModel)!.InitializeAsync();
     }
 
     protected override void OnDisappearing()

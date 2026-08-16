@@ -41,24 +41,24 @@ public partial class LoginPage : ContentPage
         this.AbortAnimation("BgMotion");
     }
 
-    private async void OnLoginClicked(object sender, EventArgs e)
+    private async void OnLoginClicked(object? sender, EventArgs e)
     {
         // Scale button down and up for quick pop animation
-        await loginBtn.ScaleTo(0.94, 100, Easing.SinOut);
-        await loginBtn.ScaleTo(1.0, 100, Easing.SinIn);
+        await loginBtn.ScaleToAsync(0.94, 100, Easing.SinOut);
+        await loginBtn.ScaleToAsync(1.0, 100, Easing.SinIn);
     }
 
     // Password reset (request + set-new-password) lives on the web app, which
     // already has the full flow; the mobile app just needs to hand off to it
     // rather than duplicating an email-input screen and magic-link handling.
-    private async void OnForgotPasswordClicked(object sender, EventArgs e)
+    private async void OnForgotPasswordClicked(object? sender, EventArgs e)
     {
         await Browser.Default.OpenAsync(
             $"{APILibrary.WebAppUrl}/forgot-password",
             BrowserLaunchMode.SystemPreferred);
     }
 
-    private void OnTogglePasswordClicked(object sender, EventArgs e)
+    private void OnTogglePasswordClicked(object? sender, EventArgs e)
     {
         passwordEntry.IsPassword = !passwordEntry.IsPassword;
         togglePasswordButton.Source = passwordEntry.IsPassword ? "eye_hidden.svg" : "eye_visible.svg";

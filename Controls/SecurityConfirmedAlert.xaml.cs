@@ -48,15 +48,15 @@ public partial class SecurityConfirmedAlert : ContentView
         ShieldBadge.Scale = 0;
 
         await Task.WhenAll(
-            this.FadeTo(1, 220, Easing.CubicOut),
-            GlassCard.FadeTo(1, 260, Easing.CubicOut),
-            GlassCard.ScaleTo(1, 360, Easing.CubicOut));
+            this.FadeToAsync(1, 220, Easing.CubicOut),
+            GlassCard.FadeToAsync(1, 260, Easing.CubicOut),
+            GlassCard.ScaleToAsync(1, 360, Easing.CubicOut));
 
         // Shield pops in with a spring overshoot, then a couple of "secured!" pulse
         // rings radiate outward and fade — reads as a distinct, celebratory moment
         // rather than just another info dialog.
-        await ShieldBadge.ScaleTo(1.15, 260, Easing.CubicOut);
-        _ = ShieldBadge.ScaleTo(1.0, 160, Easing.SpringOut);
+        await ShieldBadge.ScaleToAsync(1.15, 260, Easing.CubicOut);
+        _ = ShieldBadge.ScaleToAsync(1.0, 160, Easing.SpringOut);
 
         _ = PlayPulseAsync();
 
@@ -70,18 +70,18 @@ public partial class SecurityConfirmedAlert : ContentView
             PulseRing.Scale = 1.0;
             PulseRing.Opacity = 0.6;
             await Task.WhenAll(
-                PulseRing.ScaleTo(1.7, 700, Easing.CubicOut),
-                PulseRing.FadeTo(0, 700, Easing.CubicOut));
+                PulseRing.ScaleToAsync(1.7, 700, Easing.CubicOut),
+                PulseRing.FadeToAsync(0, 700, Easing.CubicOut));
         }
     }
 
-    private async void OnConfirmClicked(object sender, EventArgs e)
+    private async void OnConfirmClicked(object? sender, EventArgs e)
     {
-        await ConfirmButton.ScaleTo(0.96, 70, Easing.CubicOut);
+        await ConfirmButton.ScaleToAsync(0.96, 70, Easing.CubicOut);
         await Task.WhenAll(
-            GlassCard.FadeTo(0, 130, Easing.CubicIn),
-            GlassCard.ScaleTo(0.96, 130, Easing.CubicIn),
-            this.FadeTo(0, 160, Easing.CubicIn));
+            GlassCard.FadeToAsync(0, 130, Easing.CubicIn),
+            GlassCard.ScaleToAsync(0.96, 130, Easing.CubicIn),
+            this.FadeToAsync(0, 160, Easing.CubicIn));
         _completion.TrySetResult();
     }
 }

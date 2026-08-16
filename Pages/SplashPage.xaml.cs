@@ -35,14 +35,14 @@ public partial class SplashPage : ContentPage
         });
 
         await Task.WhenAll(
-            LogoImage.FadeTo(1, 350, Easing.CubicOut),
-            LogoImage.ScaleTo(1, 350, Easing.CubicOut));
+            LogoImage.FadeToAsync(1, 350, Easing.CubicOut),
+            LogoImage.ScaleToAsync(1, 350, Easing.CubicOut));
 
-        await WordmarkLabel.FadeTo(1, 280, Easing.CubicOut);
+        await WordmarkLabel.FadeToAsync(1, 280, Easing.CubicOut);
 
         // Small settle pulse so the reveal doesn't feel abrupt.
-        await LogoImage.ScaleTo(1.05, 140, Easing.SinOut);
-        await LogoImage.ScaleTo(1.0, 140, Easing.SinIn);
+        await LogoImage.ScaleToAsync(1.05, 140, Easing.SinOut);
+        await LogoImage.ScaleToAsync(1.0, 140, Easing.SinIn);
 
         await Task.Delay(150);
         await ContinueToApp();
@@ -55,7 +55,7 @@ public partial class SplashPage : ContentPage
         return (token, biometricEnabled);
     }
 
-    private async void OnSkipTapped(object sender, EventArgs e) => await ContinueToApp();
+    private async void OnSkipTapped(object? sender, EventArgs e) => await ContinueToApp();
 
     private async Task ContinueToApp()
     {
@@ -75,8 +75,8 @@ public partial class SplashPage : ContentPage
         // session token unlocks with Face ID/fingerprint instead of the marketing Welcome
         // screen; everyone else (first run, logged out, or opted out) sees the normal flow.
         if (!string.IsNullOrEmpty(token) && biometricEnabled)
-            Application.Current.MainPage = new NavigationPage(ServiceHelper.GetService<BiometricLockPage>());
+            Application.Current!.Windows[0].Page = new NavigationPage(ServiceHelper.GetService<BiometricLockPage>());
         else
-            Application.Current.MainPage = new NavigationPage(ServiceHelper.GetService<WelcomePage>());
+            Application.Current!.Windows[0].Page = new NavigationPage(ServiceHelper.GetService<WelcomePage>());
     }
 }

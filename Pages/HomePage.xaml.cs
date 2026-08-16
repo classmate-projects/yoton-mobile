@@ -15,7 +15,7 @@ public partial class HomePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await (BindingContext as HomeViewModel).InitializeAsync();
+        await (BindingContext as HomeViewModel)!.InitializeAsync();
 
         // Set by LoginViewModel the moment it detects the patient has come back and
         // logged in with a real password after previously agreeing to change their
@@ -53,7 +53,7 @@ public partial class HomePage : ContentPage
         }
     }
 
-    private async void OnMenuClicked(object sender, EventArgs e)
+    private async void OnMenuClicked(object? sender, EventArgs e)
     {
         // The flyout is gone — Settings/Support/Patient Perspective now live behind
         // the "More" tab so they're reachable (and leavable) from the same
@@ -61,7 +61,7 @@ public partial class HomePage : ContentPage
         await Shell.Current.GoToAsync("//dashboard/more");
     }
 
-    private async void OnBookAppointmentTapped(object sender, EventArgs e)
+    private async void OnBookAppointmentTapped(object? sender, EventArgs e)
     {
         await Shell.Current.GoToAsync("//dashboard/appointments");
     }

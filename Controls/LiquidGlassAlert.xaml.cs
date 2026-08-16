@@ -83,18 +83,18 @@ public partial class LiquidGlassAlert : ContentView
         GlassCard.Opacity = 0;
         GlassCard.Scale = 0.92;
         await Task.WhenAll(
-            this.FadeTo(1, 220, Easing.CubicOut),
-            GlassCard.FadeTo(1, 260, Easing.CubicOut),
-            GlassCard.ScaleTo(1, 360, Easing.CubicOut));
+            this.FadeToAsync(1, 220, Easing.CubicOut),
+            GlassCard.FadeToAsync(1, 260, Easing.CubicOut),
+            GlassCard.ScaleToAsync(1, 360, Easing.CubicOut));
         return await _completion.Task;
     }
 
-    private async void OnConfirmClicked(object sender, EventArgs e)
+    private async void OnConfirmClicked(object? sender, EventArgs e)
     {
         await FinishAsync(true, ConfirmButton);
     }
 
-    private async void OnCancelClicked(object sender, EventArgs e)
+    private async void OnCancelClicked(object? sender, EventArgs e)
     {
         await FinishAsync(false, CancelButton);
     }
@@ -104,11 +104,11 @@ public partial class LiquidGlassAlert : ContentView
         if (_completion.Task.IsCompleted)
             return;
 
-        await actionButton.ScaleTo(0.96, 70, Easing.CubicOut);
+        await actionButton.ScaleToAsync(0.96, 70, Easing.CubicOut);
         await Task.WhenAll(
-            GlassCard.FadeTo(0, 130, Easing.CubicIn),
-            GlassCard.ScaleTo(0.96, 130, Easing.CubicIn),
-            this.FadeTo(0, 160, Easing.CubicIn));
+            GlassCard.FadeToAsync(0, 130, Easing.CubicIn),
+            GlassCard.ScaleToAsync(0.96, 130, Easing.CubicIn),
+            this.FadeToAsync(0, 160, Easing.CubicIn));
         _completion.TrySetResult(confirmed);
     }
 }

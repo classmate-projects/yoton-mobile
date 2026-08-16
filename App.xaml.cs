@@ -14,8 +14,11 @@ namespace Yoton_Mobile
             {
                 LogService.Write("⚠️ FirstChanceException: " + e.Exception.Message);
             };
+        }
 
-            MainPage = new NavigationPage(ServiceHelper.GetService<SplashPage>());
+        protected override Window CreateWindow(IActivationState? activationState)
+        {
+            return new Window(new NavigationPage(ServiceHelper.GetService<SplashPage>()));
         }
     }
 }

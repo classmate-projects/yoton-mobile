@@ -35,10 +35,10 @@ namespace Yoton_Mobile.Services
 
     public class LoginResponse
     {
-        public string UserId { get; set; }
-        public string Name { get; set; }
-        public string Role { get; set; }
-        public string Token { get; set; }
+        public string UserId { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
         public bool IsDefaultPassword { get; set; }
     }
 }

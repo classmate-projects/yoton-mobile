@@ -6,7 +6,7 @@ namespace Yoton_Mobile.Converters
     // the same initials on both platforms.
     public class InitialsConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             var name = value as string;
             if (string.IsNullOrWhiteSpace(name)) return string.Empty;
@@ -20,7 +20,7 @@ namespace Yoton_Mobile.Converters
                     .Select(part => char.ToUpperInvariant(part[0])));
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
             => throw new NotSupportedException();
     }
 }

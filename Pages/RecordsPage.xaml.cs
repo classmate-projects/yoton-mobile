@@ -13,6 +13,6 @@ public partial class RecordsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await (BindingContext as RecordsViewModel).InitializeAsync();
+        await (BindingContext as RecordsViewModel)!.InitializeAsync();
     }
 }

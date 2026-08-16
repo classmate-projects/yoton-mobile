@@ -13,10 +13,10 @@ namespace Yoton_Mobile.ViewModels
         private readonly IBiometric _biometric;
 
         [ObservableProperty]
-        string email;
+        string email = string.Empty;
 
         [ObservableProperty]
-        string password;
+        string password = string.Empty;
 
         public LoginViewModel(AuthService auth, IBiometric biometric)
         {
@@ -44,8 +44,8 @@ namespace Yoton_Mobile.ViewModels
                 // is only set once AppShell becomes MainPage, which happens further down after a
                 // successful *patient* login. LiquidGlassAlert.ShowAsync just needs the actual
                 // ContentPage it should render into, not Shell.Current.
-                var currentPage = ((Application.Current?.MainPage as NavigationPage)?.CurrentPage
-                    ?? Application.Current?.MainPage) as ContentPage;
+                var currentPage = ((Application.Current?.Windows[0].Page as NavigationPage)?.CurrentPage
+                    ?? Application.Current?.Windows[0].Page) as ContentPage;
 
                 if (token == null)
                 {
@@ -92,7 +92,7 @@ namespace Yoton_Mobile.ViewModels
 
                 await OfferBiometricEnrollmentAsync();
 
-                Application.Current.MainPage = new AppShell();
+                Application.Current!.Windows[0].Page = new AppShell();
             }
             finally
             {
@@ -148,7 +148,7 @@ namespace Yoton_Mobile.ViewModels
                 return;
             }
 
-            if (Application.Current?.MainPage is NavigationPage navPage && navPage.CurrentPage is ContentPage currentPage)
+            if (Application.Current?.Windows[0].Page is NavigationPage navPage && navPage.CurrentPage is ContentPage currentPage)
             {
                 var accepted = await LiquidGlassAlert.ShowAsync(
                     currentPage,

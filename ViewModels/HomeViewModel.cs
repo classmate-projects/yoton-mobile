@@ -7,8 +7,8 @@ namespace Yoton_Mobile.ViewModels
 {
     public class PatientTask
     {
-        public string Title { get; set; }
-        public string Details { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Details { get; set; } = string.Empty;
     }
 
     public partial class HomeViewModel : BaseViewModel

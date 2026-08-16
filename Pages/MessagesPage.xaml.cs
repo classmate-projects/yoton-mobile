@@ -13,6 +13,6 @@ public partial class MessagesPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await (BindingContext as MessagesViewModel).InitializeAsync();
+        await (BindingContext as MessagesViewModel)!.InitializeAsync();
     }
 }

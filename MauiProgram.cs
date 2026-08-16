@@ -91,7 +91,7 @@ namespace Yoton_Mobile
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 LogService.Write("🔥 UNHANDLED EXCEPTION");
-                LogService.Write(e.ExceptionObject.ToString());
+                LogService.Write(e.ExceptionObject.ToString() ?? "Unknown exception");
             };
 
             TaskScheduler.UnobservedTaskException += (s, e) =>

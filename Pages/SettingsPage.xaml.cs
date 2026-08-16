@@ -13,6 +13,6 @@ public partial class SettingsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await (BindingContext as SettingsViewModel).InitializeAsync();
+        await (BindingContext as SettingsViewModel)!.InitializeAsync();
     }
 }

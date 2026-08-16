@@ -8,32 +8,32 @@ namespace Yoton_Mobile.ViewModels
 {
     public class PrescriptionItem
     {
-        public string DrugName { get; set; }
-        public string Dosage { get; set; }
-        public string Frequency { get; set; }
-        public string Instructions { get; set; }
-        public string DoctorName { get; set; }
-        public string RefillsLeft { get; set; }
+        public required string DrugName { get; set; }
+        public required string Dosage { get; set; }
+        public required string Frequency { get; set; }
+        public required string Instructions { get; set; }
+        public required string DoctorName { get; set; }
+        public required string RefillsLeft { get; set; }
     }
 
     public class LabResultItem
     {
-        public string TestName { get; set; }
-        public string Date { get; set; }
-        public string DoctorName { get; set; }
-        public string Status { get; set; }
-        public string ResultSummary { get; set; }
+        public required string TestName { get; set; }
+        public required string Date { get; set; }
+        public required string DoctorName { get; set; }
+        public required string Status { get; set; }
+        public required string ResultSummary { get; set; }
         public string? ResultFilePath { get; set; }
         public bool HasResultFile => !string.IsNullOrEmpty(ResultFilePath);
     }
 
     public class BillItemDisplay
     {
-        public string BillId { get; set; }
-        public string DateLabel { get; set; }
-        public string NetAmountLabel { get; set; }
-        public string Status { get; set; }
-        public string SummaryLine { get; set; }
+        public required string BillId { get; set; }
+        public required string DateLabel { get; set; }
+        public required string NetAmountLabel { get; set; }
+        public required string Status { get; set; }
+        public required string SummaryLine { get; set; }
     }
 
     public partial class RecordsViewModel : BaseViewModel
@@ -167,7 +167,7 @@ namespace Yoton_Mobile.ViewModels
 
         private static BillItemDisplay ToBillItemDisplay(MyBill b) => new()
         {
-            BillId = b.BillId,
+            BillId = b.BillId ?? string.Empty,
             DateLabel = b.CreatedAt.ToString("MMMM d, yyyy"),
             NetAmountLabel = $"${b.NetAmount:0.00}",
             Status = b.Status,

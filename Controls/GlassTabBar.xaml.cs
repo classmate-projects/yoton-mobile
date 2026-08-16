@@ -27,8 +27,8 @@ public partial class GlassTabBar : ContentView
 
         this.Opacity = 0;
         this.TranslationY = 24;
-        _ = this.FadeTo(1, 260, Easing.CubicOut);
-        _ = this.TranslateTo(0, 0, 260, Easing.CubicOut);
+        _ = this.FadeToAsync(1, 260, Easing.CubicOut);
+        _ = this.TranslateToAsync(0, 0, 260, Easing.CubicOut);
     }
 
     private static void OnSelectedRouteChanged(BindableObject bindable, object oldValue, object newValue) =>
@@ -50,19 +50,19 @@ public partial class GlassTabBar : ContentView
         icon.Source = selected ? $"{iconBaseName}_active.svg" : $"{iconBaseName}.svg";
     }
 
-    private void OnHomeTapped(object sender, EventArgs e) => _ = NavigateAsync("home", HomeIcon);
-    private void OnAppointmentsTapped(object sender, EventArgs e) => _ = NavigateAsync("appointments", AppointmentsIcon);
-    private void OnRecordsTapped(object sender, EventArgs e) => _ = NavigateAsync("records", RecordsIcon);
-    private void OnMessagesTapped(object sender, EventArgs e) => _ = NavigateAsync("messages", MessagesIcon);
-    private void OnMoreTapped(object sender, EventArgs e) => _ = NavigateAsync("more", MoreIcon);
+    private void OnHomeTapped(object? sender, EventArgs e) => _ = NavigateAsync("home", HomeIcon);
+    private void OnAppointmentsTapped(object? sender, EventArgs e) => _ = NavigateAsync("appointments", AppointmentsIcon);
+    private void OnRecordsTapped(object? sender, EventArgs e) => _ = NavigateAsync("records", RecordsIcon);
+    private void OnMessagesTapped(object? sender, EventArgs e) => _ = NavigateAsync("messages", MessagesIcon);
+    private void OnMoreTapped(object? sender, EventArgs e) => _ = NavigateAsync("more", MoreIcon);
 
     private async Task NavigateAsync(string route, Image icon)
     {
         if (SelectedRoute == route)
             return;
 
-        await icon.ScaleTo(0.82, 70, Easing.CubicOut);
-        await icon.ScaleTo(1, 90, Easing.CubicOut);
+        await icon.ScaleToAsync(0.82, 70, Easing.CubicOut);
+        await icon.ScaleToAsync(1, 90, Easing.CubicOut);
         await Shell.Current.GoToAsync($"//dashboard/{route}");
     }
 }
