@@ -169,7 +169,7 @@ namespace Yoton_Mobile.ViewModels
         {
             BillId = b.BillId ?? string.Empty,
             DateLabel = b.CreatedAt.ToString("MMMM d, yyyy"),
-            NetAmountLabel = $"${b.NetAmount:0.00}",
+            NetAmountLabel = $"{Preferences.Get("currency_symbol", "₹")}{b.NetAmount:0.00}",
             Status = b.Status,
             SummaryLine = b.Items.Count > 0
                 ? string.Join(", ", b.Items.Select(i => i.Description).Take(3))
