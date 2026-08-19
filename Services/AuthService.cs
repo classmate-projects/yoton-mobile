@@ -33,6 +33,11 @@ namespace Yoton_Mobile.Services
             // stored so RecordsViewModel can render bill amounts without hardcoding a symbol.
             Preferences.Set("currency_symbol", result.CurrencySymbol ?? "₹");
 
+            // Same company-wide setting the web app enforces (useIdleLogout) - read by
+            // App.xaml.cs's OnSleep/OnResume to force re-auth after the app has sat
+            // backgrounded for longer than this many minutes.
+            Preferences.Set("idle_timeout_minutes", result.IdleTimeoutMinutes ?? 15);
+
             return result;
         }
     }
@@ -46,5 +51,6 @@ namespace Yoton_Mobile.Services
         public bool IsDefaultPassword { get; set; }
         public string? CurrencyCode { get; set; }
         public string? CurrencySymbol { get; set; }
+        public int? IdleTimeoutMinutes { get; set; }
     }
 }
