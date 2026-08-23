@@ -29,6 +29,15 @@ namespace Yoton_Mobile.Services
             // Preferences, which is plaintext and included in Android's default app backups.
             await SecureStorage.Default.SetAsync("auth_token", result.Token);
 
+            // Admin-configurable in the web app's Settings page (CompanyController.UpdateSettings) -
+            // stored so RecordsViewModel can render bill amounts without hardcoding a symbol.
+            Preferences.Set("currency_symbol", result.CurrencySymbol ?? "₹");
+
+            // Same company-wide setting the web app enforces (useIdleLogout) - read by
+            // App.xaml.cs's OnSleep/OnResume to force re-auth after the app has sat
+            // backgrounded for longer than this many minutes.
+            Preferences.Set("idle_timeout_minutes", result.IdleTimeoutMinutes ?? 15);
+
             return result;
         }
     }
@@ -40,5 +49,8 @@ namespace Yoton_Mobile.Services
         public string Role { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
         public bool IsDefaultPassword { get; set; }
+        public string? CurrencyCode { get; set; }
+        public string? CurrencySymbol { get; set; }
+        public int? IdleTimeoutMinutes { get; set; }
     }
 }
