@@ -4,12 +4,14 @@ using Yoton_Mobile.BaseLibrary;
 using Yoton_Mobile.Helper;
 using Yoton_Mobile.Models;
 using Yoton_Mobile.Pages;
+using Yoton_Mobile.Services;
 
 namespace Yoton_Mobile.ViewModels
 {
     public partial class SettingsViewModel : BaseViewModel
     {
         private readonly ApiService _api;
+        private readonly AuthService _auth;
 
         [ObservableProperty]
         string userName = Preferences.Get("user_name", "Patient User");
@@ -34,9 +36,10 @@ namespace Yoton_Mobile.ViewModels
         [ObservableProperty]
         string appVersion = AppInfo.Current.VersionString;
 
-        public SettingsViewModel(ApiService api)
+        public SettingsViewModel(ApiService api, AuthService auth)
         {
             _api = api;
+            _auth = auth;
             Title = "Settings";
             IsDarkModeEnabled = Application.Current!.UserAppTheme == AppTheme.Dark;
             IsBiometricEnabled = Preferences.Get("biometric_enabled", false);
@@ -95,8 +98,15 @@ namespace Yoton_Mobile.ViewModels
         }
 
         [RelayCommand]
-        private void Logout()
+        private async Task Logout()
         {
+            // Captured before SecureStorage is cleared below - same shape as the web app's
+            // lib/auth.ts logout(). Fired without awaiting: local session state is torn down
+            // and navigation happens immediately, the server-side revoke is a best-effort
+            // cleanup that must never block it.
+            var refreshToken = await SecureStorage.Default.GetAsync("refresh_token");
+            _ = _auth.RevokeRefreshTokenAsync(refreshToken);
+
             Preferences.Clear();
             SecureStorage.Default.RemoveAll();
             var welcomePage = ServiceHelper.GetService<WelcomePage>();

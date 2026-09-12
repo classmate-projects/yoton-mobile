@@ -15,6 +15,8 @@
         public static class Auth
         {
             public const string Login = "/api/auth/login";
+            public const string RefreshToken = "/api/auth/refresh-token";
+            public const string RevokeToken = "/api/auth/revoke-token";
         }
 
         // Patient self-service endpoints. Every route is scoped server-side to the

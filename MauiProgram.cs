@@ -45,8 +45,18 @@ namespace Yoton_Mobile
             });
 #endif
 
-            // HttpClient for API calls
+            // HttpClient for API calls. AuthRefreshHandler transparently retries a 401 once
+            // with a freshly refreshed access token (see its own comments) - "YotonApiRaw" is
+            // the same base client without that handler, used only by AuthRefreshHandler
+            // itself to call the refresh endpoint without looping back through itself.
+            builder.Services.AddTransient<AuthRefreshHandler>();
+
             builder.Services.AddHttpClient("YotonApi", client =>
+            {
+                client.BaseAddress = new Uri(APILibrary.BaseUrl);
+            }).AddHttpMessageHandler<AuthRefreshHandler>();
+
+            builder.Services.AddHttpClient("YotonApiRaw", client =>
             {
                 client.BaseAddress = new Uri(APILibrary.BaseUrl);
             });
