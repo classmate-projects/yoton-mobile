@@ -1,0 +1,77 @@
+{
+  "expo": {
+    "name": "Yoton",
+    "slug": "yoton-mobile",
+    "scheme": "yoton",
+    "version": "1.2.42",
+    "orientation": "default",
+    "icon": "./assets/images/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "com.companyname.yotonmobile",
+      "buildNumber": "1",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Yoton Health uses Face ID to securely unlock the app with your existing sign-in.",
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true
+        }
+      }
+    },
+    "android": {
+      "package": "com.companyname.yotonmobile",
+      "versionCode": 1,
+      "allowBackup": false,
+      "softwareKeyboardLayoutMode": "resize",
+      "predictiveBackGestureEnabled": false,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon-foreground.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.USE_BIOMETRIC"
+      ],
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFFFFF",
+          "dark": {
+            "backgroundColor": "#1C1F23"
+          },
+          "image": "./assets/images/splash-blank.png",
+          "imageWidth": 200
+        }
+      ],
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Yoton Health uses Face ID to securely unlock the app with your existing sign-in."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Yoton Health shows a live camera picture during the Face Lock scan. Nothing is recorded or sent anywhere.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      "expo-web-browser",
+      "@react-native-community/datetimepicker",
+      "./plugins/withReleaseSigning",
+      "./plugins/withSecureWindow",
+      "./plugins/withGradleMemory"
+    ]
+  }
+}

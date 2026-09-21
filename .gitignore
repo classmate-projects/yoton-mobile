@@ -1,5 +1,44 @@
-.vs/
-obj/
-Yoton-Mobile.csproj.user
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# generated native projects (run `npx expo prebuild` to recreate)
+/ios
+/android
+
+# native signing material - never commit
+*.jks
+*.keystore
+*.p8
+*.p12
+*.key
+*.mobileprovision
 Secret/
-bin/
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# local env overrides
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# tests
+coverage/
+
+# OS / IDE
+.DS_Store
+*.pem
+.vs/
+.idea/
