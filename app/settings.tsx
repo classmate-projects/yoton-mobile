@@ -71,10 +71,13 @@ export default function SettingsScreen() {
           <SwitchRow
             title="Face Lock"
             subtitle={
-              s.hasFace
-                ? "Open the camera and unlock with a holographic face scan"
-                : "Camera face-scan screen. This phone has no face unlock, so it finishes with your fingerprint"
+              !s.hasFace
+                ? "Not available - this phone has no face unlock (Face ID / Android face unlock)"
+                : s.hasFingerprint
+                  ? "Unlock with a holographic face scan. Your fingerprint stays available as an option"
+                  : "Unlock with a holographic face scan"
             }
+            disabled={!s.hasFace}
             value={s.isFaceLockEnabled}
             onValueChange={(value) => void s.setFaceLockEnabled(value)}
           />
@@ -110,7 +113,13 @@ export default function SettingsScreen() {
   );
 }
 
-function SwitchRow(props: { title: string; subtitle: string; value: boolean; onValueChange: (value: boolean) => void }) {
+function SwitchRow(props: {
+  title: string;
+  subtitle: string;
+  value: boolean;
+  disabled?: boolean;
+  onValueChange: (value: boolean) => void;
+}) {
   const theme = useTheme();
   return (
     <View style={styles.switchRow}>
@@ -125,6 +134,7 @@ function SwitchRow(props: { title: string; subtitle: string; value: boolean; onV
       <Switch
         value={props.value}
         onValueChange={props.onValueChange}
+        disabled={props.disabled}
         // Brand-blue "on" state (Android would otherwise tint the thumb with the system accent).
         trackColor={{ false: theme.neutralFill, true: palette.primary[300] }}
         thumbColor={props.value ? palette.primary[500] : theme.isDark ? palette.neutral[300] : "#F4F3F4"}

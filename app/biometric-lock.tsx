@@ -17,14 +17,16 @@ import { useBiometricLock } from "@/viewmodels/useBiometricLock";
 const SCAN_TITLES: Record<ScanPhase, string> = {
   searching: "LOOKING FOR YOUR FACE…",
   scanning: "IDENTIFYING…",
+  fingerprint: "USE YOUR FINGERPRINT",
   verified: "IDENTITY CONFIRMED",
   failed: "NOT RECOGNISED",
 };
 
 // Shown when the session needs proving again: on a cold start with biometrics on, and whenever the
 // app is brought back after being left. The check starts straight away; the buttons are for
-// retrying or bailing out to the password form. With Face Lock on, the check is wrapped in the
-// camera + holographic scan. (Port of the MAUI BiometricLockPage.)
+// retrying or bailing out to the password form. With Face Lock on (and a phone that can check a face)
+// the face is validated first, in the camera + holographic scan; the fingerprint is only offered as a
+// choice and is not opened unless the user picks it. (Port of the MAUI BiometricLockPage.)
 export default function BiometricLockScreen() {
   const lock = useBiometricLock();
 
@@ -69,6 +71,7 @@ function FaceLockView({ lock }: { lock: LockState }) {
   const [permission] = useCameraPermissions();
   // Leave room for the header and buttons on short screens.
   const size = Math.round(Math.min(width * 0.68, height * 0.36, 300));
+  const fingerprintMode = lock.via === "fingerprint";
 
   return (
     <View style={[styles.fill, { backgroundColor: "#040A12" }]}>
@@ -88,19 +91,29 @@ function FaceLockView({ lock }: { lock: LockState }) {
           phase={lock.phase}
           title={SCAN_TITLES[lock.phase]}
           subtitle={lock.statusMessage}
-          showCamera={!!permission?.granted}
+          // In fingerprint mode the camera is released, not just hidden.
+          showCamera={!!permission?.granted && !fingerprintMode}
           size={size}
         />
       </View>
 
       <View style={[styles.faceActions, { paddingBottom: Math.max(insets.bottom, 16) + 12 }]}>
         <AppButton
-          title={lock.phase === "failed" ? "Scan again" : "Scan"}
+          title={fingerprintMode ? "Try again" : lock.phase === "failed" ? "Scan again" : "Scan"}
           disabled={!lock.canUnlock}
           backgroundColor="rgba(61,245,255,0.14)"
           textColor="#3DF5FF"
-          onPress={() => void lock.unlock()}
+          onPress={() => void lock.unlock(fingerprintMode ? "fingerprint" : "face")}
         />
+        {lock.canUseFingerprint && (
+          <AppButton
+            title={fingerprintMode ? "Use face scan instead" : "Use fingerprint instead"}
+            variant="ghost"
+            textColor="#3DF5FF"
+            disabled={!lock.canUnlock}
+            onPress={() => void lock.unlock(fingerprintMode ? "face" : "fingerprint")}
+          />
+        )}
         <AppButton title="Use password instead" variant="ghost" textColor="#8FB4C9" onPress={lock.switchToPassword} />
       </View>
     </View>

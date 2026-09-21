@@ -7,7 +7,7 @@ import type { ApiEnvelope, MyProfile } from "@/api/types";
 import { useAlert } from "@/components/GlassDialogs";
 import { APP_VERSION } from "@/config/env";
 import { withoutAppLock } from "@/services/appLock";
-import { hasFaceRecognition, isBiometricAvailable } from "@/services/biometrics";
+import { hasFaceRecognition, hasFingerprintSensor, isBiometricAvailable } from "@/services/biometrics";
 import { LogService } from "@/services/logger";
 import { signOut } from "@/services/session";
 import { prefs, PrefKeys } from "@/services/storage";
@@ -28,16 +28,26 @@ export function useSettings() {
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
   const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
   const [isFaceLockEnabled, setIsFaceLockEnabled] = useState(false);
-  // Whether the phone has real face recognition; otherwise Face Lock finishes with the fingerprint.
+  // Face Lock needs a phone that can check a face (Face ID / Android face unlock); the fingerprint is
+  // offered inside it as an alternative when the phone has one.
   const [hasFace, setHasFace] = useState(false);
+  const [hasFingerprint, setHasFingerprint] = useState(false);
 
   useEffect(() => {
     void (async () => {
       setUserName(await prefs.getString(PrefKeys.userName, "Patient User"));
       setIsBiometricEnabled(await prefs.getBool(PrefKeys.biometricEnabled, false));
       setIsNotificationsEnabled(await prefs.getBool(PrefKeys.notificationsEnabled, true));
-      setIsFaceLockEnabled(await prefs.getBool(PrefKeys.faceLockEnabled, false));
-      setHasFace(await hasFaceRecognition());
+      const face = await hasFaceRecognition();
+      setHasFace(face);
+      setHasFingerprint(await hasFingerprintSensor());
+
+      const storedFaceLock = await prefs.getBool(PrefKeys.faceLockEnabled, false);
+      if (storedFaceLock && !face) {
+        // Left over from a build/device where it was allowed: without a face unlock it can't work.
+        await prefs.setBool(PrefKeys.faceLockEnabled, false);
+      }
+      setIsFaceLockEnabled(storedFaceLock && face);
     })();
   }, []);
 
@@ -113,6 +123,8 @@ export function useSettings() {
         return;
       }
 
+      if (!hasFace) return; // The switch is disabled on such phones; this is just a guard.
+
       if (!(await requireBiometrics())) {
         setIsFaceLockEnabled(false);
         return;
@@ -138,7 +150,7 @@ export function useSettings() {
         });
       }
     },
-    [requireBiometrics, showAlert],
+    [hasFace, requireBiometrics, showAlert],
   );
 
   const logout = useCallback(async () => {
@@ -156,6 +168,7 @@ export function useSettings() {
     isBiometricEnabled,
     isFaceLockEnabled,
     hasFace,
+    hasFingerprint,
     appVersion: APP_VERSION,
     initialize,
     setDarkMode,

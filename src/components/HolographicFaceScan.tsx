@@ -16,7 +16,9 @@ import { fonts } from "@/theme/typography";
 // never claim more than the system actually confirmed. The camera feed is a live preview: it is
 // never captured, stored or sent anywhere.
 
-export type ScanPhase = "searching" | "scanning" | "verified" | "failed";
+// "fingerprint": the user chose the fingerprint instead of the face - a calm standby look, no
+// face-scanning theatre (the camera is off and nothing pretends to be identifying a face).
+export type ScanPhase = "searching" | "scanning" | "fingerprint" | "verified" | "failed";
 
 interface Props {
   phase: ScanPhase;
@@ -125,6 +127,9 @@ export function HolographicFaceScan({ phase, title, subtitle, showCamera, size =
           ]),
         ),
       ]);
+    } else if (phase === "fingerprint") {
+      reveal.setValue(0);
+      animation = Animated.timing(progress, { toValue: 0, duration: 300, useNativeDriver: false });
     } else if (phase === "verified") {
       check.setValue(0);
       burst.setValue(0);
@@ -226,11 +231,13 @@ export function HolographicFaceScan({ phase, title, subtitle, showCamera, size =
           <View style={[styles.viewport, { width: size, height: size, borderRadius: r, backgroundColor: COLORS.backdrop }]}>
             {showCamera && <CameraView style={StyleSheet.absoluteFill} facing="front" animateShutter={false} />}
 
-            {/* Cool cyan grade + darkening so the overlay reads as a projection. */}
-            <View style={[StyleSheet.absoluteFill, { backgroundColor: "rgba(0, 24, 34, 0.38)" }]} />
+            {/* Cool cyan grade + a little darkening so the overlay reads as a projection. No blend modes
+                here: they force the viewport into an offscreen layer, and Android does not composite a
+                camera surface that sits inside one (the picture would vanish). */}
+            <View style={[StyleSheet.absoluteFill, { backgroundColor: "rgba(0, 24, 34, 0.22)" }]} />
             <LinearGradient
-              colors={["rgba(61,245,255,0.30)", "rgba(61,245,255,0.04)", "rgba(61,245,255,0.20)"]}
-              style={[StyleSheet.absoluteFill, { mixBlendMode: "screen" }]}
+              colors={["rgba(61,245,255,0.22)", "rgba(61,245,255,0.04)", "rgba(61,245,255,0.16)"]}
+              style={StyleSheet.absoluteFill}
             />
 
             {/* Scanline texture + vignette. */}
@@ -308,6 +315,26 @@ export function HolographicFaceScan({ phase, title, subtitle, showCamera, size =
                   style={StyleSheet.absoluteFill}
                 />
                 <View style={[styles.beamLine, { backgroundColor: COLORS.active, shadowColor: COLORS.active }]} />
+              </Animated.View>
+            )}
+
+            {/* Fingerprint standby glyph. */}
+            {phase === "fingerprint" && (
+              <Animated.View style={[StyleSheet.absoluteFill, styles.center, { opacity: glow }]}>
+                <Svg width={size} height={size}>
+                  <G
+                    transform={`translate(${r} ${r})`}
+                    stroke={COLORS.active}
+                    strokeWidth={5}
+                    strokeLinecap="round"
+                    fill="none"
+                  >
+                    <Path d="M -46 26 C -46 -30 46 -30 46 26" />
+                    <Path d="M -32 38 C -32 -14 32 -14 32 38" />
+                    <Path d="M -18 48 C -18 2 18 2 18 48" />
+                    <Path d="M 0 56 L 0 22" />
+                  </G>
+                </Svg>
               </Animated.View>
             )}
 
