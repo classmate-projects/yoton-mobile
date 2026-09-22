@@ -41,6 +41,11 @@ async function send(url: string, options: RequestOptions, token: string | null):
       signal: controller.signal,
       headers: {
         Accept: "application/json",
+        // Identifies every request (login included) as coming from this app, not the web
+        // client - the API scopes its single-active-session enforcement to this header, so
+        // a new sign-in here ends this account's other mobile sessions without ever
+        // touching a web session (see RefreshTokenService.IssueAsync on the API side).
+        "X-Client-Platform": "mobile",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
       },
