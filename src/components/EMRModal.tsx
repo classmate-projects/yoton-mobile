@@ -1,4 +1,7 @@
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+  DateTimePickerAndroid,
+  type DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -44,7 +47,7 @@ export function EMRModal({ visible, fromDate, toDate, tiles, isBusy, onApplyDate
     setLocalTo(toDate);
   }, [fromDate, toDate]);
 
-  function handleFromChange(_: unknown, date?: Date) {
+  function handleFromChange(_event: DateTimePickerEvent, date?: Date) {
     setShowFromPicker(false);
     if (!date) return;
     const next = date > localTo ? localTo : date;
@@ -52,12 +55,31 @@ export function EMRModal({ visible, fromDate, toDate, tiles, isBusy, onApplyDate
     onApplyDates(next, localTo);
   }
 
-  function handleToChange(_: unknown, date?: Date) {
+  function handleToChange(_event: DateTimePickerEvent, date?: Date) {
     setShowToPicker(false);
     if (!date) return;
     const next = date < localFrom ? localFrom : date;
     setLocalTo(next);
     onApplyDates(localFrom, next);
+  }
+
+  // On Android the inline DateTimePicker causes layout jitter; use the imperative dialog instead.
+  function openFromPickerAndroid() {
+    DateTimePickerAndroid.open({
+      value: localFrom,
+      mode: "date",
+      maximumDate: localTo,
+      onChange: handleFromChange,
+    });
+  }
+
+  function openToPickerAndroid() {
+    DateTimePickerAndroid.open({
+      value: localTo,
+      mode: "date",
+      minimumDate: localFrom,
+      onChange: handleToChange,
+    });
   }
 
   return (
@@ -87,31 +109,32 @@ export function EMRModal({ visible, fromDate, toDate, tiles, isBusy, onApplyDate
             <DateChip
               label="From"
               date={localFrom}
-              onPress={() => setShowFromPicker(true)}
+              onPress={Platform.OS === "android" ? openFromPickerAndroid : () => setShowFromPicker(true)}
             />
             <AppText size={12} style={{ color: theme.body }}>→</AppText>
             <DateChip
               label="To"
               date={localTo}
-              onPress={() => setShowToPicker(true)}
+              onPress={Platform.OS === "android" ? openToPickerAndroid : () => setShowToPicker(true)}
             />
           </View>
         </View>
 
-        {showFromPicker && (
+        {/* iOS inline pickers only — Android uses the imperative dialog above. */}
+        {Platform.OS === "ios" && showFromPicker && (
           <DateTimePicker
             value={localFrom}
             mode="date"
-            display={Platform.OS === "ios" ? "inline" : "default"}
+            display="inline"
             maximumDate={localTo}
             onChange={handleFromChange}
           />
         )}
-        {showToPicker && (
+        {Platform.OS === "ios" && showToPicker && (
           <DateTimePicker
             value={localTo}
             mode="date"
-            display={Platform.OS === "ios" ? "inline" : "default"}
+            display="inline"
             minimumDate={localFrom}
             onChange={handleToChange}
           />

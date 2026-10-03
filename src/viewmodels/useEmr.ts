@@ -24,10 +24,10 @@ export interface EmrTileItem {
   chiefComplaint: string;
 }
 
-// Default date range: from the start of two months ago to end of current month.
+// Default date range: two-month interval — start of last month through end of current month.
 function defaultDateRange(): { from: Date; to: Date } {
   const now = new Date();
-  const from = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+  const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
   return { from, to };
 }
