@@ -113,6 +113,7 @@ export function useLogin() {
 
       await prefs.setString(PrefKeys.userName, user.name);
       await prefs.setString(PrefKeys.userRole, user.role);
+      await prefs.setString(PrefKeys.loginIdentifier, email.trim());
 
       if (user.isDefaultPassword) {
         await offerPasswordChange();

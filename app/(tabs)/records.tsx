@@ -1,13 +1,17 @@
+import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { AppButton } from "@/components/AppButton";
 import { AppText } from "@/components/AppText";
 import { Card } from "@/components/Card";
+import { EMRDetailModal } from "@/components/EMRDetailModal";
+import { EMRModal } from "@/components/EMRModal";
 import { Divider, ScreenScroll } from "@/components/layout";
 import { GlassBusyOverlay } from "@/components/GlassBusyOverlay";
 import { useOnFocus } from "@/hooks/useFocus";
 import { palette } from "@/theme/colors";
 import { useTheme } from "@/theme/ThemeProvider";
+import { useEmr } from "@/viewmodels/useEmr";
 import { useRecords } from "@/viewmodels/useRecords";
 
 // Medical history: active prescriptions, lab & radiology results, bills (view-only).
@@ -15,19 +19,44 @@ import { useRecords } from "@/viewmodels/useRecords";
 export default function RecordsScreen() {
   const theme = useTheme();
   const { isBusy, activePrescriptions, labResults, bills, initialize, viewReport } = useRecords();
+  const emr = useEmr();
+  const [isEmrOpen, setIsEmrOpen] = useState(false);
 
   useOnFocus(() => void initialize());
+
+  const handleOpenEmr = useCallback(() => {
+    setIsEmrOpen(true);
+    void emr.loadConsultations(emr.fromDate, emr.toDate);
+  }, [emr]);
+
+  const handlePrintWithAuth = useCallback(
+    async (detail: Parameters<typeof emr.printEncounter>[0], includeDoctorEntries: boolean, includeNurseEntries: boolean, password: string) => {
+      await emr.printEncounter(detail, includeDoctorEntries, includeNurseEntries, password);
+    },
+    [emr],
+  );
 
   return (
     <View style={styles.fill}>
       <ScreenScroll topInset>
-        <View style={{ gap: 4 }}>
-          <AppText variant="h2" bold>
-            Medical History
-          </AppText>
-          <AppText variant="labelLight">
-            Access your laboratory reports, diagnostic evaluations, and active medications.
-          </AppText>
+        <View style={styles.pageHeader}>
+          <View style={{ flex: 1, gap: 4 }}>
+            <AppText variant="h2" bold>
+              Medical History
+            </AppText>
+            <AppText variant="labelLight">
+              Access your laboratory reports, diagnostic evaluations, and active medications.
+            </AppText>
+          </View>
+          <Pressable
+            onPress={handleOpenEmr}
+            accessibilityRole="button"
+            accessibilityLabel="Open Electronic Medical Record"
+            style={({ pressed }) => [styles.emrBtn, { backgroundColor: palette.primary[100], opacity: pressed ? 0.7 : 1 }]}
+          >
+            <AppText size={18}>📋</AppText>
+            <AppText bold size={11} color={palette.primary[700]}>EMR</AppText>
+          </Pressable>
         </View>
 
         {/* PRESCRIPTIONS */}
@@ -126,6 +155,27 @@ export default function RecordsScreen() {
       </ScreenScroll>
 
       <GlassBusyOverlay isRunning={isBusy} message="Loading your records" />
+
+      <EMRModal
+        visible={isEmrOpen}
+        fromDate={emr.fromDate}
+        toDate={emr.toDate}
+        tiles={emr.tiles}
+        isBusy={emr.isBusy}
+        onApplyDates={emr.applyDateRange}
+        onSelectTile={emr.openDetail}
+        onClose={() => setIsEmrOpen(false)}
+      />
+
+      <EMRDetailModal
+        visible={emr.isDetailOpen}
+        detail={emr.selectedDetail}
+        isLoading={emr.isLoadingDetail}
+        onPreviewPdf={emr.previewPdf}
+        onDownloadPdf={emr.downloadPdf}
+        onPrint={handlePrintWithAuth}
+        onClose={emr.closeDetail}
+      />
     </View>
   );
 }
@@ -177,6 +227,16 @@ function StatusChip({ text }: { text: string }) {
 const styles = StyleSheet.create({
   fill: { flex: 1 },
   spread: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 },
+  pageHeader: { flexDirection: "row", alignItems: "flex-start", gap: 12 },
+  emrBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    gap: 2,
+    marginTop: 2,
+  },
   chip: { backgroundColor: palette.secondary[100], borderRadius: 4, paddingHorizontal: 6, paddingVertical: 2 },
   reportButton: {
     alignSelf: "flex-start",

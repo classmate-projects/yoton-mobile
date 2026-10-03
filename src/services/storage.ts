@@ -12,6 +12,10 @@ export const SecureKeys = {
 export const PrefKeys = {
   userName: "user_name",
   userRole: "user_role",
+  // The login identifier (email or username) entered at sign-in; stored so that re-authentication
+  // flows (e.g. print/download password gate in the EMR) can call the login endpoint without
+  // asking the user to re-enter their email.
+  loginIdentifier: "login_identifier",
   currencySymbol: "currency_symbol",
   biometricEnabled: "biometric_enabled",
   biometricPrompted: "biometric_prompted",

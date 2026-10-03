@@ -15,6 +15,11 @@ export const Endpoints = {
     testResults: "/api/patient/test-results",
     prescriptions: "/api/patient/prescriptions",
     consultations: "/api/patient/consultations",
+    /** Date-filtered consultation list for the EMR view. */
+    emrConsultations: (from: string, to: string) =>
+      `/api/patient/consultations?from=${from}&to=${to}`,
+    /** Full encounter detail for one visit (doctor entries, nurse notes, triage, test results). */
+    encounterDetail: (encounterId: string) => `/api/patient/consultations/${encounterId}`,
     bills: "/api/patient/bills",
     specializationsDoctors: "/api/patient/specializations-doctors",
     doctorSlots: (doctorId: string, date: string) =>

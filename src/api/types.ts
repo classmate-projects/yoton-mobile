@@ -194,3 +194,77 @@ export interface ChatPresence {
 // Fixed, small reaction set - matches the web app's CHAT_REACTION_EMOJIS. Deliberately not a
 // full emoji keyboard (keeps chat professional).
 export const CHAT_REACTION_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏"] as const;
+
+// ---------------- EMR (electronic medical record) ----------------
+
+// The tile shown in the date-filtered EMR grid.
+export interface EmrConsultationListItem {
+  encounterId?: string | null;
+  doctorName?: string | null;
+  specializationName?: string | null;
+  chiefComplaint?: string | null;
+  createdAt: string;
+}
+
+export interface EmrRos {
+  constitutional?: string | null;
+  eyeEarNoseMouthThroat?: string | null;
+  cardiovascular?: string | null;
+  respiratory?: string | null;
+  gastroenterology?: string | null;
+  genitourinary?: string | null;
+  musculoskeletal?: string | null;
+  neurological?: string | null;
+  psychiatric?: string | null;
+  endocrine?: string | null;
+  hematologic?: string | null;
+  allergicImmunologic?: string | null;
+  integumentary?: string | null;
+}
+
+export interface EmrNurseNote {
+  nurseNoteId?: string | null;
+  nurseName?: string | null;
+  contentHtml: string;
+  createdAt: string;
+}
+
+export interface EmrTriage {
+  triageId?: string | null;
+  nurseName?: string | null;
+  chiefComplaint?: string | null;
+  priorityLevel?: number | null;
+  heightCm?: number | null;
+  weightKg?: number | null;
+  bmi?: number | null;
+  temperature?: number | null;
+  tempSite?: string | null;
+  heartRate?: number | null;
+  bPSystolic?: number | null;
+  bPDiastolic?: number | null;
+  respiratory?: number | null;
+  oxygenSaturation?: number | null;
+  bloodSugar?: number | null;
+  actionDateTime: string;
+}
+
+export interface EmrEncounterDetail {
+  encounterId?: string | null;
+  doctorName?: string | null;
+  specializationName?: string | null;
+  createdAt: string;
+  // Doctor entries
+  chiefComplaint?: string | null;
+  diagnosisCode?: string | null;
+  diagnosisDescription?: string | null;
+  examinationNotes?: string | null;
+  clinicalExamination?: string | null;
+  plannedProcedures?: string | null;
+  reviewOfSystems?: EmrRos | null;
+  medications: MyMedication[];
+  // Nurse entries
+  nurseNotes: EmrNurseNote[];
+  triage?: EmrTriage | null;
+  // Lab / radiology results ordered during this visit
+  testResults: MyTestResult[];
+}
