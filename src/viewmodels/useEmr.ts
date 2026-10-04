@@ -253,7 +253,7 @@ export function useEmr() {
         LogService.write(`EMR share/print failed: ${error}`);
       }
     },
-    [],
+    [verifyPassword],
   );
 
   return {
