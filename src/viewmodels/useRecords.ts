@@ -91,14 +91,17 @@ export function useRecords() {
 
     try {
       const response = await api.get<ApiEnvelope<MyBill[]>>(Endpoints.patient.bills);
-      const currencySymbol = await prefs.getString(PrefKeys.currencySymbol, "₹");
+      const currencySymbol = await prefs.getString(PrefKeys.currencySymbol, "");
+      // "QR 12.50" / "AED 12.50" for letter symbols, "₹12.50" for a sign (as on the web).
+      const money = (amount: number) =>
+        /[A-Za-z.]$/.test(currencySymbol) ? `${currencySymbol} ${amount.toFixed(2)}` : `${currencySymbol}${amount.toFixed(2)}`;
       setBills(
         (response.data ?? [])
           .sort((a, b) => byNewest(a.createdAt, b.createdAt))
           .map((b) => ({
             billId: b.billId ?? "",
             dateLabel: formatMonthDayYear(parseServerDate(b.createdAt)),
-            netAmountLabel: `${currencySymbol}${b.netAmount.toFixed(2)}`,
+            netAmountLabel: money(b.netAmount),
             status: b.status,
             summaryLine:
               b.items.length > 0

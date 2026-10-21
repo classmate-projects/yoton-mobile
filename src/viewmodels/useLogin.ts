@@ -86,6 +86,10 @@ export function useLogin() {
         await showAlert({ title: "Too many attempts", message: outcome.message, confirmText: "OK" });
         return;
       }
+      if (outcome.kind === "unconfigured") {
+        await showAlert({ title: "Not available yet", message: outcome.message, confirmText: "OK" });
+        return;
+      }
       if (outcome.kind === "error") {
         await showAlert({
           title: "Something went wrong",

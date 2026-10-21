@@ -37,10 +37,20 @@ describe("login()", () => {
     expect(postDetailed.mock.calls[0][2]).toEqual({ skipAuthRefresh: true });
   });
 
-  it("defaults the currency symbol when the server omits it", async () => {
+  it("stores no currency symbol (rather than guessing one) when the server omits it", async () => {
     postDetailed.mockResolvedValueOnce({ ok: true, status: 200, body: { token: "jwt", role: "Patient", name: "P" } });
     await login("a", "b");
-    expect(prefs.setString).toHaveBeenCalledWith("currency_symbol", "₹");
+    expect(prefs.setString).toHaveBeenCalledWith("currency_symbol", "");
+  });
+
+  it("reports a system that hasn't been set up yet with the server's message", async () => {
+    postDetailed.mockResolvedValueOnce({ ok: false, status: 423, body: { code: "SYSTEM_UNCONFIGURED", message: "Not set up" } });
+    await expect(login("a", "b")).resolves.toEqual({ kind: "unconfigured", message: "Not set up" });
+
+    postDetailed.mockResolvedValueOnce({ ok: false, status: 423, body: null });
+    await expect(login("a", "b")).resolves.toMatchObject({ kind: "unconfigured" });
+
+    expect(secure.set).not.toHaveBeenCalled();
   });
 
   it("distinguishes a wrong password, rate limiting and a server error", async () => {
