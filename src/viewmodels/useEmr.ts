@@ -1,4 +1,4 @@
-import * as FileSystem from "expo-file-system";
+import { File, Paths } from "expo-file-system";
 import * as WebBrowser from "expo-web-browser";
 import { useCallback, useRef, useState } from "react";
 import { Share } from "react-native";
@@ -138,10 +138,10 @@ export function useEmr() {
       if (!url) return "No file available.";
 
       const safeName = result.testName.replace(/[^a-zA-Z0-9]/g, "_");
-      const localPath = `${FileSystem.documentDirectory}${safeName}.pdf`;
       try {
-        await FileSystem.downloadAsync(url, localPath);
-        return `Saved to: ${localPath}`;
+        // idempotent: downloading the same result again replaces the earlier copy.
+        const file = await File.downloadFileAsync(url, new File(Paths.document, `${safeName}.pdf`), { idempotent: true });
+        return `Saved to: ${file.uri}`;
       } catch (error) {
         LogService.write(`EMR download failed: ${error}`);
         return "Download failed. Please try again.";
